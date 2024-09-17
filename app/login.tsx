@@ -1,12 +1,25 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, Button, Alert } from "react-native";
+import { Text, View, TextInput, Button, Alert, StyleSheet } from "react-native";
+
+interface Credentials {
+  username: string;
+  password: string;
+}
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [credentials, setCredentials] = useState<Credentials>({
+    username: "",
+    password: "",
+  });
+
+  const handleInputChange = (field: keyof Credentials, value: string) => {
+    setCredentials({ ...credentials, [field]: value });
+  };
 
   const handleLogin = () => {
-    if (username === "" || password === "") {
+    const { username, password } = credentials;
+
+    if (!username || !password) {
       Alert.alert("Error", "Please fill out both fields");
     } else {
       // Implement login logic here
@@ -15,46 +28,45 @@ export default function Login() {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-      }}
-    >
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Login</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
 
       <TextInput
         placeholder="Username"
-        value={username}
-        onChangeText={(text) => setUsername(text)}
-        style={{
-          width: "100%",
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          paddingHorizontal: 10,
-          marginBottom: 20,
-          borderRadius: 5,
-        }}
+        value={credentials.username}
+        onChangeText={(text) => handleInputChange("username", text)}
+        style={styles.input}
       />
       <TextInput
         placeholder="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
+        value={credentials.password}
+        onChangeText={(text) => handleInputChange("password", text)}
         secureTextEntry
-        style={{
-          width: "100%",
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          paddingHorizontal: 10,
-          marginBottom: 20,
-          borderRadius: 5,
-        }}
+        style={styles.input}
       />
       <Button title="Login" onPress={handleLogin} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  input: {
+    width: "100%",
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    borderRadius: 5,
+  },
+});
