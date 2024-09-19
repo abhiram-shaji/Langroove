@@ -1,8 +1,9 @@
-// YourComponent.js
-import { StyleSheet } from "react-native";
-import { colors } from "./themes"; 
+// SignUpStyles.ts
 
-export const LoginStyles = StyleSheet.create({
+import { StyleSheet } from 'react-native';
+import { colors } from './themes';
+
+const SignUpStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -29,10 +30,11 @@ export const LoginStyles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 20,
   },
   buttonText: {
     color: colors.background,
     fontSize: 16,
   },
 });
+
+export default SignUpStyles;

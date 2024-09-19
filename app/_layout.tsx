@@ -1,14 +1,21 @@
+// _layout.tsx
 import { Stack } from 'expo-router';
 
 export default function Layout() {
   return (
-    <Stack>
-      
+    <Stack
+      screenOptions={{
+        headerShown: false, // Apply globally to all screens, hides the header
+      }}
+    >
       <Stack.Screen
         name="index"
-        options={{ title: "Login" }}  // You can customize the title here
+        options={{ title: 'Login' }}  // Header is hidden already
       />
-      
+      <Stack.Screen
+        name="sign"
+        options={{ title: 'Sign Up' }}  // Header is hidden already
+      />
     </Stack>
   );
 }
