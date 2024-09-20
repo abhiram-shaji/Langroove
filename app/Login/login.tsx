@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput,  TouchableOpacity , Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { LoginStyles } from './styles/LoginStyles';
+import { LoginStyles } from '../styles/LoginStyles';
 
 interface Credentials {
   username: string;
