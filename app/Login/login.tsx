@@ -36,7 +36,7 @@ export default function Login() {
       credentials={credentials}
       handleInputChange={handleInputChange}
       handleLogin={handleLogin}
-      onSignUp={() => router.push('/signup')}
+      onSignUp={() => router.push('../SignUp/signup')}
     />
   );
 }

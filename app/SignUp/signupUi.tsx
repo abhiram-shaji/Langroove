@@ -1,19 +1,17 @@
-// signup.tsx
-
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import SignUpStyles from './styles/SignUpStyles'; // Import SignUpStyles
-import { colors } from './styles/themes'; // Import colors from themes.ts
+import SignUpStyles from '../styles/SignUpStyles';
+import { colors } from '../styles/themes'; 
 
-const SignUpScreen: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+interface SignUpUIProps {
+  email: string;
+  password: string;
+  onEmailChange: (text: string) => void;
+  onPasswordChange: (text: string) => void;
+  onSignUp: () => void;
+}
 
-  const handleSignUp = () => {
-    // Handle sign-up logic here
-    console.log('Sign Up clicked');
-  };
-
+const SignUpUI: React.FC<SignUpUIProps> = ({ email, password, onEmailChange, onPasswordChange, onSignUp }) => {
   return (
     <View style={SignUpStyles.container}>
       <Text style={SignUpStyles.title}>Sign Up</Text>
@@ -23,7 +21,7 @@ const SignUpScreen: React.FC = () => {
         placeholder="Email"
         placeholderTextColor={colors.accent}
         value={email}
-        onChangeText={setEmail}
+        onChangeText={onEmailChange}
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -33,15 +31,15 @@ const SignUpScreen: React.FC = () => {
         placeholder="Password"
         placeholderTextColor={colors.accent}
         value={password}
-        onChangeText={setPassword}
+        onChangeText={onPasswordChange}
         secureTextEntry
       />
 
-      <TouchableOpacity style={SignUpStyles.button} onPress={handleSignUp}>
+      <TouchableOpacity style={SignUpStyles.button} onPress={onSignUp}>
         <Text style={SignUpStyles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default SignUpScreen;
+export default SignUpUI;
