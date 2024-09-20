@@ -10,9 +10,10 @@ interface LoginUIProps {
   handleInputChange: (field: 'username' | 'password', value: string) => void;
   handleLogin: () => void;
   onSignUp: () => void;
+  onForgotPassword: () => void;
 }
 
-export default function LoginUI({ credentials, handleInputChange, handleLogin, onSignUp }: LoginUIProps) {
+export default function LoginUI({ credentials, handleInputChange, handleLogin, onSignUp, onForgotPassword }: LoginUIProps) {
   return (
     <View style={LoginStyles.container}>
       <Text style={LoginStyles.title}>Langroove</Text>
@@ -37,6 +38,10 @@ export default function LoginUI({ credentials, handleInputChange, handleLogin, o
 
       <TouchableOpacity style={LoginStyles.button} onPress={onSignUp}>
         <Text style={LoginStyles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={LoginStyles.button} onPress={onForgotPassword}>
+        <Text style={LoginStyles.buttonText}>Forgot Password</Text>
       </TouchableOpacity>
     </View>
   );

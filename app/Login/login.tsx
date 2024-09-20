@@ -37,6 +37,7 @@ export default function Login() {
       handleInputChange={handleInputChange}
       handleLogin={handleLogin}
       onSignUp={() => router.push('../SignUp/signup')}
+      onForgotPassword={() => router.push('../ForgotPassword/forgotpassword')}
     />
   );
 }

@@ -9,12 +9,16 @@ export default function Layout() {
       }}
     >
       <Stack.Screen
-        name="index"
+        name="login"
         options={{ title: 'Login' }}  // Header is hidden already
       />
       <Stack.Screen
         name="sign"
         options={{ title: 'Sign Up' }}  // Header is hidden already
+      />
+      <Stack.Screen
+        name="forgot"
+        options={{ title: 'Forgot Password' }}  // Header is hidden already
       />
     </Stack>
   );
