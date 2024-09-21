@@ -35,7 +35,7 @@ export default function Login() {
     <LoginUI 
       credentials={credentials}
       handleInputChange={handleInputChange}
-      handleLogin={handleLogin}
+      handleLogin={() => router.push('/feed')}
       onSignUp={() => router.push('../SignUp/signup')}
       onForgotPassword={() => router.push('../ForgotPassword/forgotpassword')}
     />

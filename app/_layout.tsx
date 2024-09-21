@@ -20,6 +20,10 @@ export default function Layout() {
         name="forgot"
         options={{ title: 'Forgot Password' }}  // Header is hidden already
       />
+      <Stack.Screen
+        name="feed"
+        options={{ title: 'Topic Feed' }}  // Header is hidden already
+      />
     </Stack>
   );
 }
