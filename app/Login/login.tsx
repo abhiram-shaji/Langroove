@@ -36,7 +36,7 @@ export default function Login() {
       credentials={credentials}
       handleInputChange={handleInputChange}
       handleLogin={() => router.push('/feed')}
-      onSignUp={() => router.push('../friendlist')}
+      onSignUp={() => router.push('../chat')}
       onForgotPassword={() => router.push('../ForgotPassword/forgotpassword')}
     />
   );
