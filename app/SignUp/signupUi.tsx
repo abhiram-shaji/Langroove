@@ -18,6 +18,16 @@ const SignUpUI: React.FC<SignUpUIProps> = ({ email, password, onEmailChange, onP
 
       <TextInput
         style={SignUpStyles.input}
+        placeholder="Name"
+        placeholderTextColor={colors.accent}
+        value={email}
+        onChangeText={onEmailChange}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      
+      <TextInput
+        style={SignUpStyles.input}
         placeholder="Email"
         placeholderTextColor={colors.accent}
         value={email}
@@ -29,6 +39,14 @@ const SignUpUI: React.FC<SignUpUIProps> = ({ email, password, onEmailChange, onP
       <TextInput
         style={SignUpStyles.input}
         placeholder="Password"
+        placeholderTextColor={colors.accent}
+        value={password}
+        onChangeText={onPasswordChange}
+        secureTextEntry
+      />
+            <TextInput
+        style={SignUpStyles.input}
+        placeholder="Confirm Password"
         placeholderTextColor={colors.accent}
         value={password}
         onChangeText={onPasswordChange}

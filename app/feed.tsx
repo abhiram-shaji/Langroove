@@ -6,9 +6,9 @@ import { colors } from './styles/themes'; // Assuming colors are imported from y
 
 // Dummy data for topics
 const topics = [
-  { id: 1, title: 'React Native', description: 'Learn about React Native basics.' },
-  { id: 2, title: 'Expo', description: 'All about Expo for React Native.' },
-  { id: 3, title: 'JavaScript', description: 'Deep dive into JavaScript topics.' },
+  { id: 1, title: 'James', description: 'Suggest me some workouts' },
+  { id: 2, title: 'kevin', description: 'How is your morning' },
+  { id: 3, title: 'Lisa', description: 'Plans for the day ?' },
 ];
 
 const FeedScreen: React.FC = () => {
