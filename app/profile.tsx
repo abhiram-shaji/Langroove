@@ -1,0 +1,10 @@
+/*
+Components needed
+Profile picture and a Touchable opacity button named change avatar
+Profile Name
+Languages known
+Languages learning
+User time
+bio
+a back button at top left corner
+*/

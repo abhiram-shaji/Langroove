@@ -1,0 +1,10 @@
+/*
+Components
+Touchable opacity button named edit profile
+Touchable opacity button named privacy
+Touchable opacity button named themes
+Touchable opacity button named about
+Touchable opacity button named logout
+Touchable opacity button named delete profile
+
+*/
