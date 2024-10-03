@@ -1,4 +1,6 @@
 /*
+
+
 Components
 Touchable opacity button named edit profile
 Touchable opacity button named privacy
