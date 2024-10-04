@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors } from '../styles/themes';  // Import colors from themes.ts
+import { colors } from '../../styles/themes';  // Import colors from themes.ts
 
 const ForgotPasswordScreen: React.FC = () => {
   const [email, setEmail] = useState('');

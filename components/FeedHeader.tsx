@@ -4,8 +4,8 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../app/styles/themes'; // Adjust path if necessary
-import { headerStyles } from '../app/styles/FeedScreenStyles';
+import { colors } from '../styles/themes'; // Adjust path if necessary
+import { headerStyles } from '../styles/FeedScreenStyles';
 
 const FeedHeader: React.FC = () => {
   return (

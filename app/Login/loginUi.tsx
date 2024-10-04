@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { LoginStyles } from '../styles/LoginStyles';
+import { LoginStyles } from '../../styles/LoginStyles';
 
 interface LoginUIProps {
   credentials: {

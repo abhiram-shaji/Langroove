@@ -5,7 +5,7 @@ import { ScrollView, View } from 'react-native';
 import { useFeed } from '../hooks/useFeed';
 import FeedHeader from '../components/FeedHeader';
 import TopicCard from '../components/TopicCard';
-import { feedScreenStyles } from '../app/styles/FeedScreenStyles';
+import { feedScreenStyles } from '../styles/FeedScreenStyles';
 
 const FeedScreen: React.FC = () => {
   const { topics, handleTopicPress } = useFeed();

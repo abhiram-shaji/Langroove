@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import SignUpStyles from '../styles/SignUpStyles';
-import { colors } from '../styles/themes'; 
+import SignUpStyles from '../../styles/SignUpStyles';
+import { colors } from '../../styles/themes'; 
 
 interface SignUpUIProps {
   email: string;

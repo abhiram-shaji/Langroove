@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, Avatar } from 'react-native-paper';
-import { topicCardStyles } from '../app/styles/FeedScreenStyles';
+import { topicCardStyles } from '../styles/FeedScreenStyles';
 
 interface TopicCardProps {
   title: string;
