@@ -1,6 +1,8 @@
+// /app/components/LoginUI.tsx
+
 import React from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { LoginStyles } from '../../styles/LoginStyles';
+import { LoginStyles } from '../styles/LoginStyles';
 
 interface LoginUIProps {
   credentials: {
@@ -24,6 +26,7 @@ export default function LoginUI({ credentials, handleInputChange, handleLogin, o
         onChangeText={(text) => handleInputChange('username', text)}
         style={LoginStyles.input}
       />
+
       <TextInput
         placeholder="Password"
         value={credentials.password}
