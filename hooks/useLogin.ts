@@ -37,11 +37,11 @@ export const useLogin = () => {
 
   // Additional actions like sign up or forgot password could be handled here too
   const navigateToSignUp = () => {
-    router.push('/SignUp/signup');
+    router.push('/SignUpScreen');
   };
 
   const navigateToForgotPassword = () => {
-    router.push('/ForgotPassword/forgotpassword');
+    router.push('/ForgotPasswordScreen');
   };
 
   return {
