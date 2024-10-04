@@ -3,8 +3,8 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { useFeed } from '../hooks/useFeed';
-import FeedHeader from '../components/FeedHeader';
 import TopicCard from '../components/TopicCard';
+import BottomNavBar from '../components/BottomNavBar';  // Import the BottomNavBar
 import { feedScreenStyles } from '../styles/FeedScreenStyles';
 
 const FeedScreen: React.FC = () => {
@@ -12,9 +12,6 @@ const FeedScreen: React.FC = () => {
 
   return (
     <View style={feedScreenStyles.container}>
-      {/* Header - empty for now*/}
-  
-
       {/* Scrollable Content for Topic Cards */}
       <ScrollView contentContainerStyle={feedScreenStyles.scrollContainer}>
         {topics.map((topic) => (
@@ -26,6 +23,7 @@ const FeedScreen: React.FC = () => {
           />
         ))}
       </ScrollView>
+
     </View>
   );
 };
