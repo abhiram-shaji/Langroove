@@ -10,6 +10,13 @@ const SettingsScreen: React.FC = () => {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
+
+        {/* Profile Button */}
+        <SettingsButton 
+          title="Profile" 
+          onPress={() => console.log('Profile pressed')} 
+        />
+
         {/* Privacy Button */}
         <SettingsButton 
           title="Privacy" 
