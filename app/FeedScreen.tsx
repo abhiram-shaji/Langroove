@@ -12,8 +12,8 @@ const FeedScreen: React.FC = () => {
 
   return (
     <View style={feedScreenStyles.container}>
-      {/* Header */}
-      <FeedHeader />
+      {/* Header - empty for now*/}
+  
 
       {/* Scrollable Content for Topic Cards */}
       <ScrollView contentContainerStyle={feedScreenStyles.scrollContainer}>
