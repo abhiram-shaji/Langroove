@@ -42,4 +42,11 @@ export const LoginStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  forgotPasswordText: {
+    color: colors.accent,
+    fontSize: 16,
+  },
+  forgotPassword: {
+    marginTop: 20,
+  },
 });

@@ -43,8 +43,8 @@ export default function LoginUI({ credentials, handleInputChange, handleLogin, o
         <Text style={LoginStyles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={LoginStyles.button} onPress={onForgotPassword}>
-        <Text style={LoginStyles.buttonText}>Forgot Password</Text>
+      <TouchableOpacity style={LoginStyles.forgotPassword} onPress={onForgotPassword}>
+      <Text style={LoginStyles.forgotPasswordText}>Forgot Password</Text>
       </TouchableOpacity>
     </View>
   );
