@@ -1,5 +1,6 @@
 // /styles/SettingsScreenStyles.ts
 
+import { colors } from './themes';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -10,7 +11,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   button: {
-    backgroundColor: '#6200ee',
+    backgroundColor: colors.secondary,
     padding: 15,
     borderRadius: 8,
     marginVertical: 10,
