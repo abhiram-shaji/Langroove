@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase'; // Import Firebase auth from your firebase setup
 
 interface Credentials {
   username: string;
@@ -15,6 +17,7 @@ export const useLogin = () => {
     password: '',
   });
 
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // Handle input change for username and password
@@ -22,16 +25,27 @@ export const useLogin = () => {
     setCredentials({ ...credentials, [field]: value });
   };
 
-  // Handle login logic (can be extended to include API calls)
-  const handleLogin = () => {
+  // Handle login logic with Firebase Authentication
+  const handleLogin = async () => {
     const { username, password } = credentials;
 
     if (!username || !password) {
       Alert.alert('Error', 'Please fill out both fields');
-    } else {
-      // Simulate success and navigate to the Feed screen
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Use Firebase's signInWithEmailAndPassword function to authenticate
+      await signInWithEmailAndPassword(auth, username, password);
       Alert.alert('Success', `Logged in as ${username}`);
       router.push('/FeedScreen');
+    } catch (error: any) {
+      // Handle Firebase authentication errors
+      Alert.alert('Login Failed', error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,6 +60,7 @@ export const useLogin = () => {
 
   return {
     credentials,
+    loading,
     handleInputChange,
     handleLogin,
     navigateToSignUp,
