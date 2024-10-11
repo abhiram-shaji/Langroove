@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged } from 'firebase/auth';
 import FeedScreen from './FeedScreen';
 import ChatListScreen from './ChatListScreen';
@@ -37,36 +36,34 @@ export default function Layout() {
     );
   }
 
+  if (!isLoggedIn) {
+    return <LoginScreen />;
+  }
+
   return (
-    <NavigationContainer>
-      {isLoggedIn ? (
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ color, size }) => {
-              let iconName: 'home-outline' | 'chatbubble-outline' | 'settings-outline' = 'home-outline';
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName: 'home-outline' | 'chatbubble-outline' | 'settings-outline' = 'home-outline';
 
-              if (route.name === 'FeedScreen') {
-                iconName = 'home-outline';
-              } else if (route.name === 'ChatListScreen') {
-                iconName = 'chatbubble-outline';
-              } else if (route.name === 'SettingScreen') {
-                iconName = 'settings-outline';
-              }
+          if (route.name === 'FeedScreen') {
+            iconName = 'home-outline';
+          } else if (route.name === 'ChatListScreen') {
+            iconName = 'chatbubble-outline';
+          } else if (route.name === 'SettingScreen') {
+            iconName = 'settings-outline';
+          }
 
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: colors.primary,
-            tabBarInactiveTintColor: 'gray',
-            headerShown: false, // Hide the header for all screens
-          })}
-        >
-          <Tab.Screen name="FeedScreen" component={FeedScreen} />
-          <Tab.Screen name="ChatListScreen" component={ChatListScreen} />
-          <Tab.Screen name="SettingScreen" component={SettingScreen} />
-        </Tab.Navigator>
-      ) : (
-        <LoginScreen /> // Show the login screen if the user is not logged in
-      )}
-    </NavigationContainer>
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false, // Hide the header for all screens
+      })}
+    >
+      <Tab.Screen name="FeedScreen" component={FeedScreen} />
+      <Tab.Screen name="ChatListScreen" component={ChatListScreen} />
+      <Tab.Screen name="SettingScreen" component={SettingScreen} />
+    </Tab.Navigator>
   );
 }
