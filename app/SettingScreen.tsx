@@ -5,12 +5,14 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SettingsButton from '../components/SettingsButton';
 import { styles } from '../styles/SettingsScreenStyles';
+import { useLogout } from '../hooks/useLogout'; // Import the useLogout hook
 
 const SettingsScreen: React.FC = () => {
+  const { handleLogout } = useLogout(); // Destructure the handleLogout function
+
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-
         {/* Profile Button */}
         <SettingsButton 
           title="Profile" 
@@ -22,17 +24,17 @@ const SettingsScreen: React.FC = () => {
           title="Privacy" 
           onPress={() => console.log('Privacy pressed')} 
         />
-        
+
         {/* About Button */}
         <SettingsButton 
           title="About" 
           onPress={() => console.log('About pressed')} 
         />
-        
+
         {/* Logout Button */}
         <SettingsButton 
           title="Logout" 
-          onPress={() => console.log('Logout pressed')} 
+          onPress={handleLogout} // Call the logout function
         />
         
         {/* Delete Profile Button */}
