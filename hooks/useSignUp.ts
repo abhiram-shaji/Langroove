@@ -1,5 +1,7 @@
-// /hooks/useSignUp.ts
 import { useState } from 'react';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; // Firebase auth methods
+import { auth } from '../firebase'; // Assuming firebase is correctly configured in firebase.ts
+import { useRouter } from 'expo-router'; // For navigation with Expo Router
 
 interface Credentials {
   name: string;
@@ -16,30 +18,58 @@ export const useSignUp = () => {
     confirmPassword: '',
   });
 
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const router = useRouter(); // Use Expo router to navigate
+
   const handleInputChange = (field: keyof Credentials, value: string) => {
     setCredentials({ ...credentials, [field]: value });
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     const { name, email, password, confirmPassword } = credentials;
 
-    // Simple validation
+    // Basic validation
     if (!name || !email || !password || !confirmPassword) {
-      console.log('Please fill out all fields.');
+      setError('Please fill out all fields.');
       return;
     }
 
     if (password !== confirmPassword) {
-      console.log('Passwords do not match.');
+      setError('Passwords do not match.');
       return;
     }
 
-    // Handle actual sign-up logic here (e.g., API request)
-    console.log('Sign up successful for:', email);
+    setError(null);
+    setLoading(true);
+
+    try {
+      // Firebase sign-up method
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Update the user's profile with the display name (name)
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, { displayName: name });
+      }
+
+      console.log('Sign-up successful for:', email);
+
+      // After successful sign-up, navigate to the login screen
+      router.replace('/LoginScreen'); // Replace the current screen with the login screen in Expo Router
+
+    } catch (error: any) {
+      setError(error.message);
+      console.log('Sign-up error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
     credentials,
+    error,
+    loading,
     handleInputChange,
     handleSignUp,
   };
