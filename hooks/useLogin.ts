@@ -1,6 +1,4 @@
-// /hooks/useLogin.ts
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Import useEffect
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -18,6 +16,7 @@ export const useLogin = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);  // Track login success state
   const router = useRouter();
 
   // Handle input change for username and password
@@ -40,7 +39,7 @@ export const useLogin = () => {
       // Use Firebase's signInWithEmailAndPassword function to authenticate
       await signInWithEmailAndPassword(auth, username, password);
       Alert.alert('Success', `Logged in as ${username}`);
-      router.push('/FeedScreen');
+      setLoggedIn(true);  // Set login success state to true
     } catch (error: any) {
       // Handle Firebase authentication errors
       Alert.alert('Login Failed', error.message);
@@ -49,7 +48,13 @@ export const useLogin = () => {
     }
   };
 
-  // Additional actions like sign up or forgot password could be handled here too
+  // Use useEffect to navigate after login success
+  useEffect(() => {
+    if (loggedIn) {
+      router.push('/FeedScreen');  // Navigate only after login success is set
+    }
+  }, [loggedIn, router]);  // Corrected useEffect dependency list
+
   const navigateToSignUp = () => {
     router.push('/SignUpScreen');
   };
