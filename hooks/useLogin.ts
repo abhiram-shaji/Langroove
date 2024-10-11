@@ -1,10 +1,10 @@
 // /hooks/useLogin.ts
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useRootNavigationState } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; // Import Firebase auth from your firebase setup
+import { auth } from '../firebase'; // Import Firebase auth
 
 interface Credentials {
   username: string;
@@ -19,6 +19,7 @@ export const useLogin = () => {
 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const navigationState = useRootNavigationState(); // Check navigation state
 
   // Handle input change for username and password
   const handleInputChange = (field: keyof Credentials, value: string) => {
@@ -39,8 +40,12 @@ export const useLogin = () => {
     try {
       // Use Firebase's signInWithEmailAndPassword function to authenticate
       await signInWithEmailAndPassword(auth, username, password);
-      Alert.alert('Success', `Logged in as ${username}`);
-      router.push('/FeedScreen');
+
+      // Only navigate if the navigation state is mounted and ready
+      if (navigationState?.key) {
+        Alert.alert('Success', `Logged in as ${username}`);
+        router.push('/FeedScreen'); // Redirect to FeedScreen after login
+      }
     } catch (error: any) {
       // Handle Firebase authentication errors
       Alert.alert('Login Failed', error.message);
@@ -49,21 +54,17 @@ export const useLogin = () => {
     }
   };
 
-  // Additional actions like sign up or forgot password could be handled here too
-  const navigateToSignUp = () => {
-    router.push('/SignUpScreen');
-  };
-
-  const navigateToForgotPassword = () => {
-    router.push('/ForgotPasswordScreen');
-  };
+  useEffect(() => {
+    // Wait for the navigation state to be ready before attempting navigation
+    if (navigationState?.key && !loading) {
+      handleLogin();
+    }
+  }, [navigationState?.key]); // Trigger when the navigation is ready
 
   return {
     credentials,
     loading,
     handleInputChange,
     handleLogin,
-    navigateToSignUp,
-    navigateToForgotPassword,
   };
 };
