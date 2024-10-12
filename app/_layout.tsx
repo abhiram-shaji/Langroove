@@ -4,16 +4,16 @@ import { onAuthStateChanged } from 'firebase/auth';
 import FeedScreen from './FeedScreen';
 import ChatListScreen from './ChatListScreen';
 import SettingScreen from './SettingScreen';
-import LoginScreen from './LoginScreen'; // Import your LoginScreen component
-import { auth } from '../firebase'; // Import Firebase auth
+import LoginScreen from './LoginScreen'; 
+import { auth } from '../firebase'; 
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../styles/themes'; // Assuming this is where your colors are defined
+import { colors } from '../styles/themes';
 import { ActivityIndicator, View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 export default function Layout() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // Use null to represent the loading state
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
