@@ -5,9 +5,6 @@ type Route =
   | '/FeedScreen'
   | '/ChatListScreen'
   | '/SettingScreen'
-  | '/LoginScreen'
-  | '/SignUpScreen'
-  | '/ForgotPasswordScreen'
   | '/ProfileScreen'
   | '/FriendListScreen';
 

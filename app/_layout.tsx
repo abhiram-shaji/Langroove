@@ -1,11 +1,8 @@
-// _layout.tsx
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { View, ActivityIndicator } from 'react-native';
 import { auth } from '../firebase';
-import LoginScreen from './LoginScreen';
-import { colors } from '../styles/themes';
-import AppTabs from './navigation/AppTabs';
+import { Slot } from 'expo-router';  // Import Slot for routing
 import AuthLoadingScreen from '../components/AuthLoadingScreen';
 
 export default function Layout() {
@@ -20,12 +17,12 @@ export default function Layout() {
   }, []);
 
   if (isLoggedIn === null) {
-    return <AuthLoadingScreen />;
+    return <AuthLoadingScreen />;  // Show loading indicator while auth state is being checked
   }
 
   if (!isLoggedIn) {
-    return <LoginScreen />;
+    return <Slot initialRouteName="/LoginScreen" />;  // Render the login screen
   }
 
-  return <AppTabs />;
+  return <Slot initialRouteName="/AppTabs" />;  // Render the main app tabs when logged in
 }
