@@ -12,28 +12,45 @@ import { ActivityIndicator, View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
+const renderTabBarIcon = (routeName: string, color: string, size: number) => {
+  let iconName: 'home-outline' | 'chatbubble-outline' | 'settings-outline';
+
+  switch (routeName) {
+    case 'FeedScreen':
+      iconName = 'home-outline';
+      break;
+    case 'ChatListScreen':
+      iconName = 'chatbubble-outline';
+      break;
+    case 'SettingScreen':
+      iconName = 'settings-outline';
+      break;
+    default:
+      iconName = 'home-outline';
+  }
+
+  return <Ionicons name={iconName} size={size} color={color} />;
+};
+
+const AuthLoadingScreen = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <ActivityIndicator size="large" color={colors.primary} />
+  </View>
+);
+
 export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
+      setIsLoggedIn(!!user);
     });
 
     return () => unsubscribe(); // Clean up the listener on component unmount
   }, []);
 
   if (isLoggedIn === null) {
-    // Show a loading spinner while checking auth state
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
+    return <AuthLoadingScreen />;
   }
 
   if (!isLoggedIn) {
@@ -43,19 +60,7 @@ export default function Layout() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName: 'home-outline' | 'chatbubble-outline' | 'settings-outline' = 'home-outline';
-
-          if (route.name === 'FeedScreen') {
-            iconName = 'home-outline';
-          } else if (route.name === 'ChatListScreen') {
-            iconName = 'chatbubble-outline';
-          } else if (route.name === 'SettingScreen') {
-            iconName = 'settings-outline';
-          }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
+        tabBarIcon: ({ color, size }) => renderTabBarIcon(route.name, color, size),
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: 'gray',
         headerShown: false, // Hide the header for all screens
