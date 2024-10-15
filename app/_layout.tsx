@@ -1,42 +1,12 @@
+// _layout.tsx
 import React, { useState, useEffect } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { onAuthStateChanged } from 'firebase/auth';
-import FeedScreen from './FeedScreen';
-import ChatListScreen from './ChatListScreen';
-import SettingScreen from './SettingScreen';
-import LoginScreen from './LoginScreen'; 
-import { auth } from '../firebase'; 
-import { Ionicons } from '@expo/vector-icons';
+import { View, ActivityIndicator } from 'react-native';
+import { auth } from '../firebase';
+import LoginScreen from './LoginScreen';
 import { colors } from '../styles/themes';
-import { ActivityIndicator, View } from 'react-native';
-
-const Tab = createBottomTabNavigator();
-
-const renderTabBarIcon = (routeName: string, color: string, size: number) => {
-  let iconName: 'home-outline' | 'chatbubble-outline' | 'settings-outline';
-
-  switch (routeName) {
-    case 'FeedScreen':
-      iconName = 'home-outline';
-      break;
-    case 'ChatListScreen':
-      iconName = 'chatbubble-outline';
-      break;
-    case 'SettingScreen':
-      iconName = 'settings-outline';
-      break;
-    default:
-      iconName = 'home-outline';
-  }
-
-  return <Ionicons name={iconName} size={size} color={color} />;
-};
-
-const AuthLoadingScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <ActivityIndicator size="large" color={colors.primary} />
-  </View>
-);
+import AppTabs from './navigation/AppTabs';
+import AuthLoadingScreen from '../components/AuthLoadingScreen';
 
 export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -57,18 +27,5 @@ export default function Layout() {
     return <LoginScreen />;
   }
 
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => renderTabBarIcon(route.name, color, size),
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: 'gray',
-        headerShown: false, // Hide the header for all screens
-      })}
-    >
-      <Tab.Screen name="FeedScreen" component={FeedScreen} />
-      <Tab.Screen name="ChatListScreen" component={ChatListScreen} />
-      <Tab.Screen name="SettingScreen" component={SettingScreen} />
-    </Tab.Navigator>
-  );
+  return <AppTabs />;
 }
