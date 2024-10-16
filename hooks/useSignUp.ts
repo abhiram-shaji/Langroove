@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; // Firebase auth methods
 import { auth } from '../firebase'; // Assuming firebase is correctly configured in firebase.ts
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack'; // Import StackNavigationProp
+import { RootStackParamList } from '../App'; // Assuming you have a type for navigation params
 
 interface Credentials {
   name: string;
@@ -19,6 +22,9 @@ export const useSignUp = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // Use StackNavigationProp instead of NavigationProp
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const handleInputChange = (field: keyof Credentials, value: string) => {
     setCredentials({ ...credentials, [field]: value });
@@ -53,7 +59,7 @@ export const useSignUp = () => {
       console.log('Sign-up successful for:', email);
 
       // After successful sign-up, navigate to the login screen
-      router.replace('/LoginScreen'); // Replace the current screen with the login screen in Expo Router
+      navigation.replace('Login');  // Use navigation.replace to go to the login screen
 
     } catch (error: any) {
       setError(error.message);

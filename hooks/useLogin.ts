@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigation, NavigationProp } from '@react-navigation/native';  // Import React Navigation hook and types
-import { RootStackParamList } from '../App';  // Import the type for navigation params
+import { RootStackParamList } from '../App'; 
 
 interface Credentials {
   username: string;
