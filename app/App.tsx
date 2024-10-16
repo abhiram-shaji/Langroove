@@ -1,8 +1,7 @@
 import { registerRootComponent } from 'expo';
 import React, { useState, useEffect, useRef } from 'react';
-import { NavigationContainer, NavigationContainerRefWithCurrent } from '@react-navigation/native'; // Correct import
+import { NavigationContainer, NavigationContainerRefWithCurrent } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View, Text } from 'react-native';
 
 // Import your screens
 import LoginScreen from './LoginScreen';
@@ -18,17 +17,17 @@ type RootStackParamList = {
   Feed: undefined;
 };
 
+// Create stack navigator
 const Stack = createStackNavigator<RootStackParamList>();
 
-const App = () => {
+// Main App Component
+const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  
-  // Use correct type for navigationRef with the defined route params
   const navigationRef = useRef<NavigationContainerRefWithCurrent<RootStackParamList>>(null);
 
   useEffect(() => {
+    // Navigate to Feed if the user is logged in
     if (loggedIn && navigationRef.current) {
-      // Ensure navigationRef is ready before navigating
       navigationRef.current.navigate('Feed');
     }
   }, [loggedIn]);
@@ -45,7 +44,7 @@ const App = () => {
   );
 };
 
-export default App;
-
-// Register the component with Expo
+// Register the root component
 registerRootComponent(App);
+
+export default App;
