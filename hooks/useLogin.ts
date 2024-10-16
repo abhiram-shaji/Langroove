@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'; // Import useEffect
+import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; // Import Firebase auth from your firebase setup
+import { auth } from '../firebase';
+import { useNavigation, NavigationProp } from '@react-navigation/native';  // Import React Navigation hook and types
+import { RootStackParamList } from '../App';  // Import the type for navigation params
 
 interface Credentials {
   username: string;
@@ -15,8 +17,10 @@ export const useLogin = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);  // Track login success state
+  const [loggedIn, setLoggedIn] = useState(false);
 
+  // Correctly type the navigation prop with RootStackParamList
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   // Handle input change for username and password
   const handleInputChange = (field: keyof Credentials, value: string) => {
@@ -35,31 +39,29 @@ export const useLogin = () => {
     setLoading(true);
 
     try {
-      // Use Firebase's signInWithEmailAndPassword function to authenticate
       await signInWithEmailAndPassword(auth, username, password);
       Alert.alert('Success', `Logged in as ${username}`);
-      setLoggedIn(true);  // Set login success state to true
+      setLoggedIn(true);
     } catch (error: any) {
-      // Handle Firebase authentication errors
       Alert.alert('Login Failed', error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Use useEffect to navigate after login success
+  // Navigate after login success
   useEffect(() => {
     if (loggedIn) {
-      router.push('/FeedScreen');  // Navigate only after login success is set
+      navigation.navigate('Feed');  // Use navigation to go to FeedScreen
     }
-  }, [loggedIn, router]);  // Corrected useEffect dependency list
+  }, [loggedIn, navigation]);
 
   const navigateToSignUp = () => {
-    router.push('/SignUpScreen');
+    navigation.navigate('SignUp');
   };
 
   const navigateToForgotPassword = () => {
-    router.push('/ForgotPasswordScreen');
+    navigation.navigate('ForgotPassword');
   };
 
   return {
