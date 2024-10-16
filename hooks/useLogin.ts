@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'; // Import useEffect
 import { Alert } from 'react-native';
-import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase'; // Import Firebase auth from your firebase setup
 
@@ -17,7 +16,7 @@ export const useLogin = () => {
 
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);  // Track login success state
-  const router = useRouter();
+
 
   // Handle input change for username and password
   const handleInputChange = (field: keyof Credentials, value: string) => {

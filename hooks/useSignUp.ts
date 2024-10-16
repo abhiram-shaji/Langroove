@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; // Firebase auth methods
 import { auth } from '../firebase'; // Assuming firebase is correctly configured in firebase.ts
-import { useRouter } from 'expo-router'; // For navigation with Expo Router
 
 interface Credentials {
   name: string;
@@ -20,8 +19,6 @@ export const useSignUp = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const router = useRouter(); // Use Expo router to navigate
 
   const handleInputChange = (field: keyof Credentials, value: string) => {
     setCredentials({ ...credentials, [field]: value });

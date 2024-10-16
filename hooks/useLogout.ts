@@ -1,6 +1,5 @@
 // /hooks/useLogout.ts
 
-import { useRouter } from 'expo-router';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase'; // Import Firebase auth instance
 import { Alert } from 'react-native';
