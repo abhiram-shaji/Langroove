@@ -5,11 +5,17 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SettingsButton from '../components/SettingsButton';
 import { styles } from '../styles/SettingsScreenStyles';
-import BottomNavBar from '../components/BottomNavBar';  // Import the BottomNavBar
-import { useLogout } from '../hooks/useLogout'; // Import the useLogout hook
+import BottomNavBar from '../components/BottomNavBar';
+import { useLogout } from '../hooks/useLogout';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack'; // Import StackNavigationProp
+import { RootStackParamList } from '../app/App'; // Adjust the path to where RootStackParamList is defined
+
+type SettingsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Settings'>;
 
 const SettingsScreen: React.FC = () => {
-  const { handleLogout } = useLogout(); // Destructure the handleLogout function
+  const { handleLogout } = useLogout();
+  const navigation = useNavigation<SettingsScreenNavigationProp>(); // Use typed navigation
 
   return (
     <SafeAreaProvider>
@@ -17,7 +23,7 @@ const SettingsScreen: React.FC = () => {
         {/* Profile Button */}
         <SettingsButton 
           title="Profile" 
-          onPress={() => console.log('Profile pressed')} 
+          onPress={() => navigation.navigate('Profile')}  // Correctly typed navigation
         />
 
         {/* Privacy Button */}
@@ -40,7 +46,7 @@ const SettingsScreen: React.FC = () => {
         
       </View>
       <BottomNavBar />
-      </SafeAreaProvider>
+    </SafeAreaProvider>
   );
 };
 
