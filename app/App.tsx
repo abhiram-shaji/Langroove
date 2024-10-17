@@ -1,6 +1,9 @@
+// App.tsx
+
 import { registerRootComponent } from 'expo';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -11,6 +14,10 @@ import ForgotPasswordScreen from './ForgotPasswordScreen';
 import FeedScreen from './FeedScreen';
 import ChatListScreen from './ChatListScreen';
 import SettingsScreen from './SettingScreen';
+
+// Import Firebase Auth
+import { auth } from '../firebase'; // Adjust the path as necessary
+import { onAuthStateChanged } from 'firebase/auth';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -24,10 +31,30 @@ export type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setLoggedIn(!!user); // Set loggedIn to true if user exists
+    });
+
+    // Clean up the subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+  if (loggedIn === null) {
+    // Show a loading indicator while checking login status
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login" // Start with the Login screen
+        initialRouteName={loggedIn ? 'Feed' : 'Login'}
         screenOptions={{
           headerShown: false,
         }}
