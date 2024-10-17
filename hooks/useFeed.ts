@@ -5,8 +5,8 @@ import { useState } from 'react';
 // Dummy data for topics
 const initialTopics = [
   { id: 1, title: 'James', description: 'Suggest me some workouts' },
-  { id: 2, title: 'Kevin', description: 'How is your morning?' },
-  { id: 3, title: 'Lisa', description: 'Plans for the day?' },
+  { id: 2, title: 'Kevin', description: 'How is your day?' },
+  { id: 3, title: 'Lisa', description: 'Plans for summer?' },
 ];
 
 export const useFeed = () => {
