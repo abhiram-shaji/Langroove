@@ -6,6 +6,7 @@ import { Appbar } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatItem from '../components/ChatItem';
 import { useChatList } from '../hooks/useChatList';
+import BottomNavBar from '../components/BottomNavBar';  // Import the BottomNavBar
 import { styles } from '../styles/ChatListStyles';
 
 const ChatListScreen: React.FC = () => {

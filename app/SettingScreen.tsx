@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SettingsButton from '../components/SettingsButton';
 import { styles } from '../styles/SettingsScreenStyles';
+import BottomNavBar from '../components/BottomNavBar';  // Import the BottomNavBar
 import { useLogout } from '../hooks/useLogout'; // Import the useLogout hook
 
 const SettingsScreen: React.FC = () => {
@@ -43,7 +44,8 @@ const SettingsScreen: React.FC = () => {
           onPress={() => console.log('Delete Profile pressed')} 
         />
       </View>
-    </SafeAreaProvider>
+      <BottomNavBar />
+      </SafeAreaProvider>
   );
 };
 
