@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { AuthStackParamList } from '../app/App'; 
+import { RootStackParamList } from '../app/App'; 
 
 interface Credentials {
   username: string;
@@ -20,7 +20,7 @@ export const useLogin = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   // Type the navigation prop with RootStackParamList to ensure correct route navigation
-  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   // Handle input change for username and password
   const handleInputChange = (field: keyof Credentials, value: string) => {

@@ -1,9 +1,8 @@
 import { registerRootComponent } from 'expo';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Import your screens
 import LoginScreen from './LoginScreen';
@@ -13,61 +12,36 @@ import FeedScreen from './FeedScreen';
 import ChatListScreen from './ChatListScreen';
 import SettingsScreen from './SettingScreen';
 
-export type AuthStackParamList = {
+export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
-  Feed: undefined;
   ForgotPassword: undefined;
-};
-
-export type AppStackParamList = {
   Feed: undefined;
   ChatList: undefined;
   Settings: undefined;
 };
 
-// Create stack navigators
-const AuthStack = createStackNavigator<AuthStackParamList>();
-const AppStack = createStackNavigator<AppStackParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
-// Authentication stack navigator
-const AuthStackNavigator: React.FC = () => {
-  return (
-    <AuthStack.Navigator initialRouteName="Login">
-      <AuthStack.Screen name="Login" component={LoginScreen} />
-      <AuthStack.Screen name="SignUp" component={SignUpScreen} />
-      <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-    </AuthStack.Navigator>
-  );
-};
-
-// Main app stack navigator
-const AppStackNavigator: React.FC = () => {
-  return (
-    <AppStack.Navigator initialRouteName="Feed">
-      <AppStack.Screen name="Feed" component={FeedScreen} />
-      <AppStack.Screen name="ChatList" component={ChatListScreen} />
-      <AppStack.Screen name="Settings" component={SettingsScreen} />
-    </AppStack.Navigator>
-  );
-};
-
-// Main App Component
 const App: React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const token = await AsyncStorage.getItem('userToken');
-      setLoggedIn(!!token);  // If token exists, set logged in to true
-    };
-
-    checkLoginStatus();
-  }, []);
-
   return (
     <NavigationContainer>
-      {loggedIn ? <AppStackNavigator /> : <AuthStackNavigator />} 
+      <Stack.Navigator
+        initialRouteName="Login" // Start with the Login screen
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        {/* Authentication Screens */}
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+
+        {/* Main App Screens */}
+        <Stack.Screen name="Feed" component={FeedScreen} />
+        <Stack.Screen name="ChatList" component={ChatListScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

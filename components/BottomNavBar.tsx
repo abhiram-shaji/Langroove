@@ -3,11 +3,11 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { bottomNavBarStyles } from '../styles/BottomNavBarStyles';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { AppStackParamList } from '../app/App';  // Import the AppStackParamList for the main app flow
+import { RootStackParamList } from '../app/App';  // Import the AppStackParamList for the main app flow
 
 // Correctly type the navigation hook with AppStackParamList
 const BottomNavBar: React.FC = () => {
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();  // Use AppStackParamList for app navigation
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();  // Use AppStackParamList for app navigation
 
   return (
     <View style={bottomNavBarStyles.container}>
