@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
-import { useNavigation, NavigationProp } from '@react-navigation/native';  // Import React Navigation hook and types
-import { RootStackParamList } from '../App'; 
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { AuthStackParamList } from '../app/App'; 
 
 interface Credentials {
   username: string;
@@ -19,12 +19,12 @@ export const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // Correctly type the navigation prop with RootStackParamList
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  // Type the navigation prop with RootStackParamList to ensure correct route navigation
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   // Handle input change for username and password
   const handleInputChange = (field: keyof Credentials, value: string) => {
-    setCredentials({ ...credentials, [field]: value });
+    setCredentials((prev) => ({ ...prev, [field]: value }));
   };
 
   // Handle login logic with Firebase Authentication
@@ -39,9 +39,10 @@ export const useLogin = () => {
     setLoading(true);
 
     try {
+      // Firebase auth login
       await signInWithEmailAndPassword(auth, username, password);
       Alert.alert('Success', `Logged in as ${username}`);
-      setLoggedIn(true);
+      setLoggedIn(true); // Successfully logged in
     } catch (error: any) {
       Alert.alert('Login Failed', error.message);
     } finally {
@@ -49,19 +50,20 @@ export const useLogin = () => {
     }
   };
 
-  // Navigate after login success
+  // Navigate to the FeedScreen once logged in
   useEffect(() => {
     if (loggedIn) {
-      navigation.navigate('Feed');  // Use navigation to go to FeedScreen
+      navigation.navigate('Feed'); // Navigate to Feed screen after successful login
     }
   }, [loggedIn, navigation]);
 
+  // Navigation handlers for sign-up and forgot password
   const navigateToSignUp = () => {
-    navigation.navigate('SignUp');
+    navigation.navigate('SignUp'); // Navigate to SignUp screen
   };
 
   const navigateToForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+    navigation.navigate('ForgotPassword'); // Navigate to ForgotPassword screen
   };
 
   return {

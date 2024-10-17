@@ -2,24 +2,29 @@ import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { bottomNavBarStyles } from '../styles/BottomNavBarStyles';
-import { useNavigation } from '../hooks/useNavigation'; // Custom hook for navigation
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { AppStackParamList } from '../app/App';  // Import the AppStackParamList for the main app flow
 
+// Correctly type the navigation hook with AppStackParamList
 const BottomNavBar: React.FC = () => {
-  const { navigateTo } = useNavigation();
+  const navigation = useNavigation<NavigationProp<AppStackParamList>>();  // Use AppStackParamList for app navigation
 
   return (
     <View style={bottomNavBarStyles.container}>
-      <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigateTo('/FeedScreen')}>
+      {/* Navigate to Feed screen */}
+      <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('Feed')}>
         <Ionicons name="home-outline" size={24} color="gray" />
         <Text style={bottomNavBarStyles.label}>Feed</Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigateTo('/ChatListScreen')}>
+
+      {/* Navigate to ChatList screen */}
+      <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('ChatList')}>
         <Ionicons name="chatbubble-outline" size={24} color="gray" />
         <Text style={bottomNavBarStyles.label}>Messages</Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigateTo('/SettingScreen')}>
+
+      {/* Navigate to Settings screen */}
+      <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('Settings')}>
         <Ionicons name="settings-outline" size={24} color="gray" />
         <Text style={bottomNavBarStyles.label}>Settings</Text>
       </TouchableOpacity>

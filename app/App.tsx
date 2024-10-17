@@ -1,45 +1,73 @@
 import { registerRootComponent } from 'expo';
-import React, { useState, useEffect, useRef } from 'react';
-import { NavigationContainer, NavigationContainerRefWithCurrent } from '@react-navigation/native';
+
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Import your screens
 import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import FeedScreen from './FeedScreen';
+import ChatListScreen from './ChatListScreen';
+import SettingsScreen from './SettingScreen';
 
-// Define the type for your navigation routes
-type RootStackParamList = {
+export type AuthStackParamList = {
   Login: undefined;
   SignUp: undefined;
-  ForgotPassword: undefined;
   Feed: undefined;
+  ForgotPassword: undefined;
 };
 
-// Create stack navigator
-const Stack = createStackNavigator<RootStackParamList>();
+export type AppStackParamList = {
+  Feed: undefined;
+  ChatList: undefined;
+  Settings: undefined;
+};
+
+// Create stack navigators
+const AuthStack = createStackNavigator<AuthStackParamList>();
+const AppStack = createStackNavigator<AppStackParamList>();
+
+// Authentication stack navigator
+const AuthStackNavigator: React.FC = () => {
+  return (
+    <AuthStack.Navigator initialRouteName="Login">
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="SignUp" component={SignUpScreen} />
+      <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+    </AuthStack.Navigator>
+  );
+};
+
+// Main app stack navigator
+const AppStackNavigator: React.FC = () => {
+  return (
+    <AppStack.Navigator initialRouteName="Feed">
+      <AppStack.Screen name="Feed" component={FeedScreen} />
+      <AppStack.Screen name="ChatList" component={ChatListScreen} />
+      <AppStack.Screen name="Settings" component={SettingsScreen} />
+    </AppStack.Navigator>
+  );
+};
 
 // Main App Component
 const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const navigationRef = useRef<NavigationContainerRefWithCurrent<RootStackParamList>>(null);
 
   useEffect(() => {
-    // Navigate to Feed if the user is logged in
-    if (loggedIn && navigationRef.current) {
-      navigationRef.current.navigate('Feed');
-    }
-  }, [loggedIn]);
+    const checkLoginStatus = async () => {
+      const token = await AsyncStorage.getItem('userToken');
+      setLoggedIn(!!token);  // If token exists, set logged in to true
+    };
+
+    checkLoginStatus();
+  }, []);
 
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="Feed" component={FeedScreen} />
-      </Stack.Navigator>
+    <NavigationContainer>
+      {loggedIn ? <AppStackNavigator /> : <AuthStackNavigator />}  {/* Conditional rendering based on login */}
     </NavigationContainer>
   );
 };
