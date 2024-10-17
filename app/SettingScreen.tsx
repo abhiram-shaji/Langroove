@@ -38,11 +38,6 @@ const SettingsScreen: React.FC = () => {
           onPress={handleLogout} // Call the logout function
         />
         
-        {/* Delete Profile Button */}
-        <SettingsButton 
-          title="Delete Profile" 
-          onPress={() => console.log('Delete Profile pressed')} 
-        />
       </View>
       <BottomNavBar />
       </SafeAreaProvider>
