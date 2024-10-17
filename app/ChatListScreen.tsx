@@ -44,6 +44,7 @@ const ChatListScreen: React.FC = () => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.chatList}
       />
+      <BottomNavBar />
     </SafeAreaProvider>
   );
 };
