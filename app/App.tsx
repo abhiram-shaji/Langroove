@@ -67,7 +67,7 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      {loggedIn ? <AppStackNavigator /> : <AuthStackNavigator />}  {/* Conditional rendering based on login */}
+      {loggedIn ? <AppStackNavigator /> : <AuthStackNavigator />} 
     </NavigationContainer>
   );
 };
