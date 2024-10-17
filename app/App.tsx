@@ -15,6 +15,10 @@ import FeedScreen from './FeedScreen';
 import ChatListScreen from './ChatListScreen';
 import SettingsScreen from './SettingScreen';
 
+import ChatScreen from './ChatScreen';
+import FriendListScreen from './FriendListScreen';
+import ProfileScreen from './ProfileScreen';
+
 // Import Firebase Auth
 import { auth } from '../firebase'; // Adjust the path as necessary
 import { onAuthStateChanged } from 'firebase/auth';
@@ -26,6 +30,9 @@ export type RootStackParamList = {
   Feed: undefined;
   ChatList: undefined;
   Settings: undefined;
+  Chat: undefined;
+  FriendList: undefined;
+  Profile: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -68,6 +75,11 @@ const App: React.FC = () => {
         <Stack.Screen name="Feed" component={FeedScreen} />
         <Stack.Screen name="ChatList" component={ChatListScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+
+        {/* New Screens */}
+        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen name="FriendList" component={FriendListScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
