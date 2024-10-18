@@ -30,6 +30,7 @@ const FeedScreen: React.FC = () => {
               key={topic.id}
               description={topic.description} // Only using the description now
               ownerName={topic.ownerName}
+              ownerId={topic.ownerId} // Add this line
               onPress={() => handleTopicPress(topic.ownerId)} // Passing ownerId to navigate
             />
           ))
