@@ -1,11 +1,13 @@
+// /screens/ChatScreen.tsx
+
 import React from 'react';
-import { View, FlatList, KeyboardAvoidingView } from 'react-native';
+import { FlatList, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import { useChat } from '../hooks/useChat';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../app/App'; // Adjust the path to where RootStackParamList is defined
+import { RootStackParamList } from '../app/App';
 import { styles } from '../styles/ChatScreenStyles';
 
 type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
@@ -13,7 +15,7 @@ type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
 const ChatScreen: React.FC = () => {
   const route = useRoute<ChatScreenRouteProp>();
   const { recipientId } = route.params; // Get recipientId from route params
-  const { message, setMessage, messages, sendMessage } = useChat(recipientId);
+  const { message, setMessage, messages, sendMessage, avatars } = useChat(recipientId);
 
   return (
     <SafeAreaProvider>
@@ -21,7 +23,12 @@ const ChatScreen: React.FC = () => {
         <FlatList
           data={messages}
           renderItem={({ item }) => (
-            <ChatMessage text={item.text} sender={item.sender} />
+            <ChatMessage
+              text={item.text}
+              senderId={item.senderId}
+              senderType={item.senderType}
+              avatarUri={avatars[item.senderId]}
+            />
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatArea}

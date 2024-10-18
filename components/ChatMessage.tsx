@@ -6,12 +6,13 @@ import { styles } from '../styles/ChatMessageStyles';
 
 type ChatMessageProps = {
   text: string;
-  sender: 'me' | 'other';
+  senderId: string;
+  senderType: 'me' | 'other';
+  avatarUri?: string;
 };
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ text, sender }) => {
-  const isOther = sender === 'other';
-  const avatarUrl = `https://robohash.org/${sender}`;
+const ChatMessage: React.FC<ChatMessageProps> = ({ text, senderId, senderType, avatarUri }) => {
+  const isOther = senderType === 'other';
 
   return (
     <View
@@ -20,9 +21,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ text, sender }) => {
         isOther ? styles.receivedMessageContainer : styles.sentMessageContainer,
       ]}
     >
-      {isOther && (
+      {isOther && avatarUri && (
         <Image
-          source={{ uri: avatarUrl }}
+          source={{ uri: avatarUri }}
           style={styles.avatar}
         />
       )}
