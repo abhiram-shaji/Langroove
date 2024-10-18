@@ -1,15 +1,19 @@
-// /screens/ChatScreen.tsx
-
 import React from 'react';
 import { View, FlatList, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import { useChat } from '../hooks/useChat';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../app/App'; // Adjust the path to where RootStackParamList is defined
 import { styles } from '../styles/ChatScreenStyles';
 
+type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
+
 const ChatScreen: React.FC = () => {
-  const { message, setMessage, messages, sendMessage } = useChat();
+  const route = useRoute<ChatScreenRouteProp>();
+  const { recipientId } = route.params; // Get recipientId from route params
+  const { message, setMessage, messages, sendMessage } = useChat(recipientId);
 
   return (
     <SafeAreaProvider>

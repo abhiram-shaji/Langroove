@@ -28,7 +28,7 @@ export type RootStackParamList = {
   Feed: undefined;
   ChatList: undefined;
   Settings: undefined;
-  Chat: undefined;
+  Chat: { recipientId: string }; // Chat now expects recipientId parameter
   FriendList: undefined;
   AddTopic: undefined;
   Profile: { ownerId: string }; // Profile now expects ownerId parameter
@@ -77,7 +77,11 @@ const App: React.FC = () => {
         <Stack.Screen name="Settings" component={SettingsScreen} />
 
         {/* New Screens */}
-        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen 
+          name="Chat" 
+          component={ChatScreen} 
+          initialParams={{ recipientId: '' }} // Ensure recipientId is set
+        />
         <Stack.Screen name="FriendList" component={FriendListScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} /> 
         <Stack.Screen name="Friends" component={FriendListScreen} />
