@@ -1,5 +1,3 @@
-//useChatList.ts
-
 import { useEffect, useState } from 'react';
 import { db } from '../firebase'; // Import Firestore
 import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';

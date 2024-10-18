@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { db } from '../firebase';
-import { collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, setDoc } from 'firebase/firestore';
-import { auth } from '../firebase';
+import { db } from '../firebase'; // Firestore database import
+import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { auth } from '../firebase'; // Firebase Auth import
 
 type Message = {
   id: string;
@@ -12,7 +12,7 @@ type Message = {
 export const useChat = (recipientId: string) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
-  const currentUser = auth.currentUser;
+  const currentUser = auth.currentUser; // Get current user
 
   useEffect(() => {
     if (!currentUser || !recipientId) return;
@@ -27,9 +27,9 @@ export const useChat = (recipientId: string) => {
         return {
           id: doc.id,
           text: data.text,
-          sender: data.sender === currentUser.uid ? 'me' : 'other', // Correctly map the sender type
-        };
-      }) as Message[]; // Ensure proper type casting here
+          sender: data.sender === currentUser.uid ? 'me' : 'other', // Cast 'sender' as 'me' or 'other'
+        } as Message; // Ensure correct typing here
+      });
       setMessages(fetchedMessages);
     });
 
@@ -40,10 +40,9 @@ export const useChat = (recipientId: string) => {
     if (!message.trim() || !currentUser) return;
 
     try {
-      const chatId = [currentUser.uid, recipientId].sort().join('_');
+      const chatId = [currentUser.uid, recipientId].sort().join('_'); // Create a chat ID
       const chatRef = collection(db, 'chats', chatId, 'messages');
-
-      // Add the message to the messages collection
+      
       await addDoc(chatRef, {
         text: message,
         sender: currentUser.uid,
@@ -51,16 +50,7 @@ export const useChat = (recipientId: string) => {
         createdAt: new Date(),
       });
 
-      // Ensure the chat metadata document exists and update it
-      const chatMetaRef = doc(db, 'chats', chatId);
-      await setDoc(chatMetaRef, {
-        participants: [currentUser.uid, recipientId],
-        lastMessage: { text: message, sender: currentUser.uid },
-        lastMessageTimestamp: new Date(),
-        unreadCount: 0, // You might adjust this based on your app's logic
-      }, { merge: true }); // Merge ensures we don't overwrite existing fields
-
-      setMessage('');
+      setMessage(''); // Clear the input field after sending the message
     } catch (error) {
       console.error('Error sending message: ', error);
     }
