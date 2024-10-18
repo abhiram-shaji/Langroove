@@ -1,15 +1,19 @@
-// /screens/ProfileScreen.tsx
-
 import React from 'react';
 import { View } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import ProfileAvatar from '../components/ProfileAvatar';
 import ProfileInfo from '../components/ProfileInfo';
 import { styles } from '../styles/ProfileScreenStyles';
+import { RootStackParamList } from '../app/App'; // Adjust the path if necessary
+
+// Make sure the route refers to 'Profile' instead of 'ProfileScreen'
+type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>;
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
+  const route = useRoute<ProfileScreenRouteProp>();
+  const { ownerId } = route.params; // Get ownerId from navigation params
 
   return (
     <View style={styles.container}>
@@ -22,10 +26,10 @@ const ProfileScreen: React.FC = () => {
       />
 
       {/* Profile Avatar Section */}
-      <ProfileAvatar />
+      <ProfileAvatar userId={ownerId} /> 
 
       {/* User Info Section */}
-      <ProfileInfo />
+      <ProfileInfo userId={ownerId} /> 
     </View>
   );
 };

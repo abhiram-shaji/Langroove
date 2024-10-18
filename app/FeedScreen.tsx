@@ -15,8 +15,9 @@ const FeedScreen: React.FC = () => {
     navigation.navigate('AddTopic');
   };
 
-  const handleTopicPress = (topicDescription: string) => {
-    // Adjust as needed for handling topic press with description
+  // Updated to navigate to the profile screen when the topic is pressed
+  const handleTopicPress = (ownerId: string) => {
+    navigation.navigate('Profile', { ownerId });
   };
 
   return (
@@ -29,7 +30,7 @@ const FeedScreen: React.FC = () => {
               key={topic.id}
               description={topic.description} // Only using the description now
               ownerName={topic.ownerName}
-              onPress={() => handleTopicPress(topic.description)} // Adjusted to pass description
+              onPress={() => handleTopicPress(topic.ownerId)} // Passing ownerId to navigate
             />
           ))
         ) : (

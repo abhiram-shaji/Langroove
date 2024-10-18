@@ -4,20 +4,23 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { styles } from '../styles/ProfileScreenStyles';
-import { auth, db } from '../firebase'; // Ensure you're importing Firebase properly
+import { db } from '../firebase'; // Ensure you're importing Firebase properly
 import { doc, getDoc } from 'firebase/firestore';
 
-const ProfileInfo: React.FC = () => {
+interface ProfileInfoProps {
+  userId: string; // Accept userId as prop
+}
+
+const ProfileInfo: React.FC<ProfileInfoProps> = ({ userId }) => {
   const [name, setName] = useState<string>(''); // State to store user's name
   const [loading, setLoading] = useState<boolean>(true); // Loading state
 
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        const user = auth.currentUser;
-        if (user) {
-          // Fetch the user document from Firestore
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userId) {
+          // Fetch the user document from Firestore using userId
+          const userDoc = await getDoc(doc(db, 'users', userId));
           if (userDoc.exists()) {
             const userData = userDoc.data();
             setName(userData?.name || ''); // Set the name if it exists in Firestore
@@ -33,7 +36,7 @@ const ProfileInfo: React.FC = () => {
     };
 
     fetchUserName();
-  }, []);
+  }, [userId]);
 
   if (loading) {
     return (

@@ -1,5 +1,3 @@
-// App.tsx
-
 import { registerRootComponent } from 'expo';
 
 import React, { useState, useEffect } from 'react';
@@ -14,11 +12,9 @@ import ForgotPasswordScreen from './ForgotPasswordScreen';
 import FeedScreen from './FeedScreen';
 import ChatListScreen from './ChatListScreen';
 import SettingsScreen from './SettingScreen';
-
 import ChatScreen from './ChatScreen';
 import FriendListScreen from './FriendListScreen';
 import ProfileScreen from './ProfileScreen';
-
 import AddTopicScreen from './AddTopicScreen';
 
 // Import Firebase Auth
@@ -35,7 +31,7 @@ export type RootStackParamList = {
   Chat: undefined;
   FriendList: undefined;
   AddTopic: undefined;
-  Profile: undefined;
+  Profile: { ownerId: string }; // Profile now expects ownerId parameter
   Friends: undefined;
 };
 
@@ -83,7 +79,7 @@ const App: React.FC = () => {
         {/* New Screens */}
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="FriendList" component={FriendListScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} /> 
         <Stack.Screen name="Friends" component={FriendListScreen} />
         <Stack.Screen name="AddTopic" component={AddTopicScreen} />
       </Stack.Navigator>

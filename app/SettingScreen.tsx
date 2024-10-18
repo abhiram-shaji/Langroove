@@ -1,5 +1,3 @@
-// /screens/SettingsScreen.tsx
-
 import React from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -10,6 +8,7 @@ import { useLogout } from "../hooks/useLogout";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack"; // Import StackNavigationProp
 import { RootStackParamList } from "../app/App"; // Adjust the path to where RootStackParamList is defined
+import { auth } from "../firebase"; // Import Firebase Auth
 
 type SettingsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -19,6 +18,13 @@ type SettingsScreenNavigationProp = StackNavigationProp<
 const SettingsScreen: React.FC = () => {
   const { handleLogout } = useLogout();
   const navigation = useNavigation<SettingsScreenNavigationProp>(); // Use typed navigation
+  const user = auth.currentUser; // Get the currently logged-in user
+
+  const handleProfilePress = () => {
+    if (user) {
+      navigation.navigate("Profile", { ownerId: user.uid }); // Navigate to the user's own profile
+    }
+  };
 
   return (
     <SafeAreaProvider>
@@ -26,12 +32,12 @@ const SettingsScreen: React.FC = () => {
         {/* Profile Button */}
         <SettingsButton
           title="Profile"
-          onPress={() => navigation.navigate("Profile")} // Correctly typed navigation
+          onPress={handleProfilePress} // Navigate to own profile
         />
 
         <SettingsButton
           title="Friends"
-          onPress={() => navigation.navigate("Friends")} // Correctly typed navigation
+          onPress={() => navigation.navigate("Friends")} 
         />
 
         {/* Privacy Button */}

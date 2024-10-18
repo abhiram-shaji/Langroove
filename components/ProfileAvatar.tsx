@@ -4,27 +4,28 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { styles } from '../styles/ProfileScreenStyles';
-import { auth, db } from '../firebase'; // Assuming these are exported from firebase.ts
+import { db } from '../firebase'; // Assuming these are exported from firebase.ts
 import { doc, getDoc } from 'firebase/firestore';
 
-const ProfileAvatar: React.FC = () => {
+interface ProfileAvatarProps {
+  userId: string; // Accept userId as prop
+}
+
+const ProfileAvatar: React.FC<ProfileAvatarProps> = ({ userId }) => {
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
 
-  // Fetch user data, including the avatar URL, when the component mounts
   useEffect(() => {
     fetchUserAvatar();
-  }, []);
+  }, [userId]);
 
   const fetchUserAvatar = async () => {
     try {
-      const user = auth.currentUser;
-      if (user) {
-        // Get the user's document from Firestore
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userId) {
+        // Get the user's document from Firestore using userId
+        const userDoc = await getDoc(doc(db, 'users', userId));
         
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          // Set the avatar URI from Firestore
           setAvatarUri(userData?.avatar || 'https://robohash.org/default-avatar.png');
         }
       }
