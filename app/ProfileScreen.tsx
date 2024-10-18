@@ -46,7 +46,7 @@ const ProfileScreen: React.FC = () => {
   const handleSendMessage = () => {
     console.log('Send Message pressed');
     // Navigate to chat screen or handle sending message logic
-    //navigation.navigate('Chat', { recipientId: ownerId });
+    navigation.navigate('ChatScreen', { recipientId: ownerId });
   };
 
   return (

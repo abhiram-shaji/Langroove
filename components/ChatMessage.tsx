@@ -1,9 +1,8 @@
 // /components/ChatMessage.tsx
 
 import React from 'react';
-import { Card } from 'react-native-paper';
-import { Text, View } from 'react-native';
-import { styles } from '../styles/ChatScreenStyles';
+import { View, Text, Image } from 'react-native';
+import { styles } from '../styles/ChatMessageStyles';
 
 type ChatMessageProps = {
   text: string;
@@ -11,12 +10,26 @@ type ChatMessageProps = {
 };
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ text, sender }) => {
+  const isOther = sender === 'other';
+  const avatarUrl = `https://robohash.org/${sender}`;
+
   return (
-    <Card style={sender === 'me' ? styles.sentMessage : styles.receivedMessage}>
-      <Card.Content>
+    <View
+      style={[
+        styles.messageContainer,
+        isOther ? styles.receivedMessageContainer : styles.sentMessageContainer,
+      ]}
+    >
+      {isOther && (
+        <Image
+          source={{ uri: avatarUrl }}
+          style={styles.avatar}
+        />
+      )}
+      <View style={[styles.message, isOther ? styles.receivedMessage : styles.sentMessage]}>
         <Text>{text}</Text>
-      </Card.Content>
-    </Card>
+      </View>
+    </View>
   );
 };
 
