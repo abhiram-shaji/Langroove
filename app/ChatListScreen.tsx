@@ -1,16 +1,25 @@
-// /screens/ChatListScreen.tsx
-
 import React from 'react';
 import { FlatList, TextInput } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatItem from '../components/ChatItem';
-import { useChatList } from '../hooks/useChatList';
-import BottomNavBar from '../components/BottomNavBar';  // Import the BottomNavBar
+import { useChatList } from '../hooks/useChatList'; // Use the updated hook
+import BottomNavBar from '../components/BottomNavBar';
 import { styles } from '../styles/ChatListStyles';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../app/App';
+
+type ChatListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ChatList'>;
 
 const ChatListScreen: React.FC = () => {
-  const { search, setSearch, filteredChats } = useChatList();
+  const { search, setSearch, filteredChats } = useChatList(); // Fetch chat list from the hook
+  const navigation = useNavigation<ChatListScreenNavigationProp>(); // For navigating to individual chats
+
+  const handleChatPress = (recipientId: string) => {
+    // Navigate to the ChatScreen with the recipientId
+    navigation.navigate('Chat', { recipientId });
+  };
 
   return (
     <SafeAreaProvider>
@@ -32,18 +41,20 @@ const ChatListScreen: React.FC = () => {
         data={filteredChats}
         renderItem={({ item }) => (
           <ChatItem
-            id={item.id}  // Pass the missing 'id' prop here
+            id={item.id}  // Chat ID
             name={item.name}
             avatarUrl={item.avatarUrl}
             lastMessage={item.lastMessage}
             timestamp={item.timestamp}
             unreadCount={item.unreadCount}
-            onPress={() => console.log(`Chat with ${item.name} pressed`)}
+            onPress={() => handleChatPress(item.id)} // Navigate to chat on press
           />
         )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.chatList}
       />
+
+      {/* Bottom Navigation Bar */}
       <BottomNavBar />
     </SafeAreaProvider>
   );

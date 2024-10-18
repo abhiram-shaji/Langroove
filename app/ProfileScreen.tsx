@@ -51,7 +51,7 @@ const ProfileScreen: React.FC = () => {
           Add Friend
         </Button>
         <Button mode="contained" onPress={handleSendMessage} style={styles.button}>
-          Send Message
+          Message
         </Button>
       </View>
     </View>
