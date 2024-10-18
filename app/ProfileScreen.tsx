@@ -1,12 +1,14 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { IconButton, Button } from 'react-native-paper';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'; // Correct import
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import ProfileAvatar from '../components/ProfileAvatar';
 import ProfileInfo from '../components/ProfileInfo';
 import { styles } from '../styles/ProfileScreenStyles';
-import { RootStackParamList } from '../app/App'; // Import your RootStackParamList type
+import { RootStackParamList } from '../app/App';
+import { auth, db } from '../firebase'; // Import Firebase Auth and Firestore
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore'; // Import necessary Firestore functions
 
 // Define navigation prop type
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Profile'>;
@@ -15,35 +17,55 @@ type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Prof
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>;
 
 const ProfileScreen: React.FC = () => {
-  const navigation = useNavigation<ProfileScreenNavigationProp>(); // Use typed navigation
-  const route = useRoute<ProfileScreenRouteProp>(); // Use the useRoute hook to get params
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const route = useRoute<ProfileScreenRouteProp>();
   const { ownerId } = route.params; // Get ownerId from navigation params
+  const currentUser = auth.currentUser; // Get current logged-in user
 
-  const handleAddFriend = () => {
-    console.log('Add Friend pressed');
+  const handleAddFriend = async () => {
+    if (!currentUser) return; // Ensure the user is logged in
+    try {
+      // Get references to both users' Firestore documents
+      const currentUserDocRef = doc(db, 'users', currentUser.uid);
+      const ownerUserDocRef = doc(db, 'users', ownerId);
+
+      // Update both users' friend lists by adding each other's IDs
+      await updateDoc(currentUserDocRef, {
+        friends: arrayUnion(ownerId),
+      });
+      await updateDoc(ownerUserDocRef, {
+        friends: arrayUnion(currentUser.uid),
+      });
+
+      // Show success alert
+      Alert.alert('Success', 'You are now friends!');
+    } catch (error) {
+      console.error('Error adding friend:', error);
+      Alert.alert('Error', 'There was an error adding this user as a friend.');
+    }
   };
 
   const handleSendMessage = () => {
     console.log('Send Message pressed');
-    // Correctly navigate to the Chat screen with recipientId
+    // Navigate to the Chat screen with recipientId
     navigation.navigate('Chat', { recipientId: ownerId });
   };
 
   return (
     <View style={styles.container}>
       {/* Back Button */}
-      <IconButton 
-        icon="arrow-left" 
-        size={24} 
-        onPress={() => navigation.goBack()} 
+      <IconButton
+        icon="arrow-left"
+        size={24}
+        onPress={() => navigation.goBack()}
         style={styles.backButton}
       />
 
       {/* Profile Avatar Section */}
-      <ProfileAvatar userId={ownerId} /> 
+      <ProfileAvatar userId={ownerId} />
 
       {/* User Info Section */}
-      <ProfileInfo userId={ownerId} /> 
+      <ProfileInfo userId={ownerId} />
 
       {/* Add Friend and Send Message Buttons */}
       <View style={styles.buttonContainer}>
