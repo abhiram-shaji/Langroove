@@ -1,5 +1,3 @@
-// /styles/ProfileScreenStyles.ts
-
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -46,5 +44,15 @@ export const styles = StyleSheet.create({
     marginTop: 20,
     fontStyle: 'italic',
     color: '#666',
+  },
+  // New styles for buttons
+  buttonContainer: {
+    marginTop: 40, // Space between the info and buttons
+    flexDirection: 'row',
+    justifyContent: 'space-around', // Distribute buttons evenly
+    paddingHorizontal: 20,
+  },
+  button: {
+    width: '45%', // 45% of width for each button to fit side by side
   },
 });
