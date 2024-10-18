@@ -36,6 +36,7 @@ export type RootStackParamList = {
   FriendList: undefined;
   AddTopic: undefined;
   Profile: undefined;
+  Friends: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -83,6 +84,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="FriendList" component={FriendListScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Friends" component={FriendListScreen} />
         <Stack.Screen name="AddTopic" component={AddTopicScreen} />
       </Stack.Navigator>
     </NavigationContainer>
