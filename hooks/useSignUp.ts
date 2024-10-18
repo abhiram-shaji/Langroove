@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; // Firebase auth methods
-import { auth } from '../firebase'; // Assuming firebase is correctly configured in firebase.ts
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth, db } from '../firebase'; // Correctly import the Firestore instance
+import { doc, setDoc } from 'firebase/firestore'; // Firestore methods for setting data
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack'; // Import StackNavigationProp
-import { RootStackParamList } from '../App'; // Assuming you have a type for navigation params
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../app/App';
 
 interface Credentials {
   name: string;
@@ -23,7 +24,6 @@ export const useSignUp = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Use StackNavigationProp instead of NavigationProp
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const handleInputChange = (field: keyof Credentials, value: string) => {
@@ -51,15 +51,27 @@ export const useSignUp = () => {
       // Firebase sign-up method
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      // Update the user's profile with the display name (name)
       if (userCredential.user) {
+        const { uid } = userCredential.user;
+
+        // Update the user's profile with the display name
         await updateProfile(userCredential.user, { displayName: name });
+
+        // Generate a consistent RoboHash avatar URL based on the user's UID
+        const avatarUrl = `https://robohash.org/${uid}.png`;
+
+        // Store the user's name and avatar in Firestore
+        await setDoc(doc(db, 'users', uid), {
+          name,
+          email,
+          avatar: avatarUrl,
+        });
+
+        console.log('Sign-up successful for:', email);
+
+        // Navigate to the login screen
+        navigation.replace('Login');
       }
-
-      console.log('Sign-up successful for:', email);
-
-      // After successful sign-up, navigate to the login screen
-      navigation.replace('Login');  // Use navigation.replace to go to the login screen
 
     } catch (error: any) {
       setError(error.message);
