@@ -19,6 +19,8 @@ import ChatScreen from './ChatScreen';
 import FriendListScreen from './FriendListScreen';
 import ProfileScreen from './ProfileScreen';
 
+import AddTopicScreen from './AddTopicScreen';
+
 // Import Firebase Auth
 import { auth } from '../firebase'; // Adjust the path as necessary
 import { onAuthStateChanged } from 'firebase/auth';
@@ -32,6 +34,7 @@ export type RootStackParamList = {
   Settings: undefined;
   Chat: undefined;
   FriendList: undefined;
+  AddTopic: undefined;
   Profile: undefined;
 };
 
@@ -80,6 +83,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="FriendList" component={FriendListScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="AddTopic" component={AddTopicScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

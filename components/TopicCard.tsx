@@ -1,5 +1,3 @@
-// /components/TopicCard.tsx
-
 import React, { useState } from 'react';
 import { Card, Avatar } from 'react-native-paper';
 import { topicCardStyles } from '../styles/FeedScreenStyles';
@@ -16,20 +14,20 @@ const generateRandomString = (length: number) => {
 };
 
 interface TopicCardProps {
-  title: string;
-  description: string;
+  description: string; // Now using only description
+  ownerName: string; // Add the ownerName prop
   onPress: () => void;
 }
 
-const TopicCard: React.FC<TopicCardProps> = ({ title, description, onPress }) => {
+const TopicCard: React.FC<TopicCardProps> = ({ description, ownerName, onPress }) => {
   // Generate a random avatar URI for each TopicCard
   const randomAvatarUri = `https://robohash.org/${generateRandomString(10)}.png`;
 
   return (
     <Card style={topicCardStyles.card} onPress={onPress}>
       <Card.Title
-        title={title}
-        subtitle={description}
+        title={description} // Now using description as the title
+        subtitle={`Owner: ${ownerName}`} // OwnerName remains in the subtitle
         left={(props) => <Avatar.Image {...props} size={40} source={{ uri: randomAvatarUri }} />}
       />
     </Card>
