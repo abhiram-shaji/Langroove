@@ -1,43 +1,51 @@
 // /components/ProfileAvatar.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { styles } from '../styles/ProfileScreenStyles';
-
-// Helper function to generate a random string
-const generateRandomString = (length: number) => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
+import { auth, db } from '../firebase'; // Assuming these are exported from firebase.ts
+import { doc, getDoc } from 'firebase/firestore'; // Firestore methods to get data
 
 const ProfileAvatar: React.FC = () => {
-  const [avatarUri, setAvatarUri] = useState('https://robohash.org/avatar.png');
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
 
-  const handleChangeAvatar = () => {
-    // Generate a random string and use it in the avatar URL
-    const randomString = generateRandomString(10);
-    const newAvatarUri = `https://robohash.org/${randomString}.png`;
-    setAvatarUri(newAvatarUri);
-  };
+  // Fetch user data, including the avatar URL, when the component mounts
+  useEffect(() => {
+    const fetchUserAvatar = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          // Get the user's document from Firestore
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            // Set the avatar URI from Firestore
+            setAvatarUri(userData?.avatar || 'https://robohash.org/default-avatar.png');
+          }
+        }
+      } catch (error) {
+        console.log('Error fetching user avatar:', error);
+      }
+    };
+
+    fetchUserAvatar();
+  }, []);
 
   return (
     <View style={styles.avatarContainer}>
       <Avatar.Image 
         size={120} 
-        source={{ uri: avatarUri }} 
+        source={{ uri: avatarUri || 'https://robohash.org/default-avatar.png' }} 
         style={styles.avatar} 
       />
-      <TouchableOpacity onPress={handleChangeAvatar} style={styles.changeAvatarButton}>
-        <Text style={styles.changeAvatarText}>Change Avatar</Text>
+      <TouchableOpacity disabled style={styles.changeAvatarButton}>
+        <Text style={styles.changeAvatarText}>Change User Avatar</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 export default ProfileAvatar;
+
