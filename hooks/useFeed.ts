@@ -1,30 +1,29 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase'; // Import the Firestore database as db
-import { collection, getDocs } from 'firebase/firestore'; // Import Firestore methods
+import { collection, onSnapshot } from 'firebase/firestore'; // Import Firestore real-time methods
 
 export const useFeed = () => {
   const [topics, setTopics] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Function to fetch topics from Firestore
-  const fetchTopics = async () => {
-    try {
-      const topicsCollection = collection(db, 'topics'); // Adjust collection name if necessary
-      const topicsSnapshot = await getDocs(topicsCollection);
-      const topicsData = topicsSnapshot.docs.map(doc => ({
+  useEffect(() => {
+    const topicsCollection = collection(db, 'topics'); // Adjust collection name if necessary
+
+    // Use onSnapshot to get real-time updates
+    const unsubscribe = onSnapshot(topicsCollection, (snapshot) => {
+      const topicsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
       setTopics(topicsData);
-    } catch (error) {
-      console.error('Error fetching topics:', error);
-    } finally {
       setLoading(false);
-    }
-  };
+    }, (error) => {
+      console.error('Error fetching real-time topics:', error);
+      setLoading(false);
+    });
 
-  useEffect(() => {
-    fetchTopics();
+    // Cleanup the listener on unmount
+    return () => unsubscribe();
   }, []); // Empty dependency array ensures the data is fetched only once when the component mounts
 
   // Function to handle pressing a topic (if needed)
