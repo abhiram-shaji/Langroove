@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Button, StyleSheet, Alert } from 'react-native';
+import { View, Button } from 'react-native';
+import TestScreenStyles from '../styles/TestScreenStyles'; // Import the new styles
 
 const ButtonScreen: React.FC = () => {
   const handlePress = () => {
@@ -7,18 +8,10 @@ const ButtonScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={TestScreenStyles.container}> {/* Use the imported styles */}
       <Button title="Press me" onPress={handlePress} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default ButtonScreen;
