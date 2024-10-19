@@ -86,7 +86,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Profile" component={ProfileScreen} /> 
         <Stack.Screen name="Friends" component={FriendListScreen} />
         <Stack.Screen name="AddTopic" component={AddTopicScreen} />
-        <Stack.Screen name="Test" component={TestScreen} />  {/* Add TestScreen */}
+        <Stack.Screen name="Test" component={TestScreen} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
