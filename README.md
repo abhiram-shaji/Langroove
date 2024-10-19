@@ -42,6 +42,23 @@ Welcome to the Langroove project! This app is designed to provide an interactive
 
 ---
 
+## Logic
+
+Here is an overview of the core logic components, with detailed explanations available in the wiki:
+
+- [App.tsx (The entry)](https://github.com/abhiram-shaji/Langroove/wiki/App.tsx-(The-entry))
+- [Chat Logic](https://github.com/abhiram-shaji/Langroove/wiki/Chat-Logic)
+- [Feed Logic](https://github.com/abhiram-shaji/Langroove/wiki/Feed-Logic)
+- [Fetching User Data from Firebase Firestore](https://github.com/abhiram-shaji/Langroove/wiki/Fetching-User-Data-from-Firebase-Firestore)
+- [List of Chats Logic](https://github.com/abhiram-shaji/Langroove/wiki/List-of-Friends-Logic)
+- [List of Friends Logic](https://github.com/abhiram-shaji/Langroove/wiki/List-of-Friends-Logic)
+- [Login Logic](https://github.com/abhiram-shaji/Langroove/wiki/Login-Logic)
+- [Logout Logic](https://github.com/abhiram-shaji/Langroove/wiki/Logout-Logic)
+- [Sign-Up Logic](https://github.com/abhiram-shaji/Langroove/wiki/Sign-Up-Logic)
+
+---
+
+
 ## Prerequisites
 
 Before running the project, ensure you have the following installed on your machine:
