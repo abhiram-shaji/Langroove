@@ -10,7 +10,7 @@ import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import FeedScreen from './FeedScreen';
-import ChatListScreen from './ChatListScreen';
+// import ChatListScreen from './ChatListScreen'; // Commented out ChatListScreen import
 import SettingsScreen from './SettingScreen';
 import ChatScreen from './ChatScreen';
 import FriendListScreen from './FriendListScreen';
@@ -26,7 +26,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   ForgotPassword: undefined;
   Feed: undefined;
-  ChatList: undefined;
+  // ChatList: undefined; // Commented out ChatList from RootStackParamList
   Settings: undefined;
   Chat: { recipientId: string }; // Chat now expects recipientId parameter
   FriendList: undefined;
@@ -66,21 +66,19 @@ const App: React.FC = () => {
           headerShown: false,
         }}
       >
-        {/* Authentication Screens */}
+
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
 
-        {/* Main App Screens */}
         <Stack.Screen name="Feed" component={FeedScreen} />
-        <Stack.Screen name="ChatList" component={ChatListScreen} />
+
         <Stack.Screen name="Settings" component={SettingsScreen} />
 
-        {/* New Screens */}
         <Stack.Screen 
           name="Chat" 
           component={ChatScreen} 
-          initialParams={{ recipientId: '' }} // Ensure recipientId is set
+          initialParams={{ recipientId: '' }} 
         />
         <Stack.Screen name="FriendList" component={FriendListScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} /> 
