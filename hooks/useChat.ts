@@ -1,6 +1,6 @@
 // /hooks/useChat.ts
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { db, auth } from "../firebase"; // Adjust the import paths as necessary
 import {
   collection,
@@ -19,11 +19,46 @@ type Message = {
   senderType: "me" | "other";
 };
 
+type AvatarsMap = { [key: string]: string };
+
 export const useChat = (recipientId: string) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [avatars, setAvatars] = useState<{ [key: string]: string }>({});
-  const currentUser = auth.currentUser; // Get current user
+  const [avatars, setAvatars] = useState<AvatarsMap>({});
+  const currentUser = auth.currentUser;
+
+  const fetchAvatar = useCallback(async (senderId: string) => {
+    try {
+      const userDoc = await getDoc(doc(db, "users", senderId));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        return userData?.avatar || "https://robohash.org/default-avatar.png";
+      }
+    } catch (error) {
+      console.error("Error fetching avatar for:", senderId, error);
+    }
+    return "https://robohash.org/default-avatar.png"; // Default avatar on error or no user
+  }, []);
+
+  const updateAvatars = useCallback(
+    async (senderIds: string[]) => {
+      const newAvatars = { ...avatars };
+      const idsToFetch = senderIds.filter((id) => !avatars[id]);
+
+      if (idsToFetch.length > 0) {
+        const fetchedAvatars = await Promise.all(
+          idsToFetch.map((senderId) => fetchAvatar(senderId))
+        );
+
+        idsToFetch.forEach((senderId, index) => {
+          newAvatars[senderId] = fetchedAvatars[index];
+        });
+
+        setAvatars(newAvatars);
+      }
+    },
+    [avatars, fetchAvatar]
+  );
 
   useEffect(() => {
     if (!currentUser || !recipientId) return;
@@ -32,7 +67,7 @@ export const useChat = (recipientId: string) => {
     const chatRef = collection(db, "chats", chatId, "messages");
     const q = query(chatRef, orderBy("createdAt"));
 
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedMessages = snapshot.docs.map((doc) => {
         const data = doc.data();
         return {
@@ -45,50 +80,21 @@ export const useChat = (recipientId: string) => {
 
       setMessages(fetchedMessages);
 
-      // Collect unique senderIds from the messages
+      // Fetch avatars for new senderIds
       const senderIds = Array.from(
         new Set(fetchedMessages.map((msg) => msg.senderId))
       );
-
-      // Determine which senderIds need their avatars fetched
-      const senderIdsToFetch = senderIds.filter((id) => !avatars[id]);
-
-      // If there are new senderIds, fetch their avatars
-      if (senderIdsToFetch.length > 0) {
-        const newAvatars = { ...avatars };
-
-        await Promise.all(
-          senderIdsToFetch.map(async (senderId) => {
-            try {
-              const userDoc = await getDoc(doc(db, "users", senderId));
-              if (userDoc.exists()) {
-                const userData = userDoc.data();
-                newAvatars[senderId] =
-                  userData?.avatar || "https://robohash.org/default-avatar.png";
-              } else {
-                console.log("No such user document!", senderId);
-                newAvatars[senderId] =
-                  "https://robohash.org/default-avatar.png"; // Default avatar
-              }
-            } catch (error) {
-              console.log("Error fetching sender avatar:", error);
-              newAvatars[senderId] = "https://robohash.org/default-avatar.png"; // Default avatar on error
-            }
-          })
-        );
-
-        setAvatars(newAvatars);
-      }
+      updateAvatars(senderIds);
     });
 
     return unsubscribe;
-  }, [currentUser, recipientId, avatars]);
+  }, [currentUser, recipientId, updateAvatars]);
 
-  const sendMessage = async () => {
+  const sendMessage = useCallback(async () => {
     if (!message.trim() || !currentUser) return;
 
     try {
-      const chatId = [currentUser.uid, recipientId].sort().join("_"); // Create a consistent chat ID
+      const chatId = [currentUser.uid, recipientId].sort().join("_");
       const chatRef = collection(db, "chats", chatId, "messages");
 
       await addDoc(chatRef, {
@@ -102,7 +108,7 @@ export const useChat = (recipientId: string) => {
     } catch (error) {
       console.error("Error sending message: ", error);
     }
-  };
+  }, [message, currentUser, recipientId]);
 
   return { message, setMessage, messages, sendMessage, avatars };
 };
