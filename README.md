@@ -130,13 +130,4 @@ Once configured, select the target platform from the Expo developer tools.
 
 ---
 
-
----
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
---- 
-
 Thank you for being part of Langroove! Happy coding and language learning!
