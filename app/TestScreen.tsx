@@ -8,7 +8,7 @@ const ButtonScreen: React.FC = () => {
   };
 
   return (
-    <View style={TestScreenStyles.container}> {/* Use the imported styles */}
+    <View style={TestScreenStyles.container}>
       <Button title="Press me" onPress={handlePress} />
     </View>
   );
