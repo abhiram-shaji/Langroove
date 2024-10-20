@@ -6,7 +6,7 @@ import {
   query,
   orderBy,
   onSnapshot,
-  doc,
+  doc as firestoreDoc,
   getDoc,
   setDoc,
   Timestamp,
@@ -40,13 +40,14 @@ export const useChat = (chatId: string) => {
 
   // Helper function to check if the chat document exists and create it if not
   const ensureChatExists = useCallback(async () => {
-    const chatDocRef = doc(db, "chats", chatId);
+    const chatDocRef = firestoreDoc(db, "chats", chatId);
     const chatDoc = await getDoc(chatDocRef);
 
     if (!chatDoc.exists()) {
       // Create the chat document if it doesn't exist
       await setDoc(chatDocRef, {
         participants: [currentUser.uid], // Add current user as a participant
+        isGroupChat: false, // Modify this logic as needed for group chat detection
         createdAt: Timestamp.now(),
       });
     }
@@ -54,7 +55,7 @@ export const useChat = (chatId: string) => {
 
   const fetchAvatar = useCallback(async (senderId: string) => {
     try {
-      const userDoc = await getDoc(doc(db, "users", senderId));
+      const userDoc = await getDoc(firestoreDoc(db, "users", senderId));
       if (userDoc.exists()) {
         const userData = userDoc.data();
         return userData?.avatar || "https://robohash.org/default-avatar.png";
@@ -91,16 +92,28 @@ export const useChat = (chatId: string) => {
     const fetchMessages = async () => {
       await ensureChatExists();  // Ensure chat exists before fetching messages
 
-      const chatDocRef = doc(db, "chats", chatId);  // Reference to the chat document
+      const chatDocRef = firestoreDoc(db, "chats", chatId);  // Reference to the chat document
       const messagesRef = collection(chatDocRef, "messages");  // Reference to the messages subcollection
 
       const q = query(messagesRef, orderBy("createdAt"));
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
-        const fetchedMessages = snapshot.docs.map((doc) => {
-          const data = doc.data();
+        const fetchedMessages = snapshot.docs.map((messageDoc) => {
+          const data = messageDoc.data();
+
+          // Ensure readBy is initialized to an empty array if it's undefined
+          const readBy = data.readBy || [];
+
+          // Mark the message as read if it hasn't been already
+          if (!readBy.includes(currentUser.uid)) {
+            const messageRef = firestoreDoc(db, `chats/${chatId}/messages`, messageDoc.id);
+            setDoc(messageRef, {
+              readBy: [...readBy, currentUser.uid],
+            }, { merge: true });
+          }
+
           return {
-            id: doc.id,
+            id: messageDoc.id,
             text: data.text,
             senderId: data.sender,
             senderType: data.sender === currentUser.uid ? "me" : "other",
@@ -128,14 +141,25 @@ export const useChat = (chatId: string) => {
     try {
       await ensureChatExists();  // Ensure chat exists before sending the message
 
-      const chatDocRef = doc(db, "chats", chatId);  // Reference to the chat document
+      const chatDocRef = firestoreDoc(db, "chats", chatId);  // Reference to the chat document
       const messagesRef = collection(chatDocRef, "messages");  // Reference to the messages subcollection
 
-      await addDoc(messagesRef, {
+      // Add the new message
+      const newMessageRef = await addDoc(messagesRef, {
         text: message,
         sender: currentUser.uid,
         createdAt: Timestamp.now(),
+        readBy: [currentUser.uid], // Mark message as read by the sender
       });
+
+      // Update the lastMessage field in the chat document
+      await setDoc(chatDocRef, {
+        lastMessage: {
+          messageId: newMessageRef.id,
+          text: message,
+          createdAt: Timestamp.now(),
+        },
+      }, { merge: true });
 
       setMessage(""); // Clear the input field after sending the message
     } catch (error) {
