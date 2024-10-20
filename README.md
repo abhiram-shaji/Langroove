@@ -55,6 +55,7 @@ Here is an overview of the core logic components, with detailed explanations ava
 - [Login Logic](https://github.com/abhiram-shaji/Langroove/wiki/Login-Logic)
 - [Logout Logic](https://github.com/abhiram-shaji/Langroove/wiki/Logout-Logic)
 - [Sign-Up Logic](https://github.com/abhiram-shaji/Langroove/wiki/Sign-Up-Logic)
+- [Database Structure](https://github.com/abhiram-shaji/Langroove/wiki/Databse-Structure)
 
 ---
 
