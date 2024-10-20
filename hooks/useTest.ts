@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { db, auth } from "../firebase"; // Adjust the import paths as necessary
-import { doc, getDoc, collection, query, onSnapshot, where } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, onSnapshot } from "firebase/firestore";
+
 
 export const useTest = () => {
   const currentUser = auth.currentUser;
@@ -30,39 +31,54 @@ export const useTest = () => {
 
     console.log("Fetching chat history for user:", currentUser.uid);
 
-    // Construct the chat ID for the current user and their recipients
-    const chatId = [currentUser.uid, "ayYFbh8Frccb80et49oTYFNgXj63"].sort().join("_"); // Replace with appropriate recipient ID if dynamic
-    const messagesRef = collection(db, "chats", chatId, "messages");
+    // Query chat IDs that involve the current user (either as the first or second user in the ID)
+    const userChatQuery = query(
+      collection(db, "chats"),
+      where("participants", "array-contains", currentUser.uid)
+    );
 
-    const q = query(messagesRef, where("sender", "!=", currentUser.uid)); // Get all messages not sent by the current user
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(userChatQuery, (snapshot) => {
       if (snapshot.empty) {
-        console.log("No messages found");
+        console.log("No chats found for user");
+        return;
       }
 
-      const senderIds = new Set<string>();
+      snapshot.forEach((chatDoc) => {
+        const chatId = chatDoc.id; // The unique chat ID
+        const messagesRef = collection(db, "chats", chatId, "messages");
 
-      snapshot.forEach((doc) => {
-        const messageData = doc.data();
-        const senderId = messageData.sender;
-        if (senderId && senderId !== currentUser.uid) {
-          senderIds.add(senderId);
-        }
-      });
+        const unsubscribeMessages = onSnapshot(messagesRef, (messagesSnapshot) => {
+          if (messagesSnapshot.empty) {
+            console.log(`No messages found for chat: ${chatId}`);
+            return;
+          }
 
-      if (senderIds.size === 0) {
-        console.log("No other users found in chat");
-      }
+          const senderIds = new Set<string>();
 
-      // Fetch and log usernames
-      senderIds.forEach(async (senderId) => {
-        const userName = await fetchUserName(senderId);
-        console.log("User in chat:", userName);
+          messagesSnapshot.forEach((messageDoc) => {
+            const messageData = messageDoc.data();
+            const senderId = messageData.sender;
+            if (senderId !== currentUser.uid) {
+              senderIds.add(senderId);  // Add the sender if it's not the current user
+            }
+          });
+
+          if (senderIds.size === 0) {
+            console.log("No other users found in chat");
+          }
+
+          // Fetch and log usernames
+          senderIds.forEach(async (senderId) => {
+            const userName = await fetchUserName(senderId);
+            console.log("User in chat:", userName);
+          });
+        });
+
+        return () => unsubscribeMessages(); // Clean up the snapshot listener for messages when necessary
       });
     });
 
-    return () => unsubscribe(); // Clean up the snapshot listener when necessary
+    return () => unsubscribe(); // Clean up the snapshot listener for chats when necessary
   }, [currentUser]);
 
   return {
