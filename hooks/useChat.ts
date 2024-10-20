@@ -1,5 +1,3 @@
-// /hooks/useChat.ts
-
 import { useEffect, useState, useCallback } from "react";
 import { db, auth } from "../firebase"; // Adjust the import paths as necessary
 import {
@@ -10,6 +8,8 @@ import {
   onSnapshot,
   doc,
   getDoc,
+  setDoc,
+  Timestamp,
 } from "firebase/firestore";
 
 type Message = {
@@ -21,11 +21,36 @@ type Message = {
 
 type AvatarsMap = { [key: string]: string };
 
-export const useChat = (recipientId: string) => {
+export const useChat = (chatId: string) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [avatars, setAvatars] = useState<AvatarsMap>({});
   const currentUser = auth.currentUser;
+
+  // Check for missing chatId early
+  if (!chatId) {
+    console.error("Invalid or missing chatId");
+    return { message, setMessage, messages, sendMessage: () => {}, avatars };
+  }
+
+  if (!currentUser) {
+    console.warn("User not authenticated");
+    return { message, setMessage, messages, sendMessage: () => {}, avatars };
+  }
+
+  // Helper function to check if the chat document exists and create it if not
+  const ensureChatExists = useCallback(async () => {
+    const chatDocRef = doc(db, "chats", chatId);
+    const chatDoc = await getDoc(chatDocRef);
+
+    if (!chatDoc.exists()) {
+      // Create the chat document if it doesn't exist
+      await setDoc(chatDocRef, {
+        participants: [currentUser.uid], // Add current user as a participant
+        createdAt: Timestamp.now(),
+      });
+    }
+  }, [chatId, currentUser]);
 
   const fetchAvatar = useCallback(async (senderId: string) => {
     try {
@@ -61,54 +86,62 @@ export const useChat = (recipientId: string) => {
   );
 
   useEffect(() => {
-    if (!currentUser || !recipientId) return;
+    if (!currentUser || !chatId) return;
 
-    const chatId = [currentUser.uid, recipientId].sort().join("_");
-    const chatRef = collection(db, "chats", chatId, "messages");
-    const q = query(chatRef, orderBy("createdAt"));
+    const fetchMessages = async () => {
+      await ensureChatExists();  // Ensure chat exists before fetching messages
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedMessages = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          text: data.text,
-          senderId: data.sender,
-          senderType: data.sender === currentUser.uid ? "me" : "other",
-        } as Message;
+      const chatDocRef = doc(db, "chats", chatId);  // Reference to the chat document
+      const messagesRef = collection(chatDocRef, "messages");  // Reference to the messages subcollection
+
+      const q = query(messagesRef, orderBy("createdAt"));
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const fetchedMessages = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            text: data.text,
+            senderId: data.sender,
+            senderType: data.sender === currentUser.uid ? "me" : "other",
+          } as Message;
+        });
+
+        setMessages(fetchedMessages);
+
+        // Fetch avatars for new senderIds
+        const senderIds = Array.from(
+          new Set(fetchedMessages.map((msg) => msg.senderId))
+        );
+        updateAvatars(senderIds);
       });
 
-      setMessages(fetchedMessages);
+      return unsubscribe;
+    };
 
-      // Fetch avatars for new senderIds
-      const senderIds = Array.from(
-        new Set(fetchedMessages.map((msg) => msg.senderId))
-      );
-      updateAvatars(senderIds);
-    });
-
-    return unsubscribe;
-  }, [currentUser, recipientId, updateAvatars]);
+    fetchMessages();
+  }, [currentUser, chatId, ensureChatExists, updateAvatars]);
 
   const sendMessage = useCallback(async () => {
     if (!message.trim() || !currentUser) return;
 
     try {
-      const chatId = [currentUser.uid, recipientId].sort().join("_");
-      const chatRef = collection(db, "chats", chatId, "messages");
+      await ensureChatExists();  // Ensure chat exists before sending the message
 
-      await addDoc(chatRef, {
+      const chatDocRef = doc(db, "chats", chatId);  // Reference to the chat document
+      const messagesRef = collection(chatDocRef, "messages");  // Reference to the messages subcollection
+
+      await addDoc(messagesRef, {
         text: message,
         sender: currentUser.uid,
-        recipient: recipientId,
-        createdAt: new Date(),
+        createdAt: Timestamp.now(),
       });
 
       setMessage(""); // Clear the input field after sending the message
     } catch (error) {
       console.error("Error sending message: ", error);
     }
-  }, [message, currentUser, recipientId]);
+  }, [message, currentUser, chatId, ensureChatExists]);
 
   return { message, setMessage, messages, sendMessage, avatars };
 };
