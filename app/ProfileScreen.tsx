@@ -47,9 +47,22 @@ const ProfileScreen: React.FC = () => {
 
   const handleSendMessage = () => {
     console.log('Send Message pressed');
-    // Navigate to the Chat screen with recipientId
-    navigation.navigate('Chat', { recipientId: ownerId });
+  
+    const currentUserId = currentUser?.uid;
+  
+    if (!currentUserId) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    // Generate chatId by combining the current user and recipient's IDs
+    const chatId = [currentUserId, ownerId].sort().join('_');
+  
+    // Navigate to the Chat screen with chatId only
+    navigation.navigate('Chat', { chatId });
   };
+  
+  
 
   return (
     <View style={styles.container}>

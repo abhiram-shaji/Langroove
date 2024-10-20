@@ -1,40 +1,39 @@
-import { registerRootComponent } from 'expo';
+import { registerRootComponent } from "expo";
 
-import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState, useEffect } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 // Import your screens
-import LoginScreen from './LoginScreen';
-import SignUpScreen from './SignUpScreen';
-import ForgotPasswordScreen from './ForgotPasswordScreen';
-import FeedScreen from './FeedScreen';
+import LoginScreen from "./LoginScreen";
+import SignUpScreen from "./SignUpScreen";
+import ForgotPasswordScreen from "./ForgotPasswordScreen";
+import FeedScreen from "./FeedScreen";
 // import ChatListScreen from './ChatListScreen'; // Commented out ChatListScreen import
-import SettingsScreen from './SettingScreen';
-import ChatScreen from './ChatScreen';
-import FriendListScreen from './FriendListScreen';
-import ProfileScreen from './ProfileScreen';
-import AddTopicScreen from './AddTopicScreen';
-import TestScreen from './TestScreen';  // Import your new TestScreen
+import SettingsScreen from "./SettingScreen";
+import ChatScreen from "./ChatScreen";
+import FriendListScreen from "./FriendListScreen";
+import ProfileScreen from "./ProfileScreen";
+import AddTopicScreen from "./AddTopicScreen";
+import TestScreen from "./TestScreen"; // Import your new TestScreen
 
 // Import Firebase Auth
-import { auth } from '../firebase'; // Adjust the path as necessary
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "../firebase"; // Adjust the path as necessary
+import { onAuthStateChanged } from "firebase/auth";
 
 export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
   ForgotPassword: undefined;
   Feed: undefined;
-  // ChatList: undefined; // Commented out ChatList from RootStackParamList
   Settings: undefined;
-  Chat: { recipientId: string }; // Chat now expects recipientId parameter
+  Chat: { chatId: string }; // Expect chatId now
   FriendList: undefined;
   AddTopic: undefined;
-  Profile: { ownerId: string }; // Profile now expects ownerId parameter
+  Profile: { ownerId: string };
   Friends: undefined;
-  Test: undefined;  // Add TestScreen to RootStackParamList
+  Test: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -54,7 +53,7 @@ const App: React.FC = () => {
   if (loggedIn === null) {
     // Show a loading indicator while checking login status
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -63,12 +62,11 @@ const App: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={loggedIn ? 'Feed' : 'Login'}
+        initialRouteName={loggedIn ? "Feed" : "Login"}
         screenOptions={{
           headerShown: false,
         }}
       >
-
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
@@ -77,16 +75,17 @@ const App: React.FC = () => {
 
         <Stack.Screen name="Settings" component={SettingsScreen} />
 
-        <Stack.Screen 
-          name="Chat" 
-          component={ChatScreen} 
-          initialParams={{ recipientId: '' }} 
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
+          initialParams={{ chatId: "" }} // Initial params should now include chatId
         />
+
         <Stack.Screen name="FriendList" component={FriendListScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} /> 
+        <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Friends" component={FriendListScreen} />
         <Stack.Screen name="AddTopic" component={AddTopicScreen} />
-        <Stack.Screen name="Test" component={TestScreen} /> 
+        <Stack.Screen name="Test" component={TestScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

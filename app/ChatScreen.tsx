@@ -1,7 +1,5 @@
-// /screens/ChatScreen.tsx
-
 import React from 'react';
-import { FlatList, KeyboardAvoidingView } from 'react-native';
+import { FlatList, KeyboardAvoidingView, View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
@@ -14,8 +12,40 @@ type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
 
 const ChatScreen: React.FC = () => {
   const route = useRoute<ChatScreenRouteProp>();
-  const { recipientId } = route.params; // Get recipientId from route params
-  const { message, setMessage, messages, sendMessage, avatars } = useChat(recipientId);
+  console.log('Route params:', route.params);
+  const { chatId } = route.params;  // Ensure chatId is passed correctly via route params
+
+  // Return early if chatId is invalid or missing
+  if (!chatId) {
+    return (
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <Text style={{ color: 'red' }}>Invalid or missing chatId</Text>
+        </View>
+      </SafeAreaProvider>
+    );
+  }
+
+  const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
+  const [isGroupChat, setIsGroupChat] = React.useState(false);  // State to handle if the chat is a group chat
+
+  // UI for empty chat
+  if (!messages || messages.length === 0) {
+    return (
+      <SafeAreaProvider>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <View style={styles.chatArea}>
+            <Text style={{ textAlign: 'center', marginTop: 20 }}>No messages yet. Start the conversation!</Text>
+          </View>
+          <ChatInput
+            message={message}
+            onChangeMessage={setMessage}
+            onSendMessage={sendMessage}
+          />
+        </KeyboardAvoidingView>
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <SafeAreaProvider>
@@ -27,14 +57,15 @@ const ChatScreen: React.FC = () => {
               text={item.text}
               senderId={item.senderId}
               senderType={item.senderType}
-              avatarUri={avatars[item.senderId]}
+              avatarUri={avatars[item.senderId]}  // Avatar for each sender
+              senderName={isGroupChat ? item.senderId : undefined}  // Show sender's name if group chat
+              isGroupChat={isGroupChat}  // Pass group chat status
             />
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatArea}
         />
 
-        {/* Chat input area */}
         <ChatInput
           message={message}
           onChangeMessage={setMessage}
