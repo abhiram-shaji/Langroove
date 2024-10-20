@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Button } from 'react-native';
-import TestScreenStyles from '../styles/TestScreenStyles'; // Import the new styles
+import TestScreenStyles from '../styles/TestScreenStyles';
+import { useTest } from '../hooks/useTest'; 
 
 const ButtonScreen: React.FC = () => {
-  const handlePress = () => {
-    console.log('Hello');
-  };
+  const { handlePress } = useTest();
 
   return (
     <View style={TestScreenStyles.container}>
