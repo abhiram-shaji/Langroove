@@ -27,9 +27,14 @@ export const useChat = (chatId: string) => {
   const [avatars, setAvatars] = useState<AvatarsMap>({});
   const currentUser = auth.currentUser;
 
-  // Check for missing chatId early
-  if (!chatId) {
-    console.error("Invalid or missing chatId");
+  // Extract recipientId from chatId
+  const recipientId = chatId
+    .split("_")
+    .find((id) => id !== currentUser?.uid);
+
+  // Check for missing chatId or recipientId early
+  if (!chatId || !recipientId) {
+    console.error("Invalid or missing chatId or recipientId");
     return { message, setMessage, messages, sendMessage: () => {}, avatars };
   }
 
@@ -46,12 +51,12 @@ export const useChat = (chatId: string) => {
     if (!chatDoc.exists()) {
       // Create the chat document if it doesn't exist
       await setDoc(chatDocRef, {
-        participants: [currentUser.uid], // Add current user as a participant
+        participants: [currentUser.uid, recipientId], // Add both users as participants
         isGroupChat: false, // Modify this logic as needed for group chat detection
         createdAt: Timestamp.now(),
       });
     }
-  }, [chatId, currentUser]);
+  }, [chatId, currentUser, recipientId]);
 
   const fetchAvatar = useCallback(async (senderId: string) => {
     try {
