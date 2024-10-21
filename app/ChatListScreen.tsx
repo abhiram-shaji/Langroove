@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 import ChatListItem from '../components/ChatListItem';
 import BottomNavBar from '../components/BottomNavBar';
 import styles from '../styles/ChatListScreenStyles';
@@ -22,12 +22,9 @@ const ChatListScreen: React.FC = () => {
             />
           ))
         ) : (
-          <ChatListItem
-            id="0"
-            name="No chats yet"
-            avatar="https://via.placeholder.com/50"
-            lastMessage="Start a conversation!"
-          />
+          <View style={styles.noChatsContainer}>
+            <Text style={styles.noChatsText}>No chats available</Text>
+          </View>
         )}
       </ScrollView>
 
