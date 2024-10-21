@@ -45,6 +45,10 @@ export const headerStyles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
   },
+  subtitle: {
+    fontSize: 10,
+    color: colors.text,
+  },
   iconButton: {
     padding: 5,
   },
@@ -56,5 +60,10 @@ export const topicCardStyles = StyleSheet.create({
     backgroundColor: colors.background,
     borderColor: colors.border,
     borderWidth: 1,
+  },
+  description: {
+    fontSize: 16,
+    color: colors.text,
+    flexWrap: 'wrap',
   },
 });
