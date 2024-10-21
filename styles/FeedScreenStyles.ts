@@ -24,6 +24,15 @@ export const feedScreenStyles = StyleSheet.create({
     position: 'absolute',
     right: 20, // Distance from the right edge of the screen
     bottom: 70, // Distance from the bottom edge of the screen
+
+      // iOS shadow
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 4,
+
+  // Android shadow
+  elevation: 5,
   },
 });
 
