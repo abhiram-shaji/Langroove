@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, Button } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { useFeed } from '../hooks/useFeed';
 import TopicCard from '../components/TopicCard';
 import BottomNavBar from '../components/BottomNavBar';
@@ -39,8 +39,12 @@ const FeedScreen: React.FC = () => {
         )}
       </ScrollView>
 
-      {/* Button to Add Topic */}
-      <Button title="Add Topic" onPress={handleAddTopicPress} />
+      <TouchableOpacity
+        style={feedScreenStyles.addButton}
+        onPress={handleAddTopicPress}
+      >
+        <Text style={feedScreenStyles.addButtonText}>Add Topic</Text>
+      </TouchableOpacity>
 
       {/* Bottom Navigation Bar */}
       <BottomNavBar />

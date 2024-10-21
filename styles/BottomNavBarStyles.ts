@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors } from './themes';  // Assuming you have a theme file with colors
+import { colors } from './themes';
 
 export const bottomNavBarStyles = StyleSheet.create({
   container: {

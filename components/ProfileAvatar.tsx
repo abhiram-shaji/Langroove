@@ -1,45 +1,36 @@
 // /components/ProfileAvatar.tsx
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { styles } from '../styles/ProfileScreenStyles';
-import { db } from '../firebase'; // Assuming these are exported from firebase.ts
-import { doc, getDoc } from 'firebase/firestore';
+import useUserInfo from '../hooks/useUserInfo'; // Import the new custom hook
 
 interface ProfileAvatarProps {
-  userId: string; // Accept userId as prop
+  userId: string;
 }
 
 const ProfileAvatar: React.FC<ProfileAvatarProps> = ({ userId }) => {
-  const [avatarUri, setAvatarUri] = useState<string | null>(null);
+  const { userInfo, loading } = useUserInfo(userId); // Use the custom hook
 
-  useEffect(() => {
-    fetchUserAvatar();
-  }, [userId]);
-
-  const fetchUserAvatar = async () => {
-    try {
-      if (userId) {
-        // Get the user's document from Firestore using userId
-        const userDoc = await getDoc(doc(db, 'users', userId));
-        
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setAvatarUri(userData?.avatar || 'https://robohash.org/default-avatar.png');
-        }
-      }
-    } catch (error) {
-      console.log('Error fetching user avatar:', error);
-    }
-  };
+  if (loading) {
+    return (
+      <View style={styles.avatarContainer}>
+        <Avatar.Image
+          size={120}
+          source={{ uri: 'https://robohash.org/default-avatar.png' }}
+          style={styles.avatar}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.avatarContainer}>
-      <Avatar.Image 
-        size={120} 
-        source={{ uri: avatarUri || 'https://robohash.org/default-avatar.png' }} 
-        style={styles.avatar} 
+      <Avatar.Image
+        size={120}
+        source={{ uri: userInfo.avatar || 'https://robohash.org/default-avatar.png' }}
+        style={styles.avatar}
       />
     </View>
   );

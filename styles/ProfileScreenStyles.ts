@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { colors } from './themes';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
   backButton: {
     position: 'absolute',
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   changeAvatarText: {
-    color: '#007bff',
+    color: '#007bff', // Consider adding this as an accent color in your theme
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
@@ -35,15 +36,17 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    color: colors.text, // Ensure the text color follows the theme
   },
   label: {
     fontSize: 16,
     marginVertical: 5,
+    color: colors.text, // Use theme text color
   },
   bio: {
     marginTop: 20,
     fontStyle: 'italic',
-    color: '#666',
+    color: colors.accent, // Using accent color from theme for bio
   },
   // New styles for buttons
   buttonContainer: {

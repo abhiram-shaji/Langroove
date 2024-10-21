@@ -7,9 +7,26 @@ export const feedScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+    paddingTop: 20,
   },
   scrollContainer: {
     padding: 10,
+  },
+  addButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    width: 150,
+    alignSelf: 'center',
+  },
+  addButtonText: {
+    color: colors.background, // white text on black button
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

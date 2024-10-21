@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.background,
   },
   button: {
     backgroundColor: colors.secondary,
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.background,
     fontSize: 16,
     fontWeight: 'bold',
   },

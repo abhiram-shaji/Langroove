@@ -1,7 +1,7 @@
 // SignUpStyles.ts
 
 import { StyleSheet } from 'react-native';
-import { colors } from './themes'; // Assuming you have a theme file
+import { colors } from './themes';
 
 export const SignUpStyles = StyleSheet.create({
   container: {
