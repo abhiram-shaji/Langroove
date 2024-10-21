@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.breifkace.Langroove"
     },
     "web": {
       "bundler": "metro",
@@ -28,6 +29,11 @@
     "plugins": [],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "198af924-fcbb-4c82-81c5-0e50b4c9d43f"
+      }
     }
   }
 }
