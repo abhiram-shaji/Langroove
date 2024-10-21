@@ -1,30 +1,51 @@
-import React from "react";
-import { ScrollView, View, Text, TouchableOpacity } from "react-native";
-import { useFeed } from "../hooks/useFeed";
-import TopicCard from "../components/TopicCard";
-import BottomNavBar from "../components/BottomNavBar";
-import { feedScreenStyles } from "../styles/FeedScreenStyles";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../app/App";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from 'react';
+import { ScrollView, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useFeed } from '../hooks/useFeed';
+import useUserInfo from '../hooks/useUserInfo';
+import TopicCard from '../components/TopicCard';
+import BottomNavBar from '../components/BottomNavBar';
+import { feedScreenStyles } from '../styles/FeedScreenStyles';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../app/App';
+import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../firebase';
 
 const FeedScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { topics } = useFeed();
+  const [userId, setUserId] = useState<string | null>(null); // State to hold userId
+
+  // Fetch current userId from Firebase Auth
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setUserId(currentUser.uid); // Set the userId from current user
+    } else {
+      console.log('No user is logged in');
+    }
+  }, []);
+
+  const { userInfo, loading } = useUserInfo(userId || ''); // Fetch user info using the hook
 
   const handleAddTopicPress = () => {
-    navigation.navigate("AddTopic");
+    navigation.navigate('AddTopic');
   };
 
-  // Updated to navigate to the profile screen when the topic is pressed
   const handleTopicPress = (ownerId: string) => {
-    navigation.navigate("Profile", { ownerId });
+    navigation.navigate('Profile', { ownerId });
   };
 
   return (
     <View style={feedScreenStyles.container}>
+      {/* Top Bar with Welcome Text */}
       <View style={feedScreenStyles.topBar}>
-        <Text style={feedScreenStyles.welcomeText}>Welcome</Text>
+        {loading ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text style={feedScreenStyles.welcomeText}>
+            Welcome, {userInfo.name || 'Guest'}
+          </Text>
+        )}
       </View>
 
       {/* Scrollable Content for Topic Cards */}
