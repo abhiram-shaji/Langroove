@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAddTopic } from '../hooks/useAddTopic';
-import styles from '../styles/AddTopicScreenStyles'; // Import styles from the new file
+import styles from '../styles/AddTopicScreenStyles';
 
 const AddTopicScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -17,7 +17,12 @@ const AddTopicScreen: React.FC = () => {
         style={[styles.input, styles.textArea]}
         multiline
       />
-      <Button title="Submit" onPress={() => handleAddTopic(navigation)} />
+      <TouchableOpacity 
+        style={styles.submitButton} 
+        onPress={() => handleAddTopic(navigation)}
+      >
+        <Text style={styles.submitButtonText}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 };

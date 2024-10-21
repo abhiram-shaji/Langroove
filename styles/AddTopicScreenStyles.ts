@@ -1,29 +1,41 @@
+// AddTopicScreenStyles.ts
 import { StyleSheet } from 'react-native';
-import { colors } from '../styles/themes'; // Import colors from themes
+import { colors } from './themes';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: colors.background, // Use theme background color
+    padding: 10,
+    paddingVertical: 50,
+    backgroundColor: colors.background,
   },
   input: {
     borderWidth: 1,
-    borderColor: colors.border, // Use theme border color
-    padding: 8,
-    marginBottom: 16,
+    borderColor: colors.border,
+    padding: 10,
     borderRadius: 8,
-    backgroundColor: colors.background, // Ensure consistent input background
-    color: colors.text, // Text color from theme
+    marginBottom: 16,
+    backgroundColor: colors.background,
   },
   textArea: {
     height: 100,
-    borderWidth: 1,
-    borderColor: colors.border, // Consistent with input
-    padding: 8,
+    textAlignVertical: 'top', // Ensures the text starts at the top in multiline
+  },
+  submitButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
     borderRadius: 8,
-    backgroundColor: colors.background,
-    color: colors.text, // Use text color from theme
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: 200, // Set the width to be the same as the button in FeedScreen
+    marginBottom: 16,
+  },
+  submitButtonText: {
+    color: colors.background, // white text on black button
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
