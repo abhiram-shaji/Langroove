@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { db, auth } from '../firebase'; // Import Firestore database and Firebase auth
-import { collection, onSnapshot, query, where } from 'firebase/firestore'; // Import Firestore real-time methods
+import { db, auth } from '../firebase';
+import { collection, onSnapshot } from 'firebase/firestore'; 
 
 export const useFeed = () => {
   const [topics, setTopics] = useState<any[]>([]);
@@ -13,11 +13,8 @@ export const useFeed = () => {
 
     const topicsCollection = collection(db, 'topics'); // Adjust collection name if necessary
 
-    // Filter topics where ownerId is not equal to the logged-in user's ID
-    const topicsQuery = query(topicsCollection, where('ownerId', '!=', currentUser.uid));
-
-    // Use onSnapshot to get real-time updates
-    const unsubscribe = onSnapshot(topicsQuery, (snapshot) => {
+    // Fetch all topics without filtering
+    const unsubscribe = onSnapshot(topicsCollection, (snapshot) => {
       const topicsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
