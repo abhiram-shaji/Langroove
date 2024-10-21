@@ -7,6 +7,7 @@ export const feedScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+    paddingTop: 20,
   },
   scrollContainer: {
     padding: 10,
