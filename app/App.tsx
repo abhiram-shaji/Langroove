@@ -13,6 +13,7 @@ import FeedScreen from "./FeedScreen";
 // import ChatListScreen from './ChatListScreen'; // Commented out ChatListScreen import
 import SettingsScreen from "./SettingScreen";
 import ChatScreen from "./ChatScreen";
+import ChatListScreen from "./ChatListScreen";
 import FriendListScreen from "./FriendListScreen";
 import ProfileScreen from "./ProfileScreen";
 import AddTopicScreen from "./AddTopicScreen";
@@ -32,6 +33,7 @@ export type RootStackParamList = {
   AddTopic: undefined;
   Profile: { ownerId: string };
   Friends: undefined;
+  ChatListScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -72,6 +74,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Feed" component={FeedScreen} />
 
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
 
         <Stack.Screen
           name="Chat"

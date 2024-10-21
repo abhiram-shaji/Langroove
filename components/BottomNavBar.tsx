@@ -17,6 +17,11 @@ const BottomNavBar: React.FC = () => {
         <Text style={bottomNavBarStyles.label}>Feed</Text>
       </TouchableOpacity>
 
+      {/* Navigate to Chat List screen */}
+      <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('ChatListScreen')}>
+        <Ionicons name="chatbubble-outline" size={24} color="gray" />
+        <Text style={bottomNavBarStyles.label}>Chats</Text> 
+      </TouchableOpacity>
 
       {/* Navigate to Settings screen */}
       <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('Settings')}>
