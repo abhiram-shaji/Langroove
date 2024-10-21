@@ -63,12 +63,41 @@ export const useChatList = () => {
     
 
     const fetchChatAvatars = async (participants: string[]) => {
-      const otherParticipantId = participants.find(id => id !== currentUser.uid);
-      if (otherParticipantId) {
-        return await fetchAvatarForUser(otherParticipantId);
+      if (!currentUser || !currentUser.uid) {
+        console.warn("No authenticated user. Cannot fetch avatars.");
+        return "https://via.placeholder.com/50"; // Return placeholder if no authenticated user
       }
-      return "https://via.placeholder.com/50"; // Fallback if no other participant
+    
+      console.log(`Current user ID: ${currentUser.uid}`);
+      console.log(`Participants in chat: ${participants}`);
+    
+      // Find the other participant (the one that is not the current user)
+      const otherParticipantId = participants.find(id => {
+        console.log(`Comparing participant ID: ${id} with current user ID: ${currentUser.uid}`);
+        return id !== currentUser.uid;
+      });
+    
+      if (!otherParticipantId) {
+        console.warn("No other participant found in this one-on-one chat. Using placeholder avatar.");
+        return "https://via.placeholder.com/50"; // Fallback if no other participant
+      }
+    
+      console.log(`Other participant ID: ${otherParticipantId}`);
+    
+      // Fetch the avatar for the other participant
+      const avatar = await fetchAvatarForUser(otherParticipantId);
+      
+      if (avatar) {
+        console.log(`Fetched avatar for other participant ${otherParticipantId}: ${avatar}`);
+      } else {
+        console.warn(`No avatar found for other participant ${otherParticipantId}, using placeholder.`);
+      }
+    
+      return avatar;
     };
+    
+    
+    
 
     try {
       const chatsRef = collection(db, "chats");
