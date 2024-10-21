@@ -40,12 +40,6 @@ const SettingsScreen: React.FC = () => {
           onPress={() => navigation.navigate("Friends")} 
         />
 
-        {/* Test Screen Button */}
-        <SettingsButton
-          title="Go to Test Screen" 
-          onPress={() => navigation.navigate("Test")} // Navigate to TestScreen
-        />
-
         {/* Privacy Button */}
         <SettingsButton
           title="Privacy"
