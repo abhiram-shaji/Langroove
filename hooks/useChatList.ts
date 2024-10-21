@@ -7,57 +7,74 @@ type Chat = {
   name: string;
   avatar: string;
   lastMessage: string;
+  isGroupChat: boolean;
 };
 
 export const useChatList = () => {
   const [chats, setChats] = useState<Chat[]>([]);
-
+  
   useEffect(() => {
     const currentUser = auth.currentUser;
-
+    
     if (!currentUser) {
       return;
     }
 
-    const fetchAvatarForUser = async (userId: string) => {
+    // Fetch user name from Firestore
+    const fetchNameForUser = async (userId: string): Promise<string> => {
+      try {
+        if (!userId) {
+          return "Unknown User"; // Placeholder name
+        }
+
+        const userDoc = await getDoc(doc(db, "users", userId));
+        const userData = userDoc.exists() ? userDoc.data() : null;
+
+        return userData?.name || "Unknown User"; // Fallback to "Unknown User"
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+        return "Unknown User"; // Fallback name
+      }
+    };
+
+    // Fetch avatar for a user (same as before)
+    const fetchAvatarForUser = async (userId: string): Promise<string> => {
       try {
         if (!userId) {
           return "https://via.placeholder.com/50"; // Return placeholder if no user ID
         }
 
-        // Fetch the user document from Firestore
         const userDoc = await getDoc(doc(db, "users", userId));
+        const userData = userDoc.exists() ? userDoc.data() : null;
 
-        if (!userDoc.exists()) {
-          return "https://via.placeholder.com/50"; // Return placeholder if user not found
-        }
-
-        const userData = userDoc.data();
-        
-        if (!userData || !userData.avatar) {
-          return "https://via.placeholder.com/50"; // Return placeholder if no data or avatar
-        }
-
-        return userData.avatar; // Return the fetched avatar URL
+        return userData?.avatar || "https://via.placeholder.com/50"; // Fallback to placeholder
       } catch (error) {
-        return "https://via.placeholder.com/50"; // Fallback to placeholder if error occurs
+        console.error("Error fetching user avatar:", error);
+        return "https://via.placeholder.com/50"; // Fallback to placeholder
       }
     };
 
-    const fetchChatAvatars = async (participants: string[]) => {
-      if (!currentUser || !currentUser.uid) {
-        return "https://via.placeholder.com/50"; // Return placeholder if no authenticated user
+    const fetchChatAvatarsAndNames = async (participants: string[], isGroupChat: boolean): Promise<{ name: string, avatar: string }> => {
+      if (!currentUser?.uid) {
+        return { name: "Unknown", avatar: "https://via.placeholder.com/50" }; // Placeholder if no authenticated user
       }
 
-      // Find the other participant (the one that is not the current user)
+      if (isGroupChat) {
+        return { name: "Unnamed Group", avatar: "https://via.placeholder.com/50" }; // Placeholder for group chats
+      }
+
       const otherParticipantId = participants.find(id => id !== currentUser.uid);
-
       if (!otherParticipantId) {
-        return "https://via.placeholder.com/50"; // Fallback if no other participant
+        return { name: "Unknown", avatar: "https://via.placeholder.com/50" }; // Fallback if no other participant
       }
 
-      // Fetch the avatar for the other participant
-      return await fetchAvatarForUser(otherParticipantId);
+      // Fetch name and avatar for the other participant
+      const [name, avatar] = await Promise.all([
+        fetchNameForUser(otherParticipantId),
+        fetchAvatarForUser(otherParticipantId)
+      ]);
+
+      return { name, avatar };
     };
 
     try {
@@ -67,15 +84,18 @@ export const useChatList = () => {
       const unsubscribe = onSnapshot(q, async (snapshot) => {
         const fetchedChats = await Promise.all(snapshot.docs.map(async (doc) => {
           const data = doc.data();
+          const isGroupChat = data.isGroupChat || false;
           const lastMessage = data.lastMessage?.text || "No messages yet";
 
-          const avatar = await fetchChatAvatars(data.participants);
+          // Fetch the chat name and avatar
+          const { name, avatar } = await fetchChatAvatarsAndNames(data.participants, isGroupChat);
 
           return {
             id: doc.id, // Chat ID from Firestore
-            name: "Chat with " + (data.participants?.join(", ") || "Unknown"), // Placeholder name, replace with actual names
-            avatar: avatar, // Use fetched avatar
+            name: isGroupChat ? (data.groupName || name) : name, // Use groupName if it's a group, else use fetched name
+            avatar: avatar,
             lastMessage: lastMessage,
+            isGroupChat: isGroupChat,
           };
         }));
 
@@ -86,7 +106,7 @@ export const useChatList = () => {
         unsubscribe(); // Cleanup listener on unmount
       };
     } catch (error) {
-      // Error handling here
+      console.error("Error fetching chats:", error);
     }
   }, []);
 
