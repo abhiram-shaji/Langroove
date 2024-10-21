@@ -11,7 +11,7 @@ export const feedScreenStyles = StyleSheet.create({
   },
   topBar: {
     backgroundColor: colors.background,
-    padding: 16,
+    paddingTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -21,7 +21,7 @@ export const feedScreenStyles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scrollContainer: {
-    padding: 10,
+    paddingHorizontal: 10,
   },
   addButton: {
     backgroundColor: colors.primary,
