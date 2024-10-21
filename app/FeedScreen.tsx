@@ -5,7 +5,8 @@ import TopicCard from '../components/TopicCard';
 import BottomNavBar from '../components/BottomNavBar';
 import { feedScreenStyles } from '../styles/FeedScreenStyles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../app/App'; // Adjust the path if necessary
+import { RootStackParamList } from '../app/App';
+import { Ionicons } from '@expo/vector-icons'; 
 
 const FeedScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -28,9 +29,9 @@ const FeedScreen: React.FC = () => {
           topics.map((topic) => (
             <TopicCard
               key={topic.id}
-              description={topic.description} // Only using the description now
+              description={topic.description}
               ownerName={topic.ownerName}
-              ownerId={topic.ownerId} // Add this line
+              ownerId={topic.ownerId} 
               onPress={() => handleTopicPress(topic.ownerId)} // Passing ownerId to navigate
             />
           ))
@@ -43,7 +44,7 @@ const FeedScreen: React.FC = () => {
         style={feedScreenStyles.addButton}
         onPress={handleAddTopicPress}
       >
-        <Text style={feedScreenStyles.addButtonText}>Add Topic</Text>
+        <Ionicons name="add-circle" size={60} color="white" />
       </TouchableOpacity>
 
       {/* Bottom Navigation Bar */}

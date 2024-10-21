@@ -1,7 +1,7 @@
 // /styles/FeedScreenStyles.ts
 
-import { StyleSheet } from 'react-native';
-import { colors } from './themes';
+import { StyleSheet } from "react-native";
+import { colors } from "./themes";
 
 export const feedScreenStyles = StyleSheet.create({
   container: {
@@ -14,27 +14,24 @@ export const feedScreenStyles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: colors.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    width: 60, // Set width and height to make it circular
+    height: 60, // Same as width to ensure a perfect circle
+    borderRadius: 30, // Half of the width/height to make it circular
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
-    width: 150,
-    alignSelf: 'center',
-  },
-  addButtonText: {
-    color: colors.background, // white text on black button
-    fontSize: 16,
-    fontWeight: 'bold',
+  
+    // Positioning to the bottom-right corner
+    position: 'absolute',
+    right: 20, // Distance from the right edge of the screen
+    bottom: 70, // Distance from the bottom edge of the screen
   },
 });
 
 export const headerStyles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 15,
     backgroundColor: colors.background,
     borderBottomWidth: 1,
@@ -42,7 +39,7 @@ export const headerStyles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
   },
   subtitle: {
@@ -64,6 +61,6 @@ export const topicCardStyles = StyleSheet.create({
   description: {
     fontSize: 16,
     color: colors.text,
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
 });
