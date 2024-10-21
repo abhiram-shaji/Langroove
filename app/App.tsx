@@ -4,13 +4,12 @@ import React, { useState, useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { useTransition } from "../styles/transitions";
 
-// Import your screens
 import LoginScreen from "./LoginScreen";
 import SignUpScreen from "./SignUpScreen";
 import ForgotPasswordScreen from "./ForgotPasswordScreen";
 import FeedScreen from "./FeedScreen";
-// import ChatListScreen from './ChatListScreen'; // Commented out ChatListScreen import
 import SettingsScreen from "./SettingScreen";
 import ChatScreen from "./ChatScreen";
 import ChatListScreen from "./ChatListScreen";
@@ -21,7 +20,7 @@ import PrivacyScreen from "./PrivacyScreen";
 import AboutScreen from "./AboutScreen";
 
 // Import Firebase Auth
-import { auth } from "../firebase"; // Adjust the path as necessary
+import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 export type RootStackParamList = {
@@ -30,7 +29,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   Feed: undefined;
   Settings: undefined;
-  Chat: { chatId: string }; // Expect chatId now
+  Chat: { chatId: string };
   FriendList: undefined;
   AddTopic: undefined;
   Profile: { ownerId: string };
@@ -69,6 +68,7 @@ const App: React.FC = () => {
         initialRouteName={loggedIn ? "Feed" : "Login"}
         screenOptions={{
           headerShown: false,
+          ...useTransition,
         }}
       >
         <Stack.Screen name="Login" component={LoginScreen} />
