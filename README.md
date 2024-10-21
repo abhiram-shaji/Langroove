@@ -2,7 +2,7 @@
 
 Welcome to the Langroove project! This app is designed to provide an interactive platform for language learners, allowing users to chat, manage friends, and practice real-time communication in different languages. This README will guide you through the current implementation of the project, covering the core features, functions, and how to get started with running the app locally.
 
-[Link To Download APK](https://drive.google.com/file/d/1MRDwa8szi7MNviphRaORbkm5YGKw3aXA/view?usp=drive_link)
+[Link To Download APK](https://drive.google.com/file/d/1yvdvHZI8QV5fBRF0SgrH_b-dLH9_L0Pq/view?usp=sharing)
 
 
 ---
