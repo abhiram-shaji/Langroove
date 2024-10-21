@@ -2,11 +2,19 @@
 import { TransitionPresets } from "@react-navigation/stack";
 import { TransitionSpec } from "@react-navigation/stack/lib/typescript/src/types";
 
-// Custom fade transition
+// Custom Scale From Center transition
 export const useTransition = {
-  cardStyleInterpolator: ({ current }: { current: any }) => ({
+  cardStyleInterpolator: ({ current, layouts }: { current: any; layouts: any }) => ({
     cardStyle: {
-      opacity: current.progress,
+      opacity: current.progress, // Fade effect
+      transform: [
+        {
+          scale: current.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0.85, 1], // Scale from 85% to 100%
+          }),
+        },
+      ],
     },
   }),
   transitionSpec: {
@@ -15,5 +23,5 @@ export const useTransition = {
   },
 };
 
-// Using built-in Fade preset (Optional)
+// Using built-in Fade preset
 export const fadeFromBottomPreset = TransitionPresets.FadeFromBottomAndroid;
