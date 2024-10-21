@@ -16,7 +16,6 @@ import ChatScreen from "./ChatScreen";
 import FriendListScreen from "./FriendListScreen";
 import ProfileScreen from "./ProfileScreen";
 import AddTopicScreen from "./AddTopicScreen";
-import TestScreen from "./TestScreen"; // Import your new TestScreen
 
 // Import Firebase Auth
 import { auth } from "../firebase"; // Adjust the path as necessary
