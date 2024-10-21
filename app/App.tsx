@@ -17,6 +17,8 @@ import ChatListScreen from "./ChatListScreen";
 import FriendListScreen from "./FriendListScreen";
 import ProfileScreen from "./ProfileScreen";
 import AddTopicScreen from "./AddTopicScreen";
+import PrivacyScreen from "./PrivacyScreen";
+import AboutScreen from "./AboutScreen";
 
 // Import Firebase Auth
 import { auth } from "../firebase"; // Adjust the path as necessary
@@ -34,6 +36,8 @@ export type RootStackParamList = {
   Profile: { ownerId: string };
   Friends: undefined;
   ChatListScreen: undefined;
+  Privacy: undefined;
+  About: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -86,6 +90,9 @@ const App: React.FC = () => {
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Friends" component={FriendListScreen} />
         <Stack.Screen name="AddTopic" component={AddTopicScreen} />
+
+        <Stack.Screen name="Privacy" component={PrivacyScreen} />
+        <Stack.Screen name="About" component={AboutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

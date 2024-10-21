@@ -43,13 +43,13 @@ const SettingsScreen: React.FC = () => {
         {/* Privacy Button */}
         <SettingsButton
           title="Privacy"
-          onPress={() => console.log("Privacy pressed")}
+          onPress={() => navigation.navigate("Privacy")}
         />
 
         {/* About Button */}
         <SettingsButton
           title="About"
-          onPress={() => console.log("About pressed")}
+          onPress={() => navigation.navigate("About")}
         />
 
         {/* Logout Button */}
