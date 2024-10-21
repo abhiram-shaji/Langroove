@@ -9,6 +9,17 @@ export const feedScreenStyles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingTop: 20,
   },
+  topBar: {
+    backgroundColor: colors.background,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  welcomeText: {
+    fontSize: 20,
+    color: colors.text,
+    fontWeight: 'bold',
+  },
   scrollContainer: {
     padding: 10,
   },
