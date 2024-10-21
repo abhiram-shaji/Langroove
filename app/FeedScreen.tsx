@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useFeed } from '../hooks/useFeed';
-import useUserInfo from '../hooks/useUserInfo';
 import TopicCard from '../components/TopicCard';
 import BottomNavBar from '../components/BottomNavBar';
 import { feedScreenStyles } from '../styles/FeedScreenStyles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../app/App';
 import { Ionicons } from '@expo/vector-icons';
-import { auth } from '../firebase';
+import useHeader from '../hooks/useHeader';
 
 const FeedScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { topics } = useFeed();
-  const [userId, setUserId] = useState<string | null>(null); // State to hold userId
-
-  // Fetch current userId from Firebase Auth
-  useEffect(() => {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      setUserId(currentUser.uid); // Set the userId from current user
-    } else {
-      console.log('No user is logged in');
-    }
-  }, []);
-
-  const { userInfo, loading } = useUserInfo(userId || ''); // Fetch user info using the hook
+  const { userInfo, isUserLoading, userInfoLoading } = useHeader();
 
   const handleAddTopicPress = () => {
     navigation.navigate('AddTopic');
@@ -39,11 +26,11 @@ const FeedScreen: React.FC = () => {
     <View style={feedScreenStyles.container}>
       {/* Top Bar with Welcome Text */}
       <View style={feedScreenStyles.topBar}>
-        {loading ? (
+        {isUserLoading || userInfoLoading ? (
           <ActivityIndicator size="small" color="#ffffff" />
         ) : (
           <Text style={feedScreenStyles.welcomeText}>
-            Welcome, {userInfo.name || 'Guest'}
+            Welcome, {userInfo?.name || 'Guest'}
           </Text>
         )}
       </View>
