@@ -47,22 +47,20 @@ const ProfileScreen: React.FC = () => {
 
   const handleSendMessage = () => {
     console.log('Send Message pressed');
-  
+
     const currentUserId = currentUser?.uid;
-  
+
     if (!currentUserId) {
       console.error('User not authenticated');
       return;
     }
-  
+
     // Generate chatId by combining the current user and recipient's IDs
     const chatId = [currentUserId, ownerId].sort().join('_');
-  
+
     // Navigate to the Chat screen with chatId only
     navigation.navigate('Chat', { chatId });
   };
-  
-  
 
   return (
     <View style={styles.container}>
@@ -80,15 +78,17 @@ const ProfileScreen: React.FC = () => {
       {/* User Info Section */}
       <ProfileInfo userId={ownerId} />
 
-      {/* Add Friend and Send Message Buttons */}
-      <View style={styles.buttonContainer}>
-        <Button mode="contained" onPress={handleAddFriend} style={styles.button}>
-          Add Friend
-        </Button>
-        <Button mode="contained" onPress={handleSendMessage} style={styles.button}>
-          Message
-        </Button>
-      </View>
+      {/* Conditionally render the buttons if ownerId is different from currentUser.uid */}
+      {currentUser?.uid !== ownerId && (
+        <View style={styles.buttonContainer}>
+          <Button mode="contained" onPress={handleAddFriend} style={styles.button}>
+            Add Friend
+          </Button>
+          <Button mode="contained" onPress={handleSendMessage} style={styles.button}>
+            Message
+          </Button>
+        </View>
+      )}
     </View>
   );
 };
