@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+// /components/TopicCard.tsx
+
+import React from 'react';
 import { Card, Avatar } from 'react-native-paper';
 import { topicCardStyles } from '../styles/FeedScreenStyles';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import useUserInfo from '../hooks/useUserInfo'; // Import the existing hook
 
 interface TopicCardProps {
   description: string;
@@ -12,32 +13,7 @@ interface TopicCardProps {
 }
 
 const TopicCard: React.FC<TopicCardProps> = ({ description, ownerName, ownerId, onPress }) => {
-  const [avatarUri, setAvatarUri] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchUserAvatar();
-  }, [ownerId]);
-
-  const fetchUserAvatar = async () => {
-    try {
-      if (ownerId) {
-        console.log('Fetching avatar for ownerId:', ownerId);
-        const userDoc = await getDoc(doc(db, 'users', ownerId));
-
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log('Fetched user data:', userData);
-          setAvatarUri(userData?.avatar || 'https://robohash.org/default-avatar.png');
-        } else {
-          console.log(`No user found with ID: ${ownerId}`);
-        }
-      } else {
-        console.log('ownerId is undefined or null');
-      }
-    } catch (error) {
-      console.log('Error fetching owner avatar:', error);
-    }
-  };
+  const { userInfo, loading } = useUserInfo(ownerId); // Use the custom hook
 
   return (
     <Card style={topicCardStyles.card} onPress={onPress}>
@@ -47,7 +23,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ description, ownerName, ownerId, 
         left={() => (
           <Avatar.Image
             size={40}
-            source={{ uri: avatarUri || 'https://robohash.org/default-avatar.png' }}
+            source={{ uri: loading ? 'https://robohash.org/default-avatar.png' : userInfo.avatar }}
           />
         )}
       />
