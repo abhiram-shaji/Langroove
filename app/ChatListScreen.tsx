@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import ChatListItem from '../components/ChatListItem';
-import { colors } from '../styles/themes';
+import ChatListItem from '../components/ChatListItem';  // Your ChatListItem component
+import { colors } from '../styles/themes';   // Color theme
+import BottomNavBar from '../components/BottomNavBar';  // Import BottomNavBar
 
 const chatData = [
   { id: 1, name: 'John Doe', avatar: 'https://via.placeholder.com/50', lastMessage: 'Hey, how are you?' },
@@ -9,7 +10,7 @@ const chatData = [
   { id: 3, name: 'Mike Johnson', avatar: 'https://via.placeholder.com/50', lastMessage: 'See you soon!' },
 ];
 
-const ChatListScreen = () => {
+const ChatListScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -22,6 +23,9 @@ const ChatListScreen = () => {
           />
         ))}
       </ScrollView>
+
+      {/* Add the BottomNavBar at the bottom */}
+      <BottomNavBar />
     </View>
   );
 };
@@ -30,7 +34,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    padding: 16,
+    paddingTop: 16,
   },
 });
 
