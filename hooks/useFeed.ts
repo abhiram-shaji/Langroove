@@ -1,39 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebase';
 import { collection, onSnapshot } from 'firebase/firestore'; 
 
 export const useFeed = () => {
   const [topics, setTopics] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const unsubscribeRef = useRef<(() => void) | null>(null); // Store the unsubscribe function
 
   useEffect(() => {
-    const currentUser = auth.currentUser; // Get the currently logged-in user
+    const currentUser = auth.currentUser;
 
-    if (!currentUser) return; // Ensure the user is logged in
-
-    const topicsCollection = collection(db, 'topics'); // Adjust collection name if necessary
-
-    // Fetch all topics without filtering
-    const unsubscribe = onSnapshot(topicsCollection, (snapshot) => {
-      const topicsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setTopics(topicsData);
+    if (!currentUser) {
       setLoading(false);
-    }, (error) => {
-      console.error('Error fetching real-time topics:', error);
-      setLoading(false);
-    });
+      return;
+    }
 
-    // Cleanup the listener on unmount
-    return () => unsubscribe();
-  }, []); // Empty dependency array ensures the data is fetched only once when the component mounts
+    const topicsCollection = collection(db, 'topics');
 
-  // Function to handle pressing a topic (if needed)
-  const handleTopicPress = (description: string) => {
-    console.log(`Tapped on ${description}`);
-  };
+    // Set up the snapshot listener and store the unsubscribe function
+    const unsubscribe = onSnapshot(
+      topicsCollection,
+      (snapshot) => {
+        const topicsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTopics(topicsData);
+        setLoading(false);
+      },
+      (error) => {
+        console.error('Error fetching real-time topics:', error);
+        setLoading(false);
+      }
+    );
 
-  return { topics, handleTopicPress, loading };
+    unsubscribeRef.current = unsubscribe; // Store unsubscribe function
+
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current(); // Clean up the listener on unmount
+      }
+    };
+  }, []);
+
+  return { topics, loading, unsubscribeRef }; // Return the unsubscribeRef
 };
