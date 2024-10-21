@@ -1,51 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ScrollView, View } from 'react-native';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db, auth } from '../firebase'; // Firestore and auth instance
 import ChatListItem from '../components/ChatListItem';
 import BottomNavBar from '../components/BottomNavBar';
 import styles from '../styles/ChatListScreenStyles';
-
-type Chat = {
-  id: string;
-  name: string;
-  avatar: string;
-  lastMessage: string;
-};
+import { useChatList } from '../hooks/useChatList'; // Import the custom hook
 
 const ChatListScreen: React.FC = () => {
-  const [chats, setChats] = useState<Chat[]>([]);
-
-  useEffect(() => {
-    const currentUser = auth.currentUser;
-
-    if (!currentUser) {
-      console.warn("User is not authenticated.");
-      return;
-    }
-
-    // Fetch chats where the current user is a participant
-    const chatsRef = collection(db, "chats");
-    const q = query(chatsRef, where("participants", "array-contains", currentUser.uid));
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedChats = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        const lastMessage = data.lastMessage?.text || "No messages yet";
-
-        return {
-          id: doc.id, // Chat ID from Firestore
-          name: "Chat with " + (data.participants?.join(", ") || "Unknown"), // Placeholder name, replace with actual names
-          avatar: "https://via.placeholder.com/50", // Placeholder avatar
-          lastMessage: lastMessage,
-        };
-      });
-
-      setChats(fetchedChats);
-    });
-
-    return () => unsubscribe(); // Cleanup listener on unmount
-  }, []);
+  const chats = useChatList(); // Use the custom hook to get chats
 
   return (
     <View style={styles.container}>
@@ -54,7 +15,7 @@ const ChatListScreen: React.FC = () => {
           chats.map((chat) => (
             <ChatListItem
               key={chat.id}
-              id={chat.id}              // Pass chat ID for navigation
+              id={chat.id}
               name={chat.name}
               avatar={chat.avatar}
               lastMessage={chat.lastMessage}
