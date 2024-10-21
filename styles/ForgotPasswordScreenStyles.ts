@@ -1,7 +1,7 @@
 // /styles/ForgotPasswordScreenStyles.ts
 
 import { StyleSheet } from 'react-native';
-import { colors } from './themes'; // Assuming you have colors defined in themes.ts
+import { colors } from './themes';
 
 export const styles = StyleSheet.create({
   container: {
