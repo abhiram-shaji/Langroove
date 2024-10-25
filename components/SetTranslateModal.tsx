@@ -1,7 +1,8 @@
 // SetTranslateModal.tsx
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Modal, View, Text, TouchableOpacity, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import styles from '../styles/SetTranslateModalStyles';
 
 interface SetTranslateModalProps {
   visible: boolean;
@@ -9,20 +10,41 @@ interface SetTranslateModalProps {
   onSave: (selectedLanguage: string) => void;
 }
 
-const languages = [
-  "English",
-  "Spanish",
-  "French",
-  "Mandarin Chinese",
-  "German",
-  "Italian",
-  "Japanese",
-  "Korean",
-  "Portuguese",
-  "Russian"
-];
+// Map language names to their country codes for flag fetching
+const languageToCountryMap: Record<string, string> = {
+  English: 'US',
+  Spanish: 'ES',
+  French: 'FR',
+  'Mandarin Chinese': 'CN',
+  German: 'DE',
+  Italian: 'IT',
+  Japanese: 'JP',
+  Korean: 'KR',
+  Portuguese: 'PT',
+  Russian: 'RU'
+};
+
+const languages = Object.keys(languageToCountryMap);
 
 const SetTranslateModal: React.FC<SetTranslateModalProps> = ({ visible, onClose, onSave }) => {
+  const [flags, setFlags] = useState<{ [key: string]: string | null }>({});
+
+  useEffect(() => {
+    const fetchFlags = async () => {
+      const flagsMap: { [key: string]: string | null } = {};
+      for (const language of languages) {
+        const countryCode = languageToCountryMap[language];
+        const flagUrl = `https://flagsapi.com/${countryCode}/flat/64.png`;
+        flagsMap[language] = flagUrl;
+        console.log(`Set flag for ${language}: ${flagUrl}`);
+      }
+      setFlags(flagsMap);
+      console.log("All flags set:", flagsMap);  // Log the entire flags map after setting
+    };
+
+    fetchFlags();
+  }, []);
+
   const handleLanguageSelect = (language: string) => {
     onSave(language);
     onClose();
@@ -43,6 +65,12 @@ const SetTranslateModal: React.FC<SetTranslateModalProps> = ({ visible, onClose,
               onPress={() => handleLanguageSelect(item)}
               style={styles.languageItem}
             >
+              {flags[item] && (
+                <Image
+                  source={{ uri: flags[item] }}
+                  style={styles.flagIcon}
+                />
+              )}
               <Text style={styles.languageText}>{item}</Text>
             </TouchableOpacity>
           )}
@@ -51,38 +79,5 @@ const SetTranslateModal: React.FC<SetTranslateModalProps> = ({ visible, onClose,
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 40,
-    right: 20,
-    padding: 10,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: 'white',
-  },
-  languageItem: {
-    padding: 10,
-    marginVertical: 5,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    width: 200,
-    alignItems: 'center',
-  },
-  languageText: {
-    fontSize: 16,
-  },
-});
 
 export default SetTranslateModal;
