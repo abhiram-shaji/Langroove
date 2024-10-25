@@ -3,6 +3,7 @@ import { FlatList, KeyboardAvoidingView, View, Text, Image, TouchableOpacity } f
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
+import SetTranslateModal from '../components/SetTranslateModal'; // Import the modal
 import { useChat } from '../hooks/useChat';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../app/App';
@@ -19,6 +20,8 @@ const ChatScreen: React.FC = () => {
   const { chatId } = route.params;
   const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
   const [isGroupChat, setIsGroupChat] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
   const recipientId = chatId.split('_').find(id => id !== auth.currentUser?.uid); 
   const { userInfo, loading } = useUserInfo(recipientId || ''); 
@@ -35,6 +38,11 @@ const ChatScreen: React.FC = () => {
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>{userInfo.name}</Text>
           </View>
         ),
+        headerRight: () => (
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={{ padding: 8 }}>
+            <Text style={{ color: 'blue', fontSize: 16 }}>Set Translate</Text>
+          </TouchableOpacity>
+        ),
         headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 8 }}>
             <Ionicons name="arrow-back" size={24} color="black" />
@@ -44,36 +52,19 @@ const ChatScreen: React.FC = () => {
     }
   }, [userInfo, loading, navigation]);
 
-  if (!chatId) {
-    return (
-      <SafeAreaProvider>
-        <View style={styles.container}>
-          <Text style={{ color: 'red' }}>Invalid or missing chatId</Text>
-        </View>
-      </SafeAreaProvider>
-    );
-  }
-
-  if (!messages || messages.length === 0) {
-    return (
-      <SafeAreaProvider>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <View style={styles.chatArea}>
-            <Text style={{ textAlign: 'center', marginTop: 20 }}>No messages yet. Start the conversation!</Text>
-          </View>
-          <ChatInput
-            message={message}
-            onChangeMessage={setMessage}
-            onSendMessage={sendMessage}
-          />
-        </KeyboardAvoidingView>
-      </SafeAreaProvider>
-    );
-  }
+  const handleSaveLanguage = (language: string) => {
+    setSelectedLanguage(language);
+    // Here, you can add code to apply the selected language
+  };
 
   return (
     <SafeAreaProvider>
       <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <SetTranslateModal
+          visible={isModalVisible}
+          onClose={() => setModalVisible(false)}
+          onSave={handleSaveLanguage}
+        />
         <FlatList
           data={messages}
           renderItem={({ item }) => (
