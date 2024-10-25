@@ -1,5 +1,5 @@
 // SetTranslateModal.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -9,7 +9,18 @@ interface SetTranslateModalProps {
   onSave: (selectedLanguage: string) => void;
 }
 
-const languages = ["English", "Spanish", "French", "German", "Chinese", "Japanese", "Arabic"];
+const languages = [
+  "English",
+  "Spanish",
+  "French",
+  "Mandarin Chinese",
+  "German",
+  "Italian",
+  "Japanese",
+  "Korean",
+  "Portuguese",
+  "Russian"
+];
 
 const SetTranslateModal: React.FC<SetTranslateModalProps> = ({ visible, onClose, onSave }) => {
   const handleLanguageSelect = (language: string) => {
