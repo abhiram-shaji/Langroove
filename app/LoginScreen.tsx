@@ -1,18 +1,16 @@
-// /app/login.tsx
-
 import React from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { useLogin } from '../hooks/useLogin'; // Import the custom hook
+import { useLogin } from '../hooks/useLogin';
 import { LoginStyles } from '../styles/LoginStyles';
 
 export default function Login() {
-  // Use the custom hook to get all the login logic
   const {
     credentials,
     handleInputChange,
     handleLogin,
     navigateToSignUp,
     navigateToForgotPassword,
+    error,
   } = useLogin();
 
   return (
@@ -20,7 +18,7 @@ export default function Login() {
       <Text style={LoginStyles.title}>Langroove</Text>
 
       <TextInput
-        placeholder="email"
+        placeholder="Email"
         value={credentials.email}
         onChangeText={(text) => handleInputChange('email', text)}
         style={LoginStyles.input}
@@ -33,6 +31,9 @@ export default function Login() {
         secureTextEntry
         style={LoginStyles.input}
       />
+      
+      {/* Display the error message below the password field */}
+      {error ? <Text style={LoginStyles.errorText}>{error}</Text> : null}
 
       <TouchableOpacity style={LoginStyles.button} onPress={handleLogin}>
         <Text style={LoginStyles.buttonText}>Login</Text>
