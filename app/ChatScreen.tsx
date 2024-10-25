@@ -10,6 +10,7 @@ import { RootStackParamList } from '../app/App';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebase';
 import useUserInfo from '../hooks/useUserInfo';
+import { useFlags } from '../hooks/useFlags'; // Import the useFlags hook
 import { styles } from '../styles/ChatScreenStyles';
 
 type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
@@ -18,10 +19,10 @@ const ChatScreen: React.FC = () => {
   const route = useRoute<ChatScreenRouteProp>();
   const navigation = useNavigation();
   const { chatId } = route.params;
-  const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
+  const { message, setMessage, messages, sendMessage, avatars, userLanguage, setChatLanguage } = useChat(chatId); // Ensure setChatLanguage is included here
+  const { getFlagUrl } = useFlags(); // Use the useFlags hook
   const [isGroupChat, setIsGroupChat] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
   const recipientId = chatId.split('_').find(id => id !== auth.currentUser?.uid); 
   const { userInfo, loading } = useUserInfo(recipientId || ''); 
@@ -39,9 +40,15 @@ const ChatScreen: React.FC = () => {
           </View>
         ),
         headerRight: () => (
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={{ padding: 8 }}>
-            <Text style={{ color: 'blue', fontSize: 16 }}>Set Translate</Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image
+              source={{ uri: getFlagUrl(userLanguage) }} // Get the flag URL based on the user's language
+              style={{ width: 24, height: 24, marginRight: 8 }}
+            />
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={{ padding: 8 }}>
+              <Text style={{ color: 'blue', fontSize: 16 }}>Translator</Text>
+            </TouchableOpacity>
+          </View>
         ),
         headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 8 }}>
@@ -50,11 +57,10 @@ const ChatScreen: React.FC = () => {
         ),
       });
     }
-  }, [userInfo, loading, navigation]);
+  }, [userInfo, loading, navigation, userLanguage]);
 
   const handleSaveLanguage = (language: string) => {
-    setSelectedLanguage(language);
-    // Here, you can add code to apply the selected language
+    setChatLanguage(language); // Save the language to Firestore
   };
 
   return (
@@ -73,8 +79,7 @@ const ChatScreen: React.FC = () => {
               senderId={item.senderId}
               senderType={item.senderType}
               avatarUri={avatars[item.senderId]}
-              senderName={isGroupChat ? item.senderId : undefined}
-              isGroupChat={isGroupChat}
+              isGroupChat={false}
             />
           )}
           keyExtractor={(item) => item.id}

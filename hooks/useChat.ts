@@ -26,32 +26,69 @@ export const useChat = (chatId: string) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [avatars, setAvatars] = useState<AvatarsMap>({});
+  const [userLanguage, setUserLanguage] = useState<string | null>(null);
+  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
   const currentUser = auth.currentUser;
-
-  const recipientId = chatId.split("_").find((id) => id !== currentUser?.uid);
+  const recipientId = chatId.split("_").find(id => id !== currentUser?.uid);
 
   if (!chatId || !recipientId) {
     console.error("Invalid or missing chatId or recipientId");
-    return { message, setMessage, messages, sendMessage: () => {}, avatars };
+    return { message, setMessage, messages, sendMessage: () => {}, avatars, setChatLanguage: () => {} };
   }
 
   if (!currentUser) {
     console.warn("User not authenticated");
-    return { message, setMessage, messages, sendMessage: () => {}, avatars };
+    return { message, setMessage, messages, sendMessage: () => {}, avatars, setChatLanguage: () => {} };
   }
 
   const ensureChatExists = useCallback(async () => {
     const chatDocRef = firestoreDoc(db, "chats", chatId);
     const chatDoc = await getDoc(chatDocRef);
-
+  
     if (!chatDoc.exists()) {
       await setDoc(chatDocRef, {
         participants: [currentUser.uid, recipientId],
         isGroupChat: false,
         createdAt: Timestamp.now(),
+        languages: {
+          [currentUser.uid]: null, // Set to null instead of defaulting to "en"
+          [recipientId]: null
+        }
       });
+    } else {
+      const data = chatDoc.data();
+      const fetchedUserLanguage = data.languages?.[currentUser.uid] || null;
+      const fetchedRecipientLanguage = data.languages?.[recipientId] || null;
+  
+      setUserLanguage(fetchedUserLanguage); // Set user language
+      setRecipientLanguage(fetchedRecipientLanguage); // Set recipient language
     }
   }, [chatId, currentUser, recipientId]);
+  
+
+  useEffect(() => {
+    ensureChatExists();
+  }, [ensureChatExists]);
+
+  const setChatLanguage = useCallback(
+    async (selectedLanguage: string) => {
+      const chatDocRef = firestoreDoc(db, "chats", chatId);
+      try {
+        // Save the language under the current user's ID
+        await setDoc(
+          chatDocRef,
+          { 
+            [`languages.${currentUser?.uid}`]: selectedLanguage 
+          },
+          { merge: true } // Avoid overwriting other fields
+        );
+        setUserLanguage(selectedLanguage); // Update local state
+      } catch (error) {
+        console.error("Error updating chat language:", error);
+      }
+    },
+    [chatId, currentUser]
+  );
 
   const fetchAvatar = useCallback(async (senderId: string) => {
     const cachedAvatar = await AsyncStorage.getItem(`avatar_${senderId}`);
@@ -171,5 +208,15 @@ export const useChat = (chatId: string) => {
     }
   }, [message, currentUser, chatId, ensureChatExists]);
 
-  return { message, setMessage, messages, sendMessage, avatars };
+  return { 
+    message, 
+    setMessage, 
+    messages, 
+    sendMessage, 
+    avatars, 
+    userLanguage, 
+    recipientLanguage, 
+    setChatLanguage,
+    ensureChatExists 
+  };
 };
