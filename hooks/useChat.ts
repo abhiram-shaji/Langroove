@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { db, auth } from "../firebase"; // Adjust the import paths as necessary
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { db, auth } from "../firebase";
 import {
   collection,
   addDoc,
@@ -27,9 +28,7 @@ export const useChat = (chatId: string) => {
   const [avatars, setAvatars] = useState<AvatarsMap>({});
   const currentUser = auth.currentUser;
 
-  const recipientId = chatId
-    .split("_")
-    .find((id) => id !== currentUser?.uid);
+  const recipientId = chatId.split("_").find((id) => id !== currentUser?.uid);
 
   if (!chatId || !recipientId) {
     console.error("Invalid or missing chatId or recipientId");
@@ -55,7 +54,7 @@ export const useChat = (chatId: string) => {
   }, [chatId, currentUser, recipientId]);
 
   const fetchAvatar = useCallback(async (senderId: string) => {
-    const cachedAvatar = localStorage.getItem(`avatar_${senderId}`);
+    const cachedAvatar = await AsyncStorage.getItem(`avatar_${senderId}`);
     if (cachedAvatar) return cachedAvatar;
 
     try {
@@ -63,7 +62,7 @@ export const useChat = (chatId: string) => {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         const avatarUrl = userData?.avatar || "https://robohash.org/default-avatar.png";
-        localStorage.setItem(`avatar_${senderId}`, avatarUrl); // Cache the avatar
+        await AsyncStorage.setItem(`avatar_${senderId}`, avatarUrl); // Cache the avatar
         return avatarUrl;
       }
     } catch (error) {
@@ -95,12 +94,14 @@ export const useChat = (chatId: string) => {
   useEffect(() => {
     if (!currentUser || !chatId) return;
 
-    const cachedMessages = JSON.parse(localStorage.getItem(`messages_${chatId}`) || "[]");
-    if (cachedMessages.length > 0) {
-      setMessages(cachedMessages); // Load cached messages
-    }
+    const fetchMessagesFromCache = async () => {
+      const cachedMessages = await AsyncStorage.getItem(`messages_${chatId}`);
+      if (cachedMessages) {
+        setMessages(JSON.parse(cachedMessages)); // Load cached messages
+      }
+    };
 
-    const fetchMessages = async () => {
+    const fetchMessagesFromFirestore = async () => {
       await ensureChatExists();
 
       const chatDocRef = firestoreDoc(db, "chats", chatId);
@@ -126,7 +127,7 @@ export const useChat = (chatId: string) => {
         });
 
         setMessages(fetchedMessages);
-        localStorage.setItem(`messages_${chatId}`, JSON.stringify(fetchedMessages)); // Cache messages
+        AsyncStorage.setItem(`messages_${chatId}`, JSON.stringify(fetchedMessages)); // Cache messages
 
         const senderIds = Array.from(new Set(fetchedMessages.map((msg) => msg.senderId)));
         updateAvatars(senderIds);
@@ -135,7 +136,9 @@ export const useChat = (chatId: string) => {
       return unsubscribe;
     };
 
-    fetchMessages();
+    fetchMessagesFromCache(); // First load from cache
+    fetchMessagesFromFirestore(); // Then subscribe to Firestore updates
+
   }, [currentUser, chatId, ensureChatExists, updateAvatars]);
 
   const sendMessage = useCallback(async () => {
