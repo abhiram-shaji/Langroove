@@ -27,12 +27,10 @@ export const useChat = (chatId: string) => {
   const [avatars, setAvatars] = useState<AvatarsMap>({});
   const currentUser = auth.currentUser;
 
-  // Extract recipientId from chatId
   const recipientId = chatId
     .split("_")
     .find((id) => id !== currentUser?.uid);
 
-  // Check for missing chatId or recipientId early
   if (!chatId || !recipientId) {
     console.error("Invalid or missing chatId or recipientId");
     return { message, setMessage, messages, sendMessage: () => {}, avatars };
@@ -43,32 +41,35 @@ export const useChat = (chatId: string) => {
     return { message, setMessage, messages, sendMessage: () => {}, avatars };
   }
 
-  // Helper function to check if the chat document exists and create it if not
   const ensureChatExists = useCallback(async () => {
     const chatDocRef = firestoreDoc(db, "chats", chatId);
     const chatDoc = await getDoc(chatDocRef);
 
     if (!chatDoc.exists()) {
-      // Create the chat document if it doesn't exist
       await setDoc(chatDocRef, {
-        participants: [currentUser.uid, recipientId], // Add both users as participants
-        isGroupChat: false, // Modify this logic as needed for group chat detection
+        participants: [currentUser.uid, recipientId],
+        isGroupChat: false,
         createdAt: Timestamp.now(),
       });
     }
   }, [chatId, currentUser, recipientId]);
 
   const fetchAvatar = useCallback(async (senderId: string) => {
+    const cachedAvatar = localStorage.getItem(`avatar_${senderId}`);
+    if (cachedAvatar) return cachedAvatar;
+
     try {
       const userDoc = await getDoc(firestoreDoc(db, "users", senderId));
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        return userData?.avatar || "https://robohash.org/default-avatar.png";
+        const avatarUrl = userData?.avatar || "https://robohash.org/default-avatar.png";
+        localStorage.setItem(`avatar_${senderId}`, avatarUrl); // Cache the avatar
+        return avatarUrl;
       }
     } catch (error) {
       console.error("Error fetching avatar for:", senderId, error);
     }
-    return "https://robohash.org/default-avatar.png"; // Default avatar on error or no user
+    return "https://robohash.org/default-avatar.png";
   }, []);
 
   const updateAvatars = useCallback(
@@ -94,27 +95,26 @@ export const useChat = (chatId: string) => {
   useEffect(() => {
     if (!currentUser || !chatId) return;
 
+    const cachedMessages = JSON.parse(localStorage.getItem(`messages_${chatId}`) || "[]");
+    if (cachedMessages.length > 0) {
+      setMessages(cachedMessages); // Load cached messages
+    }
+
     const fetchMessages = async () => {
-      await ensureChatExists();  // Ensure chat exists before fetching messages
+      await ensureChatExists();
 
-      const chatDocRef = firestoreDoc(db, "chats", chatId);  // Reference to the chat document
-      const messagesRef = collection(chatDocRef, "messages");  // Reference to the messages subcollection
-
+      const chatDocRef = firestoreDoc(db, "chats", chatId);
+      const messagesRef = collection(chatDocRef, "messages");
       const q = query(messagesRef, orderBy("createdAt"));
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const fetchedMessages = snapshot.docs.map((messageDoc) => {
           const data = messageDoc.data();
-
-          // Ensure readBy is initialized to an empty array if it's undefined
           const readBy = data.readBy || [];
 
-          // Mark the message as read if it hasn't been already
           if (!readBy.includes(currentUser.uid)) {
             const messageRef = firestoreDoc(db, `chats/${chatId}/messages`, messageDoc.id);
-            setDoc(messageRef, {
-              readBy: [...readBy, currentUser.uid],
-            }, { merge: true });
+            setDoc(messageRef, { readBy: [...readBy, currentUser.uid] }, { merge: true });
           }
 
           return {
@@ -126,11 +126,9 @@ export const useChat = (chatId: string) => {
         });
 
         setMessages(fetchedMessages);
+        localStorage.setItem(`messages_${chatId}`, JSON.stringify(fetchedMessages)); // Cache messages
 
-        // Fetch avatars for new senderIds
-        const senderIds = Array.from(
-          new Set(fetchedMessages.map((msg) => msg.senderId))
-        );
+        const senderIds = Array.from(new Set(fetchedMessages.map((msg) => msg.senderId)));
         updateAvatars(senderIds);
       });
 
@@ -144,20 +142,18 @@ export const useChat = (chatId: string) => {
     if (!message.trim() || !currentUser) return;
 
     try {
-      await ensureChatExists();  // Ensure chat exists before sending the message
+      await ensureChatExists();
 
-      const chatDocRef = firestoreDoc(db, "chats", chatId);  // Reference to the chat document
-      const messagesRef = collection(chatDocRef, "messages");  // Reference to the messages subcollection
+      const chatDocRef = firestoreDoc(db, "chats", chatId);
+      const messagesRef = collection(chatDocRef, "messages");
 
-      // Add the new message
       const newMessageRef = await addDoc(messagesRef, {
         text: message,
         sender: currentUser.uid,
         createdAt: Timestamp.now(),
-        readBy: [currentUser.uid], // Mark message as read by the sender
+        readBy: [currentUser.uid],
       });
 
-      // Update the lastMessage field in the chat document
       await setDoc(chatDocRef, {
         lastMessage: {
           messageId: newMessageRef.id,
@@ -166,7 +162,7 @@ export const useChat = (chatId: string) => {
         },
       }, { merge: true });
 
-      setMessage(""); // Clear the input field after sending the message
+      setMessage("");
     } catch (error) {
       console.error("Error sending message: ", error);
     }
