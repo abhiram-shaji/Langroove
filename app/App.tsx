@@ -89,11 +89,11 @@ const App: React.FC = () => {
 
         <Stack.Screen name="FriendList" component={FriendListScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Friends" component={FriendListScreen} />
-        <Stack.Screen name="AddTopic" component={AddTopicScreen} />
+        <Stack.Screen name="Friends" options={{ headerShown: true }} component={FriendListScreen} />
+        <Stack.Screen name="AddTopic" options={{ headerShown: true }} component={AddTopicScreen} />
 
-        <Stack.Screen name="Privacy" component={PrivacyScreen} />
-        <Stack.Screen name="About" component={AboutScreen} />
+        <Stack.Screen name="Privacy" options={{ headerShown: true }} component={PrivacyScreen} />
+        <Stack.Screen name="About" options={{ headerShown: true }} component={AboutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

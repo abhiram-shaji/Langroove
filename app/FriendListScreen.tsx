@@ -14,10 +14,6 @@ const FriendListScreen: React.FC = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        {/* AppBar for the Friends List screen */}
-        <Appbar.Header>
-          <Appbar.Content title="Friends List" />
-        </Appbar.Header>
 
         {/* Search Bar */}
         <TextInput
