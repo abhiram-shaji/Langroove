@@ -1,6 +1,7 @@
 // SetTranslateModal.tsx
 import React, { useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 interface SetTranslateModalProps {
   visible: boolean;
@@ -11,42 +12,30 @@ interface SetTranslateModalProps {
 const languages = ["English", "Spanish", "French", "German", "Chinese", "Japanese", "Arabic"];
 
 const SetTranslateModal: React.FC<SetTranslateModalProps> = ({ visible, onClose, onSave }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
-
-  const handleSave = () => {
-    if (selectedLanguage) {
-      onSave(selectedLanguage);
-      onClose();
-    }
+  const handleLanguageSelect = (language: string) => {
+    onSave(language);
+    onClose();
   };
 
   return (
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalContainer}>
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <Ionicons name="close" size={24} color="white" />
+        </TouchableOpacity>
         <Text style={styles.modalTitle}>Select Language</Text>
         <FlatList
           data={languages}
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => setSelectedLanguage(item)}
-              style={[
-                styles.languageItem,
-                item === selectedLanguage && styles.selectedLanguageItem,
-              ]}
+              onPress={() => handleLanguageSelect(item)}
+              style={styles.languageItem}
             >
               <Text style={styles.languageText}>{item}</Text>
             </TouchableOpacity>
           )}
         />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={onClose} style={styles.button}>
-            <Text style={styles.buttonText}>Close</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleSave} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </Modal>
   );
@@ -58,6 +47,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    padding: 10,
   },
   modalTitle: {
     fontSize: 20,
@@ -73,24 +69,7 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: 'center',
   },
-  selectedLanguageItem: {
-    backgroundColor: '#ddd',
-  },
   languageText: {
-    fontSize: 16,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 20,
-  },
-  button: {
-    marginHorizontal: 10,
-    padding: 10,
-    backgroundColor: '#007bff',
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
     fontSize: 16,
   },
 });
