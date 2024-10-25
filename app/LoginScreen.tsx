@@ -20,9 +20,9 @@ export default function Login() {
       <Text style={LoginStyles.title}>Langroove</Text>
 
       <TextInput
-        placeholder="Username"
-        value={credentials.username}
-        onChangeText={(text) => handleInputChange('username', text)}
+        placeholder="email"
+        value={credentials.email}
+        onChangeText={(text) => handleInputChange('email', text)}
         style={LoginStyles.input}
       />
 

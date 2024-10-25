@@ -3,16 +3,16 @@ import { Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../app/App'; 
+import { RootStackParamList } from '../app/App';
 
 interface Credentials {
-  username: string;
+  email: string;
   password: string;
 }
 
 export const useLogin = () => {
   const [credentials, setCredentials] = useState<Credentials>({
-    username: '',
+    email: '',
     password: '',
   });
 
@@ -22,16 +22,16 @@ export const useLogin = () => {
   // Type the navigation prop with RootStackParamList to ensure correct route navigation
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  // Handle input change for username and password
+  // Handle input change for email and password
   const handleInputChange = (field: keyof Credentials, value: string) => {
     setCredentials((prev) => ({ ...prev, [field]: value }));
   };
 
   // Handle login logic with Firebase Authentication
   const handleLogin = async () => {
-    const { username, password } = credentials;
+    const { email, password } = credentials;
 
-    if (!username || !password) {
+    if (!email || !password) {
       Alert.alert('Error', 'Please fill out both fields');
       return;
     }
@@ -40,8 +40,8 @@ export const useLogin = () => {
 
     try {
       // Firebase auth login
-      await signInWithEmailAndPassword(auth, username, password);
-      Alert.alert('Success', `Logged in as ${username}`);
+      await signInWithEmailAndPassword(auth, email, password);
+      Alert.alert('Success', `Logged in as ${email}`);
       setLoggedIn(true); // Successfully logged in
     } catch (error: any) {
       Alert.alert('Login Failed', error.message);
