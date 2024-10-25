@@ -5,6 +5,7 @@ import { doc, setDoc, getDocs, query, collection, where } from 'firebase/firesto
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../app/App';
+import useFirebaseAuthErrors from '../hooks/useFirebaseAuthErrors';
 
 interface Credentials {
   name: string;
@@ -34,6 +35,7 @@ export const useSignUp = () => {
   const [emailExists, setEmailExists] = useState<boolean>(false);
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const { getErrorMessage } = useFirebaseAuthErrors();
 
   const handleInputChange = (field: keyof Credentials, value: string) => {
     setCredentials({ ...credentials, [field]: value });
@@ -89,7 +91,8 @@ export const useSignUp = () => {
         navigation.replace('Login');
       }
     } catch (error: any) {
-      setErrors((prevErrors) => ({ ...prevErrors, general: error.message }));
+      const errorMessage = getErrorMessage(error.code);
+      setErrors((prevErrors) => ({ ...prevErrors, general: errorMessage }));
     } finally {
       setLoading(false);
     }

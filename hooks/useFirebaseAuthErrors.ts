@@ -59,8 +59,6 @@ const useFirebaseAuthErrors = () => {
           return 'No user found with this email.';
         case 'auth/wrong-password':
           return 'Incorrect password.';
-        case 'auth/email-already-exists':
-          return 'This email is already in use by another account.';
         case 'auth/uid-already-exists':
           return 'This UID is already in use.';
         default:
