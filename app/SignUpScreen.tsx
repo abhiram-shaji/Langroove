@@ -1,12 +1,10 @@
-// /app/SignUpScreen.tsx 
-
 import React from 'react';
-import { Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useSignUp } from '../hooks/useSignUp';
 import { SignUpStyles } from '../styles/SignUpStyles';
 
 const SignUpScreen: React.FC = () => {
-  const { credentials, handleInputChange, handleSignUp } = useSignUp();
+  const { credentials, errors, loading, handleInputChange, handleSignUp } = useSignUp();
 
   return (
     <View style={SignUpStyles.container}>
@@ -18,6 +16,7 @@ const SignUpScreen: React.FC = () => {
         onChangeText={(text) => handleInputChange('name', text)}
         style={SignUpStyles.input}
       />
+      {errors.name && <Text style={SignUpStyles.errorText}>{errors.name}</Text>}
 
       <TextInput
         placeholder="Email"
@@ -26,6 +25,7 @@ const SignUpScreen: React.FC = () => {
         keyboardType="email-address"
         style={SignUpStyles.input}
       />
+      {errors.email && <Text style={SignUpStyles.errorText}>{errors.email}</Text>}
 
       <TextInput
         placeholder="Password"
@@ -34,6 +34,7 @@ const SignUpScreen: React.FC = () => {
         secureTextEntry
         style={SignUpStyles.input}
       />
+      {errors.password && <Text style={SignUpStyles.errorText}>{errors.password}</Text>}
 
       <TextInput
         placeholder="Confirm Password"
@@ -42,10 +43,17 @@ const SignUpScreen: React.FC = () => {
         secureTextEntry
         style={SignUpStyles.input}
       />
+      {errors.confirmPassword && <Text style={SignUpStyles.errorText}>{errors.confirmPassword}</Text>}
 
-      <TouchableOpacity style={SignUpStyles.button} onPress={handleSignUp}>
-        <Text style={SignUpStyles.buttonText}>Sign Up</Text>
+      <TouchableOpacity style={SignUpStyles.button} onPress={handleSignUp} disabled={loading}>
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={SignUpStyles.buttonText}>Sign Up</Text>
+        )}
       </TouchableOpacity>
+      
+      {errors.general && <Text style={SignUpStyles.errorText}>{errors.general}</Text>}
     </View>
   );
 };
