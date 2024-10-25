@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -14,19 +14,20 @@ const styles = StyleSheet.create({
     top: 40,
     right: 20,
     padding: 10,
+    backgroundColor: 'black',
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'white',
+    color: 'black',
   },
   languageItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
     marginVertical: 5,
-    backgroundColor: '#fff',
+    backgroundColor: 'black',
     borderRadius: 5,
     width: 200,
   },
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
   },
   languageText: {
     fontSize: 16,
+    color: 'white',
   },
 });
 
