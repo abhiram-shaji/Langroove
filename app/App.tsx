@@ -83,7 +83,8 @@ const App: React.FC = () => {
         <Stack.Screen
           name="Chat"
           component={ChatScreen}
-          initialParams={{ chatId: "" }} // Initial params should now include chatId
+          options={{ headerShown: true }} // Enable header only for ChatScreen
+          initialParams={{ chatId: "" }} // Include chatId as initial param
         />
 
         <Stack.Screen name="FriendList" component={FriendListScreen} />

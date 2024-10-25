@@ -1,21 +1,49 @@
-import React from 'react';
-import { FlatList, KeyboardAvoidingView, View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, KeyboardAvoidingView, View, Text, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import { useChat } from '../hooks/useChat';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../app/App';
+import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../firebase';
+import useUserInfo from '../hooks/useUserInfo';
 import { styles } from '../styles/ChatScreenStyles';
 
 type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
 
 const ChatScreen: React.FC = () => {
   const route = useRoute<ChatScreenRouteProp>();
-  console.log('Route params:', route.params);
-  const { chatId } = route.params;  // Ensure chatId is passed correctly via route params
+  const navigation = useNavigation();
+  const { chatId } = route.params;
+  const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
+  const [isGroupChat, setIsGroupChat] = useState(false);
 
-  // Return early if chatId is invalid or missing
+  const recipientId = chatId.split('_').find(id => id !== auth.currentUser?.uid); 
+  const { userInfo, loading } = useUserInfo(recipientId || ''); 
+
+  useEffect(() => {
+    if (!loading && userInfo) {
+      navigation.setOptions({
+        headerTitle: () => (
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image
+              source={{ uri: userInfo.avatar }}
+              style={{ width: 40, height: 40, borderRadius: 20, marginRight: 8 }}
+            />
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>{userInfo.name}</Text>
+          </View>
+        ),
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 8 }}>
+            <Ionicons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [userInfo, loading, navigation]);
+
   if (!chatId) {
     return (
       <SafeAreaProvider>
@@ -26,10 +54,6 @@ const ChatScreen: React.FC = () => {
     );
   }
 
-  const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
-  const [isGroupChat, setIsGroupChat] = React.useState(false);  // State to handle if the chat is a group chat
-
-  // UI for empty chat
   if (!messages || messages.length === 0) {
     return (
       <SafeAreaProvider>
@@ -57,15 +81,14 @@ const ChatScreen: React.FC = () => {
               text={item.text}
               senderId={item.senderId}
               senderType={item.senderType}
-              avatarUri={avatars[item.senderId]}  // Avatar for each sender
-              senderName={isGroupChat ? item.senderId : undefined}  // Show sender's name if group chat
-              isGroupChat={isGroupChat}  // Pass group chat status
+              avatarUri={avatars[item.senderId]}
+              senderName={isGroupChat ? item.senderId : undefined}
+              isGroupChat={isGroupChat}
             />
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatArea}
         />
-
         <ChatInput
           message={message}
           onChangeMessage={setMessage}
