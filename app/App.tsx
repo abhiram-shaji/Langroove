@@ -68,6 +68,9 @@ const App: React.FC = () => {
         initialRouteName={loggedIn ? "Feed" : "Login"}
         screenOptions={{
           headerShown: false,
+          headerStyle: {
+            backgroundColor: '#f9bc60', // Header background color
+          },
           ...useTransition,
         }}
       >
