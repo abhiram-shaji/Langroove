@@ -49,4 +49,9 @@ export const LoginStyles = StyleSheet.create({
   forgotPassword: {
     marginTop: 20,
   },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    fontSize: 12,
+  },
 });

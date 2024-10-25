@@ -42,4 +42,10 @@ export const SignUpStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
+    alignSelf: 'flex-start',
+  },
 });

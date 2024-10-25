@@ -1,74 +1,75 @@
 import { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../app/App'; 
+import { RootStackParamList } from '../app/App';
+import useFirebaseAuthErrors from './useFirebaseAuthErrors';
 
 interface Credentials {
-  username: string;
+  email: string;
   password: string;
 }
 
 export const useLogin = () => {
   const [credentials, setCredentials] = useState<Credentials>({
-    username: '',
+    email: '',
     password: '',
   });
 
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [error, setError] = useState(''); // Single error message
 
-  // Type the navigation prop with RootStackParamList to ensure correct route navigation
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { getErrorMessage } = useFirebaseAuthErrors();
 
-  // Handle input change for username and password
   const handleInputChange = (field: keyof Credentials, value: string) => {
     setCredentials((prev) => ({ ...prev, [field]: value }));
+    setError(''); // Clear error when user types
   };
 
-  // Handle login logic with Firebase Authentication
-  const handleLogin = async () => {
-    const { username, password } = credentials;
-
-    if (!username || !password) {
-      Alert.alert('Error', 'Please fill out both fields');
-      return;
+  const validateFields = (): boolean => {
+    if (!credentials.email || !credentials.password) {
+      setError('Email and password should not be empty');
+      return false;
     }
+    return true;
+  };
+
+  const handleLogin = async () => {
+    if (!validateFields()) return;
 
     setLoading(true);
 
     try {
-      // Firebase auth login
-      await signInWithEmailAndPassword(auth, username, password);
-      Alert.alert('Success', `Logged in as ${username}`);
-      setLoggedIn(true); // Successfully logged in
+      await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
+      setLoggedIn(true);
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      const errorMessage = getErrorMessage(error.code);
+      setError(errorMessage); // Set the general error message
     } finally {
       setLoading(false);
     }
   };
 
-  // Navigate to the FeedScreen once logged in
   useEffect(() => {
     if (loggedIn) {
-      navigation.navigate('Feed'); // Navigate to Feed screen after successful login
+      navigation.navigate('Feed');
     }
   }, [loggedIn, navigation]);
 
-  // Navigation handlers for sign-up and forgot password
   const navigateToSignUp = () => {
-    navigation.navigate('SignUp'); // Navigate to SignUp screen
+    navigation.navigate('SignUp');
   };
 
   const navigateToForgotPassword = () => {
-    navigation.navigate('ForgotPassword'); // Navigate to ForgotPassword screen
+    navigation.navigate('ForgotPassword');
   };
 
   return {
     credentials,
     loading,
+    error, // return single error message for UI
     handleInputChange,
     handleLogin,
     navigateToSignUp,
