@@ -3,14 +3,14 @@ import { FlatList, KeyboardAvoidingView, View, Text, Image, TouchableOpacity } f
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
-import SetTranslateModal from '../components/SetTranslateModal'; // Import the modal
+import SetTranslateModal from '../components/SetTranslateModal';
 import { useChat } from '../hooks/useChat';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../app/App';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebase';
 import useUserInfo from '../hooks/useUserInfo';
-import { useFlags } from '../hooks/useFlags'; // Import the useFlags hook
+import { useFlags } from '../hooks/useFlags';
 import { styles } from '../styles/ChatScreenStyles';
 
 type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
