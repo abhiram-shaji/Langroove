@@ -28,7 +28,7 @@ const flagMap: { [key: string]: string } = {
   RU: 'https://flagcdn.com/w320/ru.png',
 };
 
-const DEFAULT_FLAG_URL = 'https://flagcdn.com/w320/earth.png'; // Define here
+const DEFAULT_FLAG_URL = 'https://flagcdn.com/w320/us.png'; // Define here
 
 export const useFlags = () => {
   const getFlagUrl = useCallback((language: string | null | undefined): string => {

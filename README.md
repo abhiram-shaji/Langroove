@@ -73,46 +73,49 @@ Before running the project, ensure you have the following installed on your mach
 
 ---
 
-## Getting Started
-
+### Getting Started
 Follow the steps below to set up and run the project on your local machine:
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/yourusername/langroove.git
-cd langroove
-```
+1. **Fork and Clone the Repository**  
+   - First, fork this repository to your GitHub account.
+   - Then, clone it to your local machine:
+     ```bash
+     git clone https://github.com/yourusername/langroove.git
+     cd langroove
+     ```
 
-### 2. Install Dependencies
-```bash
-npm install
-```
+2. **Install Dependencies**  
+   ```bash
+   npm install
+   ```
 
-### 3. Install Expo CLI (if not already installed)
-```bash
-npm install -g expo-cli
-```
+3. **Install Expo (New Workflow)**  
+   - Install the `expo` package directly without `expo-cli`:
+     ```bash
+     npm install expo
+     ```
+   - If you prefer using the Expo Development server globally, you can run:
+     ```bash
+     npm install -g expo
+     ```
 
-### 4. Configure Firebase
-- Navigate to the Firebase Console and create a new project.
-- Set up Firebase Authentication and Firestore for the app.
-- Copy the Firebase configuration object (API keys, projectId, etc.) and add it to your app in the appropriate place (e.g., `firebaseConfig.js`).
+4. **Configure Firebase**  
+   - Navigate to the Firebase Console and create a new project.
+   - Set up **Firebase Authentication** and **Firestore**.
+   - Copy the Firebase configuration object (API keys, projectId, etc.) and add it to your app in the appropriate place (e.g., `firebaseConfig.js`).
 
-### 5. Start the Expo Development Server
-```bash
-expo start
-```
+5. **Start the Development Server**  
+   ```bash
+   npx expo start
+   ```
+   - This command will open the Expo developer tools in your browser.
+   - You can scan the QR code with the Expo Go app on your mobile device or run the app on an emulator.
 
-- This command will open the Expo developer tools in your browser.
-- You can now scan the QR code with the Expo Go app on your mobile device or run the app on an emulator.
-
-### 6. Running on Android/iOS Emulator
-To run the app on an Android or iOS emulator:
-
-- For Android: Ensure you have Android Studio installed with an emulator configured.
-- For iOS: Use Xcode and set up an iOS simulator.
-
-Once configured, select the target platform from the Expo developer tools.
+6. **Running on Android/iOS Emulator**  
+   - To run the app on an Android or iOS emulator:
+     - **Android:** Ensure you have **Android Studio** installed with an emulator configured.
+     - **iOS:** Use **Xcode** to set up an iOS simulator.
+   - Once configured, select the target platform from the Expo developer tools.
 
 ---
 
