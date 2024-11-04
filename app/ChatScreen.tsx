@@ -1,3 +1,4 @@
+// ChatScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -7,7 +8,7 @@ import { auth } from '../firebase';
 import { useChat } from '../hooks/useChat';
 import useUserInfo from '../hooks/useUserInfo';
 import { useFlags } from '../hooks/useFlags';
-import { setChatLanguage as updateChatLanguage, ensureChatLanguage } from '../hooks/translationService';
+import { setChatLanguage, ensureChatLanguage } from '../hooks/translationService';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import SetTranslateModal from '../components/SetTranslateModal';
@@ -28,24 +29,21 @@ const ChatScreen: React.FC = () => {
   const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
 
   const currentUser = auth.currentUser;
-  const getRecipientId = (chatId: string) => chatId.split('_').find(id => id !== currentUser?.uid);
+  const recipientId = chatId.split('_').find(id => id !== currentUser?.uid) || '';
+  const { userInfo, loading } = useUserInfo(recipientId);
 
-  const recipientId = getRecipientId(chatId);
-  const { userInfo, loading } = useUserInfo(recipientId || '');
-
-  // Load initial language settings for the chat
   useEffect(() => {
-    if (currentUser && recipientId) {
-      const loadChatLanguages = async () => {
+    const loadChatLanguages = async () => {
+      if (currentUser && recipientId) {
         const { userLanguage, recipientLanguage } = await ensureChatLanguage(chatId, currentUser.uid, recipientId);
         setUserLanguage(userLanguage);
         setRecipientLanguage(recipientLanguage);
         setIsLanguageLoaded(true);
-      };
-      loadChatLanguages();
-    } else {
-      console.warn("User not authenticated or recipient ID missing.");
-    }
+      } else {
+        console.warn("User not authenticated or recipient ID missing.");
+      }
+    };
+    loadChatLanguages();
   }, [chatId, currentUser, recipientId]);
 
   useEffect(() => {
@@ -95,14 +93,13 @@ const ChatScreen: React.FC = () => {
 
   const handleSaveLanguage = async (language: string) => {
     if (currentUser) {
-      await updateChatLanguage(chatId, currentUser.uid, language);
+      await setChatLanguage(chatId, currentUser.uid, language);
       setUserLanguage(language);
     } else {
       console.warn("Cannot set language: User not authenticated.");
     }
   };
 
-  // Show loading spinner until userLanguage is available
   if (!isLanguageLoaded) {
     return (
       <SafeAreaProvider>

@@ -1,6 +1,5 @@
 // useChat.ts
 import { useEffect, useState, useCallback } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db, auth } from "../firebase";
 import {
   collection,
@@ -9,13 +8,10 @@ import {
   orderBy,
   onSnapshot,
   doc as firestoreDoc,
-  getDoc,
-  setDoc, // Add setDoc here
   Timestamp,
+  setDoc,
 } from "firebase/firestore";
-import { ensureChatLanguage, setChatLanguage as updateChatLanguage } from "./translationService";
-
-
+import { ensureChatLanguage, setChatLanguage as updateChatLanguage } from "../hooks/translationService";
 
 type Message = {
   id: string;
@@ -40,16 +36,17 @@ export const useChat = (chatId: string) => {
     return { message, setMessage, messages, sendMessage: () => {}, avatars, setChatLanguage: () => {} };
   }
 
-  const initializeChatLanguages = useCallback(async () => {
-    const { userLanguage, recipientLanguage } = await ensureChatLanguage(chatId, currentUser.uid, recipientId);
-    setUserLanguage(userLanguage);
-    setRecipientLanguage(recipientLanguage);
+  // Initialize chat languages
+  useEffect(() => {
+    const initializeChatLanguages = async () => {
+      const { userLanguage, recipientLanguage } = await ensureChatLanguage(chatId, currentUser.uid, recipientId);
+      setUserLanguage(userLanguage);
+      setRecipientLanguage(recipientLanguage);
+    };
+    initializeChatLanguages();
   }, [chatId, currentUser, recipientId]);
 
-  useEffect(() => {
-    initializeChatLanguages();
-  }, [initializeChatLanguages]);
-
+  // Set chat language
   const setChatLanguage = useCallback(async (selectedLanguage: string) => {
     try {
       const updatedLanguage = await updateChatLanguage(chatId, currentUser.uid, selectedLanguage);
@@ -57,6 +54,25 @@ export const useChat = (chatId: string) => {
     } catch (error) {
       console.error("Error setting chat language:", error);
     }
+  }, [chatId, currentUser]);
+
+  // Fetch messages from Firestore in real-time
+  useEffect(() => {
+    const chatDocRef = firestoreDoc(db, "chats", chatId);
+    const messagesRef = collection(chatDocRef, "messages");
+    const messagesQuery = query(messagesRef, orderBy("createdAt", "asc"));
+
+    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+      const loadedMessages: Message[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        text: doc.data().text,
+        senderId: doc.data().sender,
+        senderType: doc.data().sender === currentUser?.uid ? "me" : "other",
+      }));
+      setMessages(loadedMessages);
+    });
+
+    return () => unsubscribe(); // Clean up listener on unmount
   }, [chatId, currentUser]);
 
   const sendMessage = useCallback(async () => {
@@ -83,17 +99,14 @@ export const useChat = (chatId: string) => {
     }
   }, [message, currentUser, chatId]);
 
-  // Remaining hook logic, such as `fetchAvatar`, `updateAvatars`, `fetchMessagesFromFirestore`
-
   return {
     message,
     setMessage,
     messages,
-    sendMessage, // Make sure `sendMessage` is included here
+    sendMessage,
     avatars,
     userLanguage,
     recipientLanguage,
     setChatLanguage,
-    initializeChatLanguages,
   };
 };
