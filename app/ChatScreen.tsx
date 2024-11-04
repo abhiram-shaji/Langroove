@@ -1,4 +1,3 @@
-// ChatScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -8,7 +7,7 @@ import { auth } from '../firebase';
 import { useChat } from '../hooks/useChat';
 import useUserInfo from '../hooks/useUserInfo';
 import { useFlags } from '../hooks/useFlags';
-import { setChatLanguage, ensureChatLanguage } from '../hooks/translationService';
+import { setChatLanguage, ensureChatLanguage, translateText } from '../hooks/translationService'; // Import translation function
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import SetTranslateModal from '../components/SetTranslateModal';
@@ -27,6 +26,9 @@ const ChatScreen: React.FC = () => {
   const [isLanguageLoaded, setIsLanguageLoaded] = useState(false);
   const [userLanguage, setUserLanguage] = useState<string | null>(null);
   const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
+
+  // State to manage translated messages
+  const [translatedMessage, setTranslatedMessage] = useState<{ id: string; text: string } | null>(null);
 
   const currentUser = auth.currentUser;
   const recipientId = chatId.split('_').find(id => id !== currentUser?.uid) || '';
@@ -100,6 +102,13 @@ const ChatScreen: React.FC = () => {
     }
   };
 
+  const handleDoubleClickMessage = async (messageId: string, messageText: string) => {
+    if (userLanguage) {
+      const translatedText = await translateText(messageText, userLanguage); // Use translation function
+      setTranslatedMessage({ id: messageId, text: translatedText });
+    }
+  };
+
   if (!isLanguageLoaded) {
     return (
       <SafeAreaProvider>
@@ -122,13 +131,25 @@ const ChatScreen: React.FC = () => {
         <FlatList
           data={messages}
           renderItem={({ item }) => (
-            <ChatMessage
-              text={item.text}
-              senderId={item.senderId}
-              senderType={item.senderType}
-              avatarUri={avatars[item.senderId]}
-              isGroupChat={false}
-            />
+            <View>
+              {translatedMessage?.id === item.id && (
+                <View style={styles.translationContainer}>
+                  <Text style={styles.translationText}>{translatedMessage.text}</Text>
+                </View>
+              )}
+              <TouchableOpacity
+                onPress={() => setTranslatedMessage(null)} // Hide translation on single click
+                onLongPress={() => handleDoubleClickMessage(item.id, item.text)} // Double-click for translation
+              >
+                <ChatMessage
+                  text={item.text}
+                  senderId={item.senderId}
+                  senderType={item.senderType}
+                  avatarUri={avatars[item.senderId]}
+                  isGroupChat={false}
+                />
+              </TouchableOpacity>
+            </View>
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatArea}

@@ -1,6 +1,14 @@
 // translationService.ts
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
+import axios from "axios";
 import { db } from "../firebase";
+
+/**
+ * Interface for the expected response structure from LibreTranslate.
+ */
+interface TranslationResponse {
+  translatedText: string;
+}
 
 /**
  * Ensures that a chat document exists with the correct language structure
@@ -64,5 +72,38 @@ export const setChatLanguage = async (
   } catch (error) {
     console.error("Error updating chat language:", error);
     throw error;
+  }
+};
+
+/**
+ * Translates a given text to the specified target language using LibreTranslate API.
+ * @param text - The text to translate.
+ * @param targetLanguage - The language code for the target language (e.g., 'es' for Spanish).
+ * @param sourceLanguage - The language code for the source language (default is 'auto').
+ * @returns The translated text.
+ */
+export const translateText = async (
+  text: string,
+  targetLanguage: string,
+  sourceLanguage: string = "auto"
+): Promise<string> => {
+  try {
+    const response = await axios.post<TranslationResponse>(
+      "https://libretranslate.de/translate",
+      {
+        q: text,
+        source: sourceLanguage,
+        target: targetLanguage,
+        format: "text",
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    return response.data.translatedText;
+  } catch (error) {
+    console.error("Error translating text:", error);
+    throw new Error("Translation failed");
   }
 };
