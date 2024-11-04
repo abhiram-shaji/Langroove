@@ -7,7 +7,7 @@ import { auth } from '../firebase';
 import { useChat } from '../hooks/useChat';
 import useUserInfo from '../hooks/useUserInfo';
 import { useFlags } from '../hooks/useFlags';
-import { setChatLanguage, ensureChatLanguage, translateText } from '../hooks/translationService'; // Import translation function
+import { setChatLanguage, ensureChatLanguage, translateText } from '../hooks/translationService';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import SetTranslateModal from '../components/SetTranslateModal';
@@ -26,9 +26,8 @@ const ChatScreen: React.FC = () => {
   const [isLanguageLoaded, setIsLanguageLoaded] = useState(false);
   const [userLanguage, setUserLanguage] = useState<string | null>(null);
   const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
-
-  // State to manage translated messages
   const [translatedMessage, setTranslatedMessage] = useState<{ id: string; text: string } | null>(null);
+  const [lastTap, setLastTap] = useState<number | null>(null); // Track last tap time
 
   const currentUser = auth.currentUser;
   const recipientId = chatId.split('_').find(id => id !== currentUser?.uid) || '';
@@ -103,9 +102,19 @@ const ChatScreen: React.FC = () => {
   };
 
   const handleDoubleClickMessage = async (messageId: string, messageText: string) => {
+    console.log(`Double-click detected on message ID: ${messageId}, text: "${messageText}"`);
     if (userLanguage) {
-      const translatedText = await translateText(messageText, userLanguage); // Use translation function
+      const translatedText = await translateText(messageText, userLanguage);
       setTranslatedMessage({ id: messageId, text: translatedText });
+    }
+  };
+
+  const handleTapMessage = (messageId: string, messageText: string) => {
+    const now = Date.now();
+    if (lastTap && (now - lastTap) < 300) { // Check if two taps are within 300ms
+      handleDoubleClickMessage(messageId, messageText);
+    } else {
+      setLastTap(now);
     }
   };
 
@@ -139,7 +148,7 @@ const ChatScreen: React.FC = () => {
               )}
               <TouchableOpacity
                 onPress={() => setTranslatedMessage(null)} // Hide translation on single click
-                onLongPress={() => handleDoubleClickMessage(item.id, item.text)} // Double-click for translation
+                onPressOut={() => handleTapMessage(item.id, item.text)} // Detect tap
               >
                 <ChatMessage
                   text={item.text}
