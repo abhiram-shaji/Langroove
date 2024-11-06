@@ -1,4 +1,3 @@
-// translationService.ts
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 import axios from "axios";
 import { db } from "../firebase";
@@ -75,10 +74,23 @@ export const setChatLanguage = async (
   }
 };
 
+const languageCodes: { [key: string]: string } = {
+  English: "en",
+  Spanish: "es",
+  French: "fr",
+  MandarinChinese: "zh",
+  German: "de",
+  Italian: "it",
+  Japanese: "ja",
+  Korean: "ko",
+  Portuguese: "pt",
+  Russian: "ru",
+};
+
 /**
  * Translates a given text to the specified target language using LibreTranslate API.
  * @param text - The text to translate.
- * @param targetLanguage - The language code for the target language (e.g., 'es' for Spanish).
+ * @param targetLanguage - The language name or code for the target language (e.g., 'es' for Spanish).
  * @param sourceLanguage - The language code for the source language (default is 'auto').
  * @returns The translated text.
  */
@@ -87,19 +99,28 @@ export const translateText = async (
   targetLanguage: string,
   sourceLanguage: string = "auto"
 ): Promise<string> => {
+  // Convert target language to ISO code if needed
+  const targetLangCode = languageCodes[targetLanguage] || targetLanguage;
+  const requestData = {
+    q: text,
+    source: sourceLanguage,
+    target: targetLangCode,
+    api_key: "6b35d883-0347-4e33-8e04-a7097c5f0e6a",
+    format: "text",
+  };
+
   try {
+    console.log("Sending request to LibreTranslate:", requestData);
+
     const response = await axios.post<TranslationResponse>(
-      "https://libretranslate.de/translate",
-      {
-        q: text,
-        source: sourceLanguage,
-        target: targetLanguage,
-        format: "text",
-      },
+      "https://libretranslate.com/translate",
+      requestData,
       {
         headers: { "Content-Type": "application/json" },
       }
     );
+
+    console.log("Received response from LibreTranslate:", response.data);
 
     return response.data.translatedText;
   } catch (error) {
