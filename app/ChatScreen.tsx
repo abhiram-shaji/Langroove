@@ -1,42 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { auth } from '../firebase';
-import { useChat } from '../hooks/useChat';
-import useUserInfo from '../hooks/useUserInfo';
-import { useFlags } from '../hooks/useFlags';
-import { setChatLanguage, ensureChatLanguage, translateText } from '../hooks/translationService';
-import ChatMessage from '../components/ChatMessage';
-import ChatInput from '../components/ChatInput';
-import SetTranslateModal from '../components/SetTranslateModal';
-import { styles } from '../styles/ChatScreenStyles';
-import { RootStackParamList } from '../app/App';
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { auth } from "../firebase";
+import { useChat } from "../hooks/useChat";
+import useUserInfo from "../hooks/useUserInfo";
+import { useFlags } from "../hooks/useFlags";
+import {
+  setChatLanguage,
+  ensureChatLanguage,
+  translateText,
+} from "../hooks/translationService";
+import ChatMessage from "../components/ChatMessage";
+import ChatInput from "../components/ChatInput";
+import SetTranslateModal from "../components/SetTranslateModal";
+import { styles } from "../styles/ChatScreenStyles";
+import { RootStackParamList } from "../app/App";
 
-type ChatScreenRouteProp = RouteProp<RootStackParamList, 'Chat'>;
+type ChatScreenRouteProp = RouteProp<RootStackParamList, "Chat">;
 
 const ChatScreen: React.FC = () => {
   const route = useRoute<ChatScreenRouteProp>();
   const navigation = useNavigation();
   const { chatId } = route.params;
-  const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
+  const { message, setMessage, messages, sendMessage, avatars } =
+    useChat(chatId);
   const { getFlagUrl } = useFlags();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLanguageLoaded, setIsLanguageLoaded] = useState(false);
   const [userLanguage, setUserLanguage] = useState<string | null>(null);
-  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
-  const [translatedMessage, setTranslatedMessage] = useState<{ id: string; text: string } | null>(null);
+  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(
+    null
+  );
+  const [translatedMessage, setTranslatedMessage] = useState<{
+    id: string;
+    text: string;
+  } | null>(null);
   const [lastTap, setLastTap] = useState<number | null>(null); // Track last tap time
 
   const currentUser = auth.currentUser;
-  const recipientId = chatId.split('_').find(id => id !== currentUser?.uid) || '';
+  const recipientId =
+    chatId.split("_").find((id) => id !== currentUser?.uid) || "";
   const { userInfo, loading } = useUserInfo(recipientId);
 
   useEffect(() => {
     const loadChatLanguages = async () => {
       if (currentUser && recipientId) {
-        const { userLanguage, recipientLanguage } = await ensureChatLanguage(chatId, currentUser.uid, recipientId);
+        const { userLanguage, recipientLanguage } = await ensureChatLanguage(
+          chatId,
+          currentUser.uid,
+          recipientId
+        );
         setUserLanguage(userLanguage);
         setRecipientLanguage(recipientLanguage);
         setIsLanguageLoaded(true);
@@ -79,15 +102,21 @@ const ChatScreen: React.FC = () => {
           source={{ uri: flagUrl }}
           style={{ width: 24, height: 24, marginRight: 8 }}
         />
-        <TouchableOpacity onPress={() => setModalVisible(true)} style={{ padding: 8 }}>
-          <Text style={{ color: 'blue', fontSize: 16 }}>Translator</Text>
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          style={{ padding: 8 }}
+        >
+          <Text style={{ color: "blue", fontSize: 16 }}>Translator</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
   const renderHeaderLeft = () => (
-    <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 8 }}>
+    <TouchableOpacity
+      onPress={() => navigation.goBack()}
+      style={{ padding: 8 }}
+    >
       <Ionicons name="arrow-back" size={24} color="black" />
     </TouchableOpacity>
   );
@@ -101,8 +130,13 @@ const ChatScreen: React.FC = () => {
     }
   };
 
-  const handleDoubleClickMessage = async (messageId: string, messageText: string) => {
-    console.log(`Double-click detected on message ID: ${messageId}, text: "${messageText}"`);
+  const handleDoubleClickMessage = async (
+    messageId: string,
+    messageText: string
+  ) => {
+    console.log(
+      `Double-click detected on message ID: ${messageId}, text: "${messageText}"`
+    );
     if (userLanguage) {
       const translatedText = await translateText(messageText, userLanguage);
       setTranslatedMessage({ id: messageId, text: translatedText });
@@ -111,7 +145,8 @@ const ChatScreen: React.FC = () => {
 
   const handleTapMessage = (messageId: string, messageText: string) => {
     const now = Date.now();
-    if (lastTap && (now - lastTap) < 300) { // Check if two taps are within 300ms
+    if (lastTap && now - lastTap < 300) {
+      // Check if two taps are within 300ms
       handleDoubleClickMessage(messageId, messageText);
     } else {
       setLastTap(now);
@@ -137,13 +172,16 @@ const ChatScreen: React.FC = () => {
           onClose={() => setModalVisible(false)}
           onSave={handleSaveLanguage}
         />
+
         <FlatList
           data={messages}
           renderItem={({ item }) => (
             <View>
               {translatedMessage?.id === item.id && (
                 <View style={styles.translationContainer}>
-                  <Text style={styles.translationText}>{translatedMessage.text}</Text>
+                  <Text style={styles.translationText}>
+                    {translatedMessage.text}
+                  </Text>
                 </View>
               )}
               <TouchableOpacity
@@ -156,6 +194,9 @@ const ChatScreen: React.FC = () => {
                   senderType={item.senderType}
                   avatarUri={avatars[item.senderId]}
                   isGroupChat={false}
+                  onDoubleTapTranslate={() =>
+                    handleDoubleClickMessage(item.id, item.text)
+                  } // Pass handleDoubleClickMessage
                 />
               </TouchableOpacity>
             </View>
@@ -163,6 +204,7 @@ const ChatScreen: React.FC = () => {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatArea}
         />
+
         <ChatInput
           message={message}
           onChangeMessage={setMessage}
