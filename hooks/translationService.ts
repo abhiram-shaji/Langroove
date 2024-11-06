@@ -78,7 +78,7 @@ const languageCodes: { [key: string]: string } = {
   English: "en",
   Spanish: "es",
   French: "fr",
-  MandarinChinese: "zh",
+  "Mandarin Chinese": "zh",
   German: "de",
   Italian: "it",
   Japanese: "ja",

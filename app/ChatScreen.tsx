@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -26,43 +27,73 @@ import SetTranslateModal from "../components/SetTranslateModal";
 import { styles } from "../styles/ChatScreenStyles";
 import { RootStackParamList } from "../app/App";
 
+// Define the Message type
+type Message = {
+  id: string;
+  text: string;
+  senderId: string;
+  senderType: "me" | "other"; // Adjust based on your sender types
+  // Add other properties if necessary
+};
+
 type ChatScreenRouteProp = RouteProp<RootStackParamList, "Chat">;
 
 const ChatScreen: React.FC = () => {
   const route = useRoute<ChatScreenRouteProp>();
   const navigation = useNavigation();
   const { chatId } = route.params;
-  const { message, setMessage, messages, sendMessage, avatars } =
-    useChat(chatId);
+  const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
   const { getFlagUrl } = useFlags();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLanguageLoaded, setIsLanguageLoaded] = useState(false);
   const [userLanguage, setUserLanguage] = useState<string | null>(null);
-  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(
-    null
-  );
-  const [translatedMessage, setTranslatedMessage] = useState<{
-    id: string;
-    text: string;
-  } | null>(null);
-  const [lastTap, setLastTap] = useState<number | null>(null); // Track last tap time
+  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
+  const [translatedMessage, setTranslatedMessage] = useState<{ id: string; text: string } | null>(null);
+  const [lastTap, setLastTap] = useState<number | null>(null);
+  const [translationsCache, setTranslationsCache] = useState<{ [key: string]: string }>({});
+  const [cachedMessages, setCachedMessages] = useState<Message[]>([]); // Explicitly typed
 
   const currentUser = auth.currentUser;
-  const recipientId =
-    chatId.split("_").find((id) => id !== currentUser?.uid) || "";
+  const recipientId = chatId.split("_").find((id) => id !== currentUser?.uid) || "";
   const { userInfo, loading } = useUserInfo(recipientId);
 
+  // Load cached messages and translations on mount
+  useEffect(() => {
+    const loadCache = async () => {
+      try {
+        const storedMessages = await AsyncStorage.getItem(`messages_${chatId}`);
+        const storedTranslations = await AsyncStorage.getItem(`translations_${chatId}`);
+        if (storedMessages) {
+          const parsedMessages: Message[] = JSON.parse(storedMessages);
+          setCachedMessages(parsedMessages);
+        }
+        if (storedTranslations) {
+          const parsedTranslations: { [key: string]: string } = JSON.parse(storedTranslations);
+          setTranslationsCache(parsedTranslations);
+        }
+      } catch (error) {
+        console.error("Error loading cache:", error);
+      }
+    };
+    loadCache();
+  }, [chatId]);
+
+  // Load chat languages
   useEffect(() => {
     const loadChatLanguages = async () => {
       if (currentUser && recipientId) {
-        const { userLanguage, recipientLanguage } = await ensureChatLanguage(
-          chatId,
-          currentUser.uid,
-          recipientId
-        );
-        setUserLanguage(userLanguage);
-        setRecipientLanguage(recipientLanguage);
-        setIsLanguageLoaded(true);
+        try {
+          const { userLanguage, recipientLanguage } = await ensureChatLanguage(
+            chatId,
+            currentUser.uid,
+            recipientId
+          );
+          setUserLanguage(userLanguage);
+          setRecipientLanguage(recipientLanguage);
+          setIsLanguageLoaded(true);
+        } catch (error) {
+          console.error("Error ensuring chat language:", error);
+        }
       } else {
         console.warn("User not authenticated or recipient ID missing.");
       }
@@ -70,6 +101,22 @@ const ChatScreen: React.FC = () => {
     loadChatLanguages();
   }, [chatId, currentUser, recipientId]);
 
+  // Cache messages when they change
+  useEffect(() => {
+    const cacheMessages = async () => {
+      try {
+        if (messages.length > 0) {
+          await AsyncStorage.setItem(`messages_${chatId}`, JSON.stringify(messages));
+          setCachedMessages(messages);
+        }
+      } catch (error) {
+        console.error("Error caching messages:", error);
+      }
+    };
+    cacheMessages();
+  }, [messages, chatId]);
+
+  // Setup navigation options once userInfo is loaded
   useEffect(() => {
     if (!loading && userInfo) {
       setupNavigationOptions(userInfo);
@@ -95,13 +142,15 @@ const ChatScreen: React.FC = () => {
   );
 
   const renderHeaderRight = () => {
-    const flagUrl = getFlagUrl(userLanguage);
+    const flagUrl = userLanguage ? getFlagUrl(userLanguage) : null;
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Image
-          source={{ uri: flagUrl }}
-          style={{ width: 24, height: 24, marginRight: 8 }}
-        />
+        {flagUrl && (
+          <Image
+            source={{ uri: flagUrl }}
+            style={{ width: 24, height: 24, marginRight: 8 }}
+          />
+        )}
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
           style={{ padding: 8 }}
@@ -123,30 +172,41 @@ const ChatScreen: React.FC = () => {
 
   const handleSaveLanguage = async (language: string) => {
     if (currentUser) {
-      await setChatLanguage(chatId, currentUser.uid, language);
-      setUserLanguage(language);
+      try {
+        await setChatLanguage(chatId, currentUser.uid, language);
+        setUserLanguage(language);
+      } catch (error) {
+        console.error("Error setting chat language:", error);
+      }
     } else {
       console.warn("Cannot set language: User not authenticated.");
     }
   };
 
-  const handleDoubleClickMessage = async (
-    messageId: string,
-    messageText: string
-  ) => {
-    console.log(
-      `Double-click detected on message ID: ${messageId}, text: "${messageText}"`
-    );
-    if (userLanguage) {
-      const translatedText = await translateText(messageText, userLanguage);
-      setTranslatedMessage({ id: messageId, text: translatedText });
+  const handleDoubleClickMessage = async (messageId: string, messageText: string) => {
+    if (!userLanguage) {
+      console.warn("User language not set.");
+      return;
+    }
+
+    if (translationsCache[messageId]) {
+      setTranslatedMessage({ id: messageId, text: translationsCache[messageId] });
+    } else {
+      try {
+        const translatedText = await translateText(messageText, userLanguage);
+        setTranslatedMessage({ id: messageId, text: translatedText });
+        const updatedTranslationsCache = { ...translationsCache, [messageId]: translatedText };
+        setTranslationsCache(updatedTranslationsCache);
+        await AsyncStorage.setItem(`translations_${chatId}`, JSON.stringify(updatedTranslationsCache));
+      } catch (error) {
+        console.error("Error translating message:", error);
+      }
     }
   };
 
   const handleTapMessage = (messageId: string, messageText: string) => {
     const now = Date.now();
     if (lastTap && now - lastTap < 300) {
-      // Check if two taps are within 300ms
       handleDoubleClickMessage(messageId, messageText);
     } else {
       setLastTap(now);
@@ -174,9 +234,9 @@ const ChatScreen: React.FC = () => {
         />
 
         <FlatList
-          data={messages}
+          data={cachedMessages.length > 0 ? cachedMessages : messages}
           renderItem={({ item }) => (
-            <View>
+            <View key={item.id}>
               {translatedMessage?.id === item.id && (
                 <View style={styles.translationContainer}>
                   <Text style={styles.translationText}>
