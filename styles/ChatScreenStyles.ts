@@ -53,4 +53,10 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic', // Italicized to differentiate from regular message
   },
+  clearTranslationButton: {
+    fontSize: 14,
+    color: "blue",
+    marginTop: 4,
+    textAlign: "right",
+  },
 });

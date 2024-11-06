@@ -27,13 +27,11 @@ import SetTranslateModal from "../components/SetTranslateModal";
 import { styles } from "../styles/ChatScreenStyles";
 import { RootStackParamList } from "../app/App";
 
-// Define the Message type
 type Message = {
   id: string;
   text: string;
   senderId: string;
-  senderType: "me" | "other"; // Adjust based on your sender types
-  // Add other properties if necessary
+  senderType: "me" | "other";
 };
 
 type ChatScreenRouteProp = RouteProp<RootStackParamList, "Chat">;
@@ -48,16 +46,15 @@ const ChatScreen: React.FC = () => {
   const [isLanguageLoaded, setIsLanguageLoaded] = useState(false);
   const [userLanguage, setUserLanguage] = useState<string | null>(null);
   const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
-  const [translatedMessage, setTranslatedMessage] = useState<{ id: string; text: string } | null>(null);
+  const [translatedMessages, setTranslatedMessages] = useState<{ [id: string]: string }>({});
   const [lastTap, setLastTap] = useState<number | null>(null);
   const [translationsCache, setTranslationsCache] = useState<{ [key: string]: string }>({});
-  const [cachedMessages, setCachedMessages] = useState<Message[]>([]); // Explicitly typed
+  const [cachedMessages, setCachedMessages] = useState<Message[]>([]);
 
   const currentUser = auth.currentUser;
   const recipientId = chatId.split("_").find((id) => id !== currentUser?.uid) || "";
   const { userInfo, loading } = useUserInfo(recipientId);
 
-  // Load cached messages and translations on mount
   useEffect(() => {
     const loadCache = async () => {
       try {
@@ -78,7 +75,6 @@ const ChatScreen: React.FC = () => {
     loadCache();
   }, [chatId]);
 
-  // Load chat languages
   useEffect(() => {
     const loadChatLanguages = async () => {
       if (currentUser && recipientId) {
@@ -101,7 +97,6 @@ const ChatScreen: React.FC = () => {
     loadChatLanguages();
   }, [chatId, currentUser, recipientId]);
 
-  // Cache messages when they change
   useEffect(() => {
     const cacheMessages = async () => {
       try {
@@ -116,7 +111,6 @@ const ChatScreen: React.FC = () => {
     cacheMessages();
   }, [messages, chatId]);
 
-  // Setup navigation options once userInfo is loaded
   useEffect(() => {
     if (!loading && userInfo) {
       setupNavigationOptions(userInfo);
@@ -190,17 +184,38 @@ const ChatScreen: React.FC = () => {
     }
 
     if (translationsCache[messageId]) {
-      setTranslatedMessage({ id: messageId, text: translationsCache[messageId] });
+      setTranslatedMessages((prev) => ({ ...prev, [messageId]: translationsCache[messageId] }));
     } else {
       try {
         const translatedText = await translateText(messageText, userLanguage);
-        setTranslatedMessage({ id: messageId, text: translatedText });
+        setTranslatedMessages((prev) => ({ ...prev, [messageId]: translatedText }));
+        
         const updatedTranslationsCache = { ...translationsCache, [messageId]: translatedText };
         setTranslationsCache(updatedTranslationsCache);
         await AsyncStorage.setItem(`translations_${chatId}`, JSON.stringify(updatedTranslationsCache));
       } catch (error) {
         console.error("Error translating message:", error);
       }
+    }
+  };
+
+  const handleClearTranslation = async (messageId: string) => {
+    // Remove from translatedMessages state
+    setTranslatedMessages((prev) => {
+      const updated = { ...prev };
+      delete updated[messageId];
+      return updated;
+    });
+
+    // Remove from translationsCache and update AsyncStorage
+    const updatedTranslationsCache = { ...translationsCache };
+    delete updatedTranslationsCache[messageId];
+    setTranslationsCache(updatedTranslationsCache);
+
+    try {
+      await AsyncStorage.setItem(`translations_${chatId}`, JSON.stringify(updatedTranslationsCache));
+    } catch (error) {
+      console.error("Error updating cache in AsyncStorage:", error);
     }
   };
 
@@ -237,16 +252,18 @@ const ChatScreen: React.FC = () => {
           data={cachedMessages.length > 0 ? cachedMessages : messages}
           renderItem={({ item }) => (
             <View key={item.id}>
-              {translatedMessage?.id === item.id && (
+              {translatedMessages[item.id] && (
                 <View style={styles.translationContainer}>
                   <Text style={styles.translationText}>
-                    {translatedMessage.text}
+                    {translatedMessages[item.id]}
                   </Text>
+                  <TouchableOpacity onPress={() => handleClearTranslation(item.id)}>
+                    <Text style={styles.clearTranslationButton}>Clear</Text>
+                  </TouchableOpacity>
                 </View>
               )}
               <TouchableOpacity
-                onPress={() => setTranslatedMessage(null)} // Hide translation on single click
-                onPressOut={() => handleTapMessage(item.id, item.text)} // Detect tap
+                onPress={() => handleTapMessage(item.id, item.text)}
               >
                 <ChatMessage
                   text={item.text}
@@ -256,7 +273,7 @@ const ChatScreen: React.FC = () => {
                   isGroupChat={false}
                   onDoubleTapTranslate={() =>
                     handleDoubleClickMessage(item.id, item.text)
-                  } // Pass handleDoubleClickMessage
+                  }
                 />
               </TouchableOpacity>
             </View>
