@@ -39,4 +39,24 @@ export const styles = StyleSheet.create({
     marginVertical: 5,
     backgroundColor: colors.background, // Use the theme's background color for received messages
   },
+  translationContainer: {
+    backgroundColor: '#f0f0f0', // Light gray background for translation bubble
+    padding: 8,
+    borderRadius: 8,
+    marginVertical: 4,
+    marginHorizontal: 16,
+    alignSelf: 'flex-start', // Aligns it with the incoming message
+    maxWidth: '80%', // Limits width to avoid overly wide translations
+  },
+  translationText: {
+    color: '#333', // Dark text for readability
+    fontSize: 14,
+    fontStyle: 'italic', // Italicized to differentiate from regular message
+  },
+  clearTranslationButton: {
+    fontSize: 14,
+    color: "blue",
+    marginTop: 4,
+    textAlign: "right",
+  },
 });

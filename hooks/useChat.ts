@@ -1,5 +1,5 @@
+// useChat.ts
 import { useEffect, useState, useCallback } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db, auth } from "../firebase";
 import {
   collection,
@@ -8,10 +8,10 @@ import {
   orderBy,
   onSnapshot,
   doc as firestoreDoc,
-  getDoc,
-  setDoc,
   Timestamp,
+  setDoc,
 } from "firebase/firestore";
+import { ensureChatLanguage, setChatLanguage as updateChatLanguage } from "../hooks/translationService";
 
 type Message = {
   id: string;
@@ -26,150 +26,87 @@ export const useChat = (chatId: string) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [avatars, setAvatars] = useState<AvatarsMap>({});
+  const [userLanguage, setUserLanguage] = useState<string | null>(null);
+  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
   const currentUser = auth.currentUser;
+  const recipientId = chatId.split("_").find(id => id !== currentUser?.uid);
 
-  const recipientId = chatId.split("_").find((id) => id !== currentUser?.uid);
-
-  if (!chatId || !recipientId) {
-    console.error("Invalid or missing chatId or recipientId");
-    return { message, setMessage, messages, sendMessage: () => {}, avatars };
+  if (!chatId || !recipientId || !currentUser) {
+    console.warn("Invalid chat setup: missing chatId, recipientId, or user not authenticated");
+    return { message, setMessage, messages, sendMessage: () => {}, avatars, setChatLanguage: () => {} };
   }
 
-  if (!currentUser) {
-    console.warn("User not authenticated");
-    return { message, setMessage, messages, sendMessage: () => {}, avatars };
-  }
-
-  const ensureChatExists = useCallback(async () => {
-    const chatDocRef = firestoreDoc(db, "chats", chatId);
-    const chatDoc = await getDoc(chatDocRef);
-
-    if (!chatDoc.exists()) {
-      await setDoc(chatDocRef, {
-        participants: [currentUser.uid, recipientId],
-        isGroupChat: false,
-        createdAt: Timestamp.now(),
-      });
-    }
+  // Initialize chat languages
+  useEffect(() => {
+    const initializeChatLanguages = async () => {
+      const { userLanguage, recipientLanguage } = await ensureChatLanguage(chatId, currentUser.uid, recipientId);
+      setUserLanguage(userLanguage);
+      setRecipientLanguage(recipientLanguage);
+    };
+    initializeChatLanguages();
   }, [chatId, currentUser, recipientId]);
 
-  const fetchAvatar = useCallback(async (senderId: string) => {
-    const cachedAvatar = await AsyncStorage.getItem(`avatar_${senderId}`);
-    if (cachedAvatar) return cachedAvatar;
-
+  // Set chat language
+  const setChatLanguage = useCallback(async (selectedLanguage: string) => {
     try {
-      const userDoc = await getDoc(firestoreDoc(db, "users", senderId));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        const avatarUrl = userData?.avatar || "https://robohash.org/default-avatar.png";
-        await AsyncStorage.setItem(`avatar_${senderId}`, avatarUrl); // Cache the avatar
-        return avatarUrl;
-      }
+      const updatedLanguage = await updateChatLanguage(chatId, currentUser.uid, selectedLanguage);
+      setUserLanguage(updatedLanguage);
     } catch (error) {
-      console.error("Error fetching avatar for:", senderId, error);
+      console.error("Error setting chat language:", error);
     }
-    return "https://robohash.org/default-avatar.png";
-  }, []);
+  }, [chatId, currentUser]);
 
-  const updateAvatars = useCallback(
-    async (senderIds: string[]) => {
-      const newAvatars = { ...avatars };
-      const idsToFetch = senderIds.filter((id) => !avatars[id]);
-
-      if (idsToFetch.length > 0) {
-        const fetchedAvatars = await Promise.all(
-          idsToFetch.map((senderId) => fetchAvatar(senderId))
-        );
-
-        idsToFetch.forEach((senderId, index) => {
-          newAvatars[senderId] = fetchedAvatars[index];
-        });
-
-        setAvatars(newAvatars);
-      }
-    },
-    [avatars, fetchAvatar]
-  );
-
+  // Fetch messages from Firestore in real-time
   useEffect(() => {
-    if (!currentUser || !chatId) return;
+    const chatDocRef = firestoreDoc(db, "chats", chatId);
+    const messagesRef = collection(chatDocRef, "messages");
+    const messagesQuery = query(messagesRef, orderBy("createdAt", "asc"));
 
-    const fetchMessagesFromCache = async () => {
-      const cachedMessages = await AsyncStorage.getItem(`messages_${chatId}`);
-      if (cachedMessages) {
-        setMessages(JSON.parse(cachedMessages)); // Load cached messages
-      }
-    };
+    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+      const loadedMessages: Message[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        text: doc.data().text,
+        senderId: doc.data().sender,
+        senderType: doc.data().sender === currentUser?.uid ? "me" : "other",
+      }));
+      setMessages(loadedMessages);
+    });
 
-    const fetchMessagesFromFirestore = async () => {
-      await ensureChatExists();
-
-      const chatDocRef = firestoreDoc(db, "chats", chatId);
-      const messagesRef = collection(chatDocRef, "messages");
-      const q = query(messagesRef, orderBy("createdAt"));
-
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const fetchedMessages = snapshot.docs.map((messageDoc) => {
-          const data = messageDoc.data();
-          const readBy = data.readBy || [];
-
-          if (!readBy.includes(currentUser.uid)) {
-            const messageRef = firestoreDoc(db, `chats/${chatId}/messages`, messageDoc.id);
-            setDoc(messageRef, { readBy: [...readBy, currentUser.uid] }, { merge: true });
-          }
-
-          return {
-            id: messageDoc.id,
-            text: data.text,
-            senderId: data.sender,
-            senderType: data.sender === currentUser.uid ? "me" : "other",
-          } as Message;
-        });
-
-        setMessages(fetchedMessages);
-        AsyncStorage.setItem(`messages_${chatId}`, JSON.stringify(fetchedMessages)); // Cache messages
-
-        const senderIds = Array.from(new Set(fetchedMessages.map((msg) => msg.senderId)));
-        updateAvatars(senderIds);
-      });
-
-      return unsubscribe;
-    };
-
-    fetchMessagesFromCache(); // First load from cache
-    fetchMessagesFromFirestore(); // Then subscribe to Firestore updates
-
-  }, [currentUser, chatId, ensureChatExists, updateAvatars]);
+    return () => unsubscribe(); // Clean up listener on unmount
+  }, [chatId, currentUser]);
 
   const sendMessage = useCallback(async () => {
-    if (!message.trim() || !currentUser) return;
+    if (!message.trim()) return;
 
+    const chatDocRef = firestoreDoc(db, "chats", chatId);
+    const messagesRef = collection(chatDocRef, "messages");
     try {
-      await ensureChatExists();
-
-      const chatDocRef = firestoreDoc(db, "chats", chatId);
-      const messagesRef = collection(chatDocRef, "messages");
-
-      const newMessageRef = await addDoc(messagesRef, {
+      await addDoc(messagesRef, {
         text: message,
         sender: currentUser.uid,
         createdAt: Timestamp.now(),
         readBy: [currentUser.uid],
       });
-
       await setDoc(chatDocRef, {
         lastMessage: {
-          messageId: newMessageRef.id,
           text: message,
           createdAt: Timestamp.now(),
         },
       }, { merge: true });
-
       setMessage("");
     } catch (error) {
-      console.error("Error sending message: ", error);
+      console.error("Error sending message:", error);
     }
-  }, [message, currentUser, chatId, ensureChatExists]);
+  }, [message, currentUser, chatId]);
 
-  return { message, setMessage, messages, sendMessage, avatars };
+  return {
+    message,
+    setMessage,
+    messages,
+    sendMessage,
+    avatars,
+    userLanguage,
+    recipientLanguage,
+    setChatLanguage,
+  };
 };
