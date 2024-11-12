@@ -2,16 +2,19 @@ import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { bottomNavBarStyles } from '../styles/BottomNavBarStyles';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../app/App';
-import { useCurrentScreen } from '../hooks/useCurrentScreen';
+import { NavigationHelpers, TabNavigationState, ParamListBase } from '@react-navigation/native';
+import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs'; // Corrected import
 
-const BottomNavBar: React.FC = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const currentScreen = useCurrentScreen(); // Get the current screen name
-  
-  // Function to determine the icon size and color based on the active screen
-  const getIconStyle = (screenName: keyof RootStackParamList) => {
+type BottomNavBarProps = {
+  navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
+  state: TabNavigationState<ParamListBase>;
+};
+
+const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
+  const currentScreen = state.routes[state.index].name; // Get the name of the current active screen
+
+  // Function to determine the icon style based on the active screen
+  const getIconStyle = (screenName: string) => {
     return {
       color: currentScreen === screenName ? 'black' : 'gray', // Black if active, gray if inactive
       size: currentScreen === screenName ? 28 : 24, // Larger size if active
@@ -19,7 +22,7 @@ const BottomNavBar: React.FC = () => {
   };
 
   // Function to determine the text style based on the active screen
-  const getTextStyle = (screenName: keyof RootStackParamList) => {
+  const getTextStyle = (screenName: string) => {
     return {
       color: currentScreen === screenName ? 'black' : 'gray', // Black if active, gray if inactive
       fontWeight: currentScreen === screenName ? 'bold' as 'bold' | 'normal' : 'normal' as 'bold' | 'normal', // Bold if active

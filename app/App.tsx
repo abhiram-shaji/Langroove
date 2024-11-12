@@ -1,9 +1,9 @@
 import { registerRootComponent } from "expo";
-
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTransition } from "../styles/transitions";
 
 import LoginScreen from "./LoginScreen";
@@ -19,7 +19,7 @@ import AddTopicScreen from "./AddTopicScreen";
 import PrivacyScreen from "./PrivacyScreen";
 import AboutScreen from "./AboutScreen";
 
-// Import Firebase Auth
+import BottomNavBar from "../components/BottomNavBar";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -39,7 +39,45 @@ export type RootStackParamList = {
   About: undefined;
 };
 
+// Create Stack and Tab Navigators
 const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
+
+const StackNavigator = () => (
+  <Stack.Navigator
+    initialRouteName="Feed"
+    screenOptions={{
+      headerShown: false,
+      headerStyle: {
+        backgroundColor: '#f9bc60',
+      },
+      ...useTransition,
+    }}
+  >
+    <Stack.Screen name="Login" component={LoginScreen} />
+    <Stack.Screen name="SignUp" component={SignUpScreen} />
+    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+
+    {/* Main Screens */}
+    <Stack.Screen name="Feed" component={FeedScreen} />
+    <Stack.Screen name="Settings" component={SettingsScreen} />
+    <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
+
+    {/* Additional Screens */}
+    <Stack.Screen
+      name="Chat"
+      component={ChatScreen}
+      options={{ headerShown: true }}
+      initialParams={{ chatId: "" }}
+    />
+    <Stack.Screen name="FriendList" component={FriendListScreen} />
+    <Stack.Screen name="Profile" component={ProfileScreen} />
+    <Stack.Screen name="Friends" component={FriendListScreen} options={{ headerShown: true }} />
+    <Stack.Screen name="AddTopic" component={AddTopicScreen} options={{ headerShown: true }} />
+    <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true }} />
+    <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: true }} />
+  </Stack.Navigator>
+);
 
 const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
@@ -64,40 +102,16 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={loggedIn ? "Feed" : "Login"}
-        screenOptions={{
-          headerShown: false,
-          headerStyle: {
-            backgroundColor: '#f9bc60', // Header background color
-          },
-          ...useTransition,
-        }}
-      >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-
-        <Stack.Screen name="Feed" component={FeedScreen} />
-
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
-
-        <Stack.Screen
-          name="Chat"
-          component={ChatScreen}
-          options={{ headerShown: true }} // Enable header only for ChatScreen
-          initialParams={{ chatId: "" }} // Include chatId as initial param
-        />
-
-        <Stack.Screen name="FriendList" component={FriendListScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Friends" options={{ headerShown: true }} component={FriendListScreen} />
-        <Stack.Screen name="AddTopic" options={{ headerShown: true }} component={AddTopicScreen} />
-
-        <Stack.Screen name="Privacy" options={{ headerShown: true }} component={PrivacyScreen} />
-        <Stack.Screen name="About" options={{ headerShown: true }} component={AboutScreen} />
-      </Stack.Navigator>
+      {loggedIn ? (
+        <Tab.Navigator
+          tabBar={(props) => <BottomNavBar {...props} />}
+          screenOptions={{ headerShown: false }}
+        >
+          <Tab.Screen name="Main" component={StackNavigator} />
+        </Tab.Navigator>
+      ) : (
+        <StackNavigator />
+      )}
     </NavigationContainer>
   );
 };

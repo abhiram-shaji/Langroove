@@ -3,62 +3,33 @@ import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SettingsButton from "../components/SettingsButton";
 import { styles } from "../styles/SettingsScreenStyles";
-import BottomNavBar from "../components/BottomNavBar";
 import { useLogout } from "../hooks/useLogout";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack"; // Import StackNavigationProp
-import { RootStackParamList } from "../app/App"; // Adjust the path to where RootStackParamList is defined
-import { auth } from "../firebase"; // Import Firebase Auth
+import { StackScreenProps } from "@react-navigation/stack"; // Import StackScreenProps
+import { RootStackParamList } from "../app/App";
+import { auth } from "../firebase";
 
-type SettingsScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "Settings"
->;
+// Define SettingsScreen's props using StackScreenProps
+type SettingsScreenProps = StackScreenProps<RootStackParamList, 'Settings'>;
 
-const SettingsScreen: React.FC = () => {
+const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { handleLogout } = useLogout();
-  const navigation = useNavigation<SettingsScreenNavigationProp>(); // Use typed navigation
-  const user = auth.currentUser; // Get the currently logged-in user
+  const user = auth.currentUser;
 
   const handleProfilePress = () => {
     if (user) {
-      navigation.navigate("Profile", { ownerId: user.uid }); // Navigate to the user's own profile
+      navigation.navigate("Profile", { ownerId: user.uid });
     }
   };
 
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        {/* Profile Button */}
-        <SettingsButton
-          title="Profile"
-          onPress={handleProfilePress} // Navigate to own profile
-        />
-
-        <SettingsButton
-          title="Friends"
-          onPress={() => navigation.navigate("Friends")} 
-        />
-
-        {/* Privacy Button */}
-        <SettingsButton
-          title="Privacy"
-          onPress={() => navigation.navigate("Privacy")}
-        />
-
-        {/* About Button */}
-        <SettingsButton
-          title="About"
-          onPress={() => navigation.navigate("About")}
-        />
-
-        {/* Logout Button */}
-        <SettingsButton
-          title="Logout"
-          onPress={handleLogout} // Call the logout function
-        />
+        <SettingsButton title="Profile" onPress={handleProfilePress} />
+        <SettingsButton title="Friends" onPress={() => navigation.navigate("Friends")} />
+        <SettingsButton title="Privacy" onPress={() => navigation.navigate("Privacy")} />
+        <SettingsButton title="About" onPress={() => navigation.navigate("About")} />
+        <SettingsButton title="Logout" onPress={handleLogout} />
       </View>
-      <BottomNavBar />
     </SafeAreaProvider>
   );
 };

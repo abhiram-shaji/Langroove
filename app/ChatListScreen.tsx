@@ -1,25 +1,27 @@
 import React from "react";
 import { ScrollView, View, Text, TextInput } from "react-native";
 import ChatListItem from "../components/ChatListItem";
-import BottomNavBar from "../components/BottomNavBar";
 import styles from "../styles/ChatListScreenStyles";
-import { useChatList } from "../hooks/useChatList"; // Import the custom hook
-import useSearch from "../hooks/useSearch"; // Import the useSearch hook
+import { useChatList } from "../hooks/useChatList";
+import useSearch from "../hooks/useSearch";
+import { StackScreenProps } from "@react-navigation/stack"; // Import StackScreenProps
+import { RootStackParamList } from "../app/App";
 
-const ChatListScreen: React.FC = () => {
-  const chats = useChatList(); // Use the custom hook to get chats
-  const { search, setSearch, filteredData } = useSearch(chats); // Use search hook to filter chats
+// Define ChatListScreen's props using StackScreenProps
+type ChatListScreenProps = StackScreenProps<RootStackParamList, 'ChatListScreen'>;
+
+const ChatListScreen: React.FC<ChatListScreenProps> = () => {
+  const chats = useChatList();
+  const { search, setSearch, filteredData } = useSearch(chats);
 
   return (
     <View style={styles.container}>
-      {/* Search Bar */}
       <TextInput
         style={styles.searchInput}
         placeholder="Search friends..."
         value={search}
-        onChangeText={setSearch} // Update search term
+        onChangeText={setSearch}
       />
-
       <ScrollView>
         {filteredData.length > 0 ? (
           filteredData.map((chat) => (
@@ -37,9 +39,6 @@ const ChatListScreen: React.FC = () => {
           </View>
         )}
       </ScrollView>
-
-      {/* Add the BottomNavBar at the bottom */}
-      <BottomNavBar />
     </View>
   );
 };
