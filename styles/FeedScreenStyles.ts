@@ -76,7 +76,7 @@ export const topicCardStyles = StyleSheet.create({
     marginVertical: 8,
     backgroundColor: colors.background,
     borderColor: colors.border,
-    borderWidth: 1,
+    borderWidth: 2,
   },
   description: {
     fontSize: 16,

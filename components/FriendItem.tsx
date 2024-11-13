@@ -1,24 +1,27 @@
 // /components/FriendItem.tsx
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { List, Avatar, Divider } from 'react-native-paper';
 
 interface FriendItemProps {
   id: string;
   name: string;
   avatar: string;
+  onPress: () => void;
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ name, avatar }) => {
+const FriendItem: React.FC<FriendItemProps> = ({ name, avatar, onPress }) => {
   return (
-    <View>
-      <List.Item
-        title={name}
-        left={() => <Avatar.Image size={48} source={{ uri: avatar }} />}
-      />
-      <Divider />
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View>
+        <List.Item
+          title={name}
+          left={() => <Avatar.Image size={48} source={{ uri: avatar }} />}
+        />
+        <Divider />
+      </View>
+    </TouchableOpacity>
   );
 };
 
