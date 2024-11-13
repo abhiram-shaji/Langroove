@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { IconButton, Button } from 'react-native-paper';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -8,41 +8,56 @@ import { styles } from '../styles/ProfileScreenStyles';
 import { RootStackParamList } from '../app/App';
 import { useProfileActions } from '../hooks/useProfileActions';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { auth } from '../firebase';
-
+import { auth, db } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Profile'>;
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>;
 
 const ProfileScreen: React.FC = () => {
-  const navigation = useNavigation<ProfileScreenNavigationProp>(); // Use navigation here
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
   const route = useRoute<ProfileScreenRouteProp>();
-  const { ownerId } = route.params; // Get ownerId from navigation params
-  const { handleAddFriend, handleSendMessage, loading } = useProfileActions(ownerId); // Use the hook
-  const currentUser = auth.currentUser; // Get current logged-in user
+  const { ownerId } = route.params;
+  const { handleAddFriend, handleSendMessage, loading } = useProfileActions(ownerId);
+  const currentUser = auth.currentUser;
+  
+  const [isFriend, setIsFriend] = useState(false);
+
+  useEffect(() => {
+    const checkFriendStatus = async () => {
+      if (currentUser) {
+        const currentUserDocRef = doc(db, 'users', currentUser.uid);
+        const currentUserDoc = await getDoc(currentUserDocRef);
+
+        if (currentUserDoc.exists()) {
+          const userFriends = currentUserDoc.data().friends || [];
+          setIsFriend(userFriends.includes(ownerId));
+        }
+      }
+    };
+
+    checkFriendStatus();
+  }, [currentUser, ownerId]);
 
   return (
     <View style={styles.container}>
-      {/* Back Button */}
       <IconButton
         icon="arrow-left"
         size={24}
-        onPress={() => navigation.goBack()} // Correctly reference navigation here
+        onPress={() => navigation.goBack()}
         style={styles.backButton}
       />
 
-      {/* Profile Avatar Section */}
       <ProfileAvatar userId={ownerId} />
-
-      {/* User Info Section */}
       <ProfileInfo userId={ownerId} />
 
-      {/* Conditionally render the buttons if ownerId is different from currentUser.uid */}
       {currentUser?.uid !== ownerId && (
         <View style={styles.buttonContainer}>
-          <Button mode="contained" onPress={handleAddFriend} style={styles.button} loading={loading}>
-            Add Friend
-          </Button>
+          {!isFriend && (
+            <Button mode="contained" onPress={handleAddFriend} style={styles.button} loading={loading}>
+              Add Friend
+            </Button>
+          )}
           <Button mode="contained" onPress={handleSendMessage} style={styles.button}>
             Message
           </Button>
