@@ -8,8 +8,8 @@ export const bottomNavBarStyles = StyleSheet.create({
     alignItems: 'center',
     height: 70,
     backgroundColor: colors.background,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
+    borderTopWidth: 3,
+    borderTopColor: colors.primary,
     position: 'relative',
   },
   navItem: {
