@@ -6,24 +6,24 @@ export const bottomNavBarStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 60,
+    height: 70,
     backgroundColor: colors.background,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    paddingHorizontal: 16,
+    position: 'relative',
   },
   navItem: {
     alignItems: 'center',
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1, // Adjusts width based on the screen width
   },
   activeBackground: {
-    backgroundColor: 'black', // Black background for the active icon only
-    borderRadius: 4, // Square with slightly rounded edges
+    width: 60, // Size of the square
+    height: 60,
+    backgroundColor: 'black',
+    borderRadius: 4,
+    position: 'absolute',
+    top: 6, // Center it vertically relative to icons
+    left: '8.5%', // Slightly offset to align with icon centers
   },
   label: {
     fontSize: 12,

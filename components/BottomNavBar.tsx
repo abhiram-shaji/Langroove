@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, TouchableOpacity, Text, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { bottomNavBarStyles } from '../styles/BottomNavBarStyles';
 import { NavigationHelpers, TabNavigationState, ParamListBase } from '@react-navigation/native';
@@ -11,50 +11,58 @@ type BottomNavBarProps = {
 };
 
 const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
-  const currentScreen = state.routes[state.index].name; // Get the name of the current active screen
+  const currentScreenIndex = state.index;
+  const animatedPosition = useRef(new Animated.Value(0)).current; // Animated value for position
 
-  // Function to determine the icon color based on the active screen
-  const getIconColor = (screenName: string) => (currentScreen === screenName ? 'white' : 'black');
+  const [activeScreen, setActiveScreen] = useState(state.routes[currentScreenIndex].name); // Track the screen for color change
+
+  const screenWidth = Dimensions.get('window').width;
+  const iconWidth = screenWidth / state.routes.length; // Equal width for each icon
+
+  useEffect(() => {
+    // Animate to the new position whenever the screen changes
+    Animated.timing(animatedPosition, {
+      toValue: iconWidth * currentScreenIndex,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      // After animation completes, update the active screen
+      setActiveScreen(state.routes[currentScreenIndex].name);
+    });
+  }, [currentScreenIndex]);
+
+  const getIconColor = (screenName: string) =>
+    activeScreen === screenName ? 'white' : 'black';
+
+  const getLabelColor = (screenName: string) =>
+    activeScreen === screenName ? { color: 'white' } : { color: 'black' };
 
   return (
     <View style={bottomNavBarStyles.container}>
+      {/* Animated Background Square */}
+      <Animated.View
+        style={[
+          bottomNavBarStyles.activeBackground,
+          { transform: [{ translateX: animatedPosition }] },
+        ]}
+      />
+
       {/* Navigate to Feed screen */}
       <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('Feed')}>
-        <View
-          style={[
-            bottomNavBarStyles.iconContainer,
-            currentScreen === 'Feed' && bottomNavBarStyles.activeBackground, // Apply black background only if active
-          ]}
-        >
-          <Ionicons name="home-outline" size={24} color={getIconColor('Feed')} />
-        </View>
-        <Text style={bottomNavBarStyles.label}>Feed</Text>
+        <Ionicons name="home-outline" size={24} color={getIconColor('Feed')} />
+        <Text style={[bottomNavBarStyles.label, getLabelColor('Feed')]}>Feed</Text>
       </TouchableOpacity>
 
       {/* Navigate to Chat List screen */}
       <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('ChatListScreen')}>
-        <View
-          style={[
-            bottomNavBarStyles.iconContainer,
-            currentScreen === 'ChatListScreen' && bottomNavBarStyles.activeBackground, // Apply black background only if active
-          ]}
-        >
-          <Ionicons name="chatbubble-outline" size={24} color={getIconColor('ChatListScreen')} />
-        </View>
-        <Text style={bottomNavBarStyles.label}>Chats</Text>
+        <Ionicons name="chatbubble-outline" size={24} color={getIconColor('ChatListScreen')} />
+        <Text style={[bottomNavBarStyles.label, getLabelColor('ChatListScreen')]}>Chats</Text>
       </TouchableOpacity>
 
       {/* Navigate to Settings screen */}
       <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('Settings')}>
-        <View
-          style={[
-            bottomNavBarStyles.iconContainer,
-            currentScreen === 'Settings' && bottomNavBarStyles.activeBackground, // Apply black background only if active
-          ]}
-        >
-          <Ionicons name="settings-outline" size={24} color={getIconColor('Settings')} />
-        </View>
-        <Text style={bottomNavBarStyles.label}>Settings</Text>
+        <Ionicons name="settings-outline" size={24} color={getIconColor('Settings')} />
+        <Text style={[bottomNavBarStyles.label, getLabelColor('Settings')]}>Settings</Text>
       </TouchableOpacity>
     </View>
   );
