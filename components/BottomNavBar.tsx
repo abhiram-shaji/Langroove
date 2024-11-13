@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { bottomNavBarStyles } from '../styles/BottomNavBarStyles';
 import { NavigationHelpers, TabNavigationState, ParamListBase } from '@react-navigation/native';
-import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs'; // Corrected import
+import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs';
 
 type BottomNavBarProps = {
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
@@ -13,41 +13,48 @@ type BottomNavBarProps = {
 const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
   const currentScreen = state.routes[state.index].name; // Get the name of the current active screen
 
-  // Function to determine the icon style based on the active screen
-  const getIconStyle = (screenName: string) => {
-    console.log(`Screen Name: ${screenName}, Current Screen: ${currentScreen}`);
-    return {
-      color: currentScreen === screenName ? 'black' : 'gray', // Black if active, gray if inactive
-      size: currentScreen === screenName ? 28 : 24, // Larger size if active
-    };
-  };
-
-  // Function to determine the text style based on the active screen
-  const getTextStyle = (screenName: string) => {
-    return {
-      color: currentScreen === screenName ? 'black' : 'gray', // Black if active, gray if inactive
-      fontWeight: currentScreen === screenName ? 'bold' as 'bold' | 'normal' : 'normal' as 'bold' | 'normal', // Bold if active
-    };
-  };
+  // Function to determine the icon color based on the active screen
+  const getIconColor = (screenName: string) => (currentScreen === screenName ? 'white' : 'black');
 
   return (
     <View style={bottomNavBarStyles.container}>
       {/* Navigate to Feed screen */}
       <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('Feed')}>
-        <Ionicons name="home-outline" size={getIconStyle('Feed').size} color={getIconStyle('Feed').color} />
-        <Text style={getTextStyle('Feed')}>Feed</Text>
+        <View
+          style={[
+            bottomNavBarStyles.iconContainer,
+            currentScreen === 'Feed' && bottomNavBarStyles.activeBackground, // Apply black background only if active
+          ]}
+        >
+          <Ionicons name="home-outline" size={24} color={getIconColor('Feed')} />
+        </View>
+        <Text style={bottomNavBarStyles.label}>Feed</Text>
       </TouchableOpacity>
 
       {/* Navigate to Chat List screen */}
       <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('ChatListScreen')}>
-        <Ionicons name="chatbubble-outline" size={getIconStyle('ChatListScreen').size} color={getIconStyle('ChatListScreen').color} />
-        <Text style={getTextStyle('ChatListScreen')}>Chats</Text>
+        <View
+          style={[
+            bottomNavBarStyles.iconContainer,
+            currentScreen === 'ChatListScreen' && bottomNavBarStyles.activeBackground, // Apply black background only if active
+          ]}
+        >
+          <Ionicons name="chatbubble-outline" size={24} color={getIconColor('ChatListScreen')} />
+        </View>
+        <Text style={bottomNavBarStyles.label}>Chats</Text>
       </TouchableOpacity>
 
       {/* Navigate to Settings screen */}
       <TouchableOpacity style={bottomNavBarStyles.navItem} onPress={() => navigation.navigate('Settings')}>
-        <Ionicons name="settings-outline" size={getIconStyle('Settings').size} color={getIconStyle('Settings').color} />
-        <Text style={getTextStyle('Settings')}>Settings</Text>
+        <View
+          style={[
+            bottomNavBarStyles.iconContainer,
+            currentScreen === 'Settings' && bottomNavBarStyles.activeBackground, // Apply black background only if active
+          ]}
+        >
+          <Ionicons name="settings-outline" size={24} color={getIconColor('Settings')} />
+        </View>
+        <Text style={bottomNavBarStyles.label}>Settings</Text>
       </TouchableOpacity>
     </View>
   );

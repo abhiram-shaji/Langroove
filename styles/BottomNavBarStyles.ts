@@ -10,16 +10,25 @@ export const bottomNavBarStyles = StyleSheet.create({
     backgroundColor: colors.background,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    paddingHorizontal: 16,  // Add padding for spacing on the left and right
+    paddingHorizontal: 16,
   },
   navItem: {
     alignItems: 'center',
-    paddingVertical: 8,  // Add vertical padding for a balanced look
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeBackground: {
+    backgroundColor: 'black', // Black background for the active icon only
+    borderRadius: 4, // Square with slightly rounded edges
   },
   label: {
     fontSize: 12,
     color: colors.text,
-    fontWeight: '600',  // Slightly bold for better readability
+    fontWeight: '600',
     marginTop: 4,
   },
 });

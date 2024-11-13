@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: 20,
+    padding: 50,
     backgroundColor: colors.background,
   },
   button: {
