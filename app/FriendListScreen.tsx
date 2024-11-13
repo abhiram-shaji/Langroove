@@ -9,7 +9,8 @@ import { styles } from '../styles/FriendListStyles';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../app/App';
 
-type FriendListScreenProps = StackScreenProps<RootStackParamList, 'FriendList'>;
+// Define props for FriendListScreen
+type FriendListScreenProps = StackScreenProps<RootStackParamList, 'Friends'>;
 
 const FriendListScreen: React.FC<FriendListScreenProps> = ({ navigation }) => {
   const { search, setSearch, filteredFriends } = useFriendList();
