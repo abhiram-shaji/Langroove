@@ -18,7 +18,7 @@ export const bottomNavBarStyles = StyleSheet.create({
   },
   activeBackground: {
     width: 60, // Size of the square
-    height: 60,
+    height: 55,
     backgroundColor: 'black',
     borderRadius: 4,
     position: 'absolute',
