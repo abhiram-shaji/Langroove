@@ -33,8 +33,8 @@ export const feedScreenStyles = StyleSheet.create({
   
     // Positioning to the bottom-right corner
     position: 'absolute',
-    right: 20, // Distance from the right edge of the screen
-    bottom: 70, // Distance from the bottom edge of the screen
+    right: 10, // Distance from the right edge of the screen
+    bottom: 10, // Distance from the bottom edge of the screen
 
       // iOS shadow
   shadowColor: '#000',

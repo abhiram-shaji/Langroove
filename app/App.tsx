@@ -2,8 +2,8 @@ import { registerRootComponent } from "expo";
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator, StackScreenProps } from "@react-navigation/stack";
+import { createBottomTabNavigator, BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useTransition } from "../styles/transitions";
 
 import LoginScreen from "./LoginScreen";
@@ -23,10 +23,12 @@ import BottomNavBar from "../components/BottomNavBar";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
+// Define types for route parameters
 export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
   ForgotPassword: undefined;
+  TabScreens: undefined;
   Feed: undefined;
   Settings: undefined;
   Chat: { chatId: string };
@@ -39,18 +41,29 @@ export type RootStackParamList = {
   About: undefined;
 };
 
-// Create Stack and Tab Navigators
+// Stack and Tab Navigators
 const Stack = createStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
+// Define TabScreens with correct types
+const TabScreens = () => (
+  <Tab.Navigator
+    tabBar={(props) => <BottomNavBar {...props} />}
+    screenOptions={{ headerShown: false }}
+  >
+    <Tab.Screen name="Feed" component={FeedScreen as React.ComponentType} />
+    <Tab.Screen name="ChatListScreen" component={ChatListScreen as React.ComponentType} />
+    <Tab.Screen name="Settings" component={SettingsScreen as React.ComponentType} />
+  </Tab.Navigator>
+);
+
+// StackNavigator with the corrected route name type
 const StackNavigator = () => (
   <Stack.Navigator
-    initialRouteName="Feed"
+    initialRouteName="Login"
     screenOptions={{
       headerShown: false,
-      headerStyle: {
-        backgroundColor: '#f9bc60',
-      },
+      headerStyle: { backgroundColor: '#f9bc60' },
       ...useTransition,
     }}
   >
@@ -58,12 +71,10 @@ const StackNavigator = () => (
     <Stack.Screen name="SignUp" component={SignUpScreen} />
     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
 
-    {/* Main Screens */}
-    <Stack.Screen name="Feed" component={FeedScreen} />
-    <Stack.Screen name="Settings" component={SettingsScreen} />
-    <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
+    {/* Main Screens with BottomNavBar */}
+    <Stack.Screen name="Feed" component={TabScreens as React.ComponentType} />
 
-    {/* Additional Screens */}
+    {/* Additional Screens without BottomNavBar */}
     <Stack.Screen
       name="Chat"
       component={ChatScreen}
@@ -102,16 +113,7 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      {loggedIn ? (
-        <Tab.Navigator
-          tabBar={(props) => <BottomNavBar {...props} />}
-          screenOptions={{ headerShown: false }}
-        >
-          <Tab.Screen name="Main" component={StackNavigator} />
-        </Tab.Navigator>
-      ) : (
-        <StackNavigator />
-      )}
+      {loggedIn ? <StackNavigator /> : <StackNavigator />}
     </NavigationContainer>
   );
 };

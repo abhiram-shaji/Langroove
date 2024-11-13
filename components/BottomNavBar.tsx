@@ -15,6 +15,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
 
   // Function to determine the icon style based on the active screen
   const getIconStyle = (screenName: string) => {
+    console.log(`Screen Name: ${screenName}, Current Screen: ${currentScreen}`);
     return {
       color: currentScreen === screenName ? 'black' : 'gray', // Black if active, gray if inactive
       size: currentScreen === screenName ? 28 : 24, // Larger size if active
