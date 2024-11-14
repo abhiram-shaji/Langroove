@@ -1,12 +1,14 @@
+// ForgotPasswordScreen.tsx
+
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useForgotPassword } from '../hooks/useForgotPassword';
 import ResetPasswordButton from '../components/ResetPasswordButton';
 import { styles } from '../styles/ForgotPasswordScreenStyles';
-import { colors } from '../styles/themes';  // Assuming colors are imported from themes.ts
+import { colors } from '../styles/themes';
 
 const ForgotPasswordScreen: React.FC = () => {
-  const { email, setEmail, handleResetPassword, navigateLogin } = useForgotPassword(); // Destructure navigateLogin from useForgotPassword hook
+  const { email, setEmail, handleResetPassword, navigateLogin } = useForgotPassword();
 
   return (
     <View style={styles.container}>
