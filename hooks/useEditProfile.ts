@@ -1,6 +1,7 @@
-//hooks/useEditProfile.ts
+// hooks/useEditProfile.ts
 import { useState } from 'react';
 import { useFlags } from './useFlags';
+import { handleSaveProfile } from '../services/profileService';
 
 const languages = [
   "English",
@@ -55,14 +56,15 @@ export const useEditProfile = () => {
     setter((prev) => prev.filter((lang) => lang !== language));
   };
 
-  const handleSaveProfile = () => {
-    console.log({
+  const saveProfile = () => {
+    const profileData = {
       name,
       nativeLanguages,
       fluentLanguages,
       learningLanguages,
       bio,
-    });
+    };
+    handleSaveProfile(profileData);
   };
 
   return {
@@ -87,7 +89,7 @@ export const useEditProfile = () => {
     getAvailableLanguages,
     handleLanguageSelection,
     handleRemoveLanguage,
-    handleSaveProfile,
+    saveProfile, // Exposing the saveProfile method
     languages,
   };
 };
