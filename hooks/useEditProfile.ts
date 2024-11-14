@@ -1,7 +1,9 @@
 // hooks/useEditProfile.ts
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { useFlags } from './useFlags';
-import { handleSaveProfile } from '../services/profileService';
+import { handleSaveProfile, fetchProfile } from '../services/profileService';
+import { getAuth } from 'firebase/auth'; // Assuming you're using Firebase Auth
 
 const languages = [
   "English",
@@ -25,10 +27,27 @@ export const useEditProfile = () => {
   const [bioCharacterLimit] = useState(200);
 
   const { getFlagUrl } = useFlags();
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid; // Get userId from Firebase Auth
 
   const [nativeLangMenuVisible, setNativeLangMenuVisible] = useState(false);
   const [fluentLangMenuVisible, setFluentLangMenuVisible] = useState(false);
   const [learningLangMenuVisible, setLearningLangMenuVisible] = useState(false);
+
+  useEffect(() => {
+    if (!userId) return; // Ensure userId exists before fetching
+    const loadProfileData = async () => {
+      const profileData = await fetchProfile(userId);
+      if (profileData) {
+        setName(profileData.name || '');
+        setNativeLanguages(profileData.nativeLanguages || []);
+        setFluentLanguages(profileData.fluentLanguages || []);
+        setLearningLanguages(profileData.learningLanguages || []);
+        setBio(profileData.bio || '');
+      }
+    };
+    loadProfileData();
+  }, [userId]);
 
   const getAvailableLanguages = (currentSelection: string[]) => {
     return languages.filter(
@@ -46,9 +65,9 @@ export const useEditProfile = () => {
     setMenuVisible: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
     setter((prev) => [...prev, selectedLanguage]);
-    setMenuVisible(false); // Close the menu after selection
+    setMenuVisible(false);
   };
-  
+
   const handleRemoveLanguage = (
     language: string,
     setter: React.Dispatch<React.SetStateAction<string[]>>
@@ -56,8 +75,8 @@ export const useEditProfile = () => {
     setter((prev) => prev.filter((lang) => lang !== language));
   };
 
-  // Wrap handleSaveProfile in saveProfile function
   const saveProfile = () => {
+    if (!userId) return;
     const profileData = {
       name,
       nativeLanguages,
@@ -65,7 +84,7 @@ export const useEditProfile = () => {
       learningLanguages,
       bio,
     };
-    handleSaveProfile(profileData);
+    handleSaveProfile(userId, profileData);
   };
 
   return {
@@ -90,7 +109,6 @@ export const useEditProfile = () => {
     getAvailableLanguages,
     handleLanguageSelection,
     handleRemoveLanguage,
-    saveProfile, // Expose the saveProfile method
-    languages,
+    saveProfile,
   };
 };

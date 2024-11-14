@@ -37,7 +37,7 @@ const EditProfileScreen = () => {
     getAvailableLanguages,
     handleLanguageSelection,
     handleRemoveLanguage,
-    saveProfile, // Use saveProfile method from the hook
+    saveProfile,
   } = useEditProfile();
 
   const InputField = ({
@@ -234,7 +234,7 @@ const EditProfileScreen = () => {
 
         <Button
           mode="contained"
-          onPress={saveProfile} // Call saveProfile from hook
+          onPress={saveProfile}
           style={styles.saveButton}
         >
           Save Profile
