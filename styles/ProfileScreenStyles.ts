@@ -74,4 +74,8 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: '#999',
   },
+  languageText: {
+    fontSize: 16,
+    color: colors.text,
+  },
 });
