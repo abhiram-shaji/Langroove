@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -54,6 +54,8 @@ const ChatScreen: React.FC = () => {
   const currentUser = auth.currentUser;
   const recipientId = chatId.split("_").find((id) => id !== currentUser?.uid) || "";
   const { userInfo, loading } = useUserInfo(recipientId);
+
+  const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
     const loadCache = async () => {
@@ -228,6 +230,7 @@ const ChatScreen: React.FC = () => {
     }
   };
 
+
   if (!isLanguageLoaded) {
     return (
       <SafeAreaProvider>
@@ -249,6 +252,7 @@ const ChatScreen: React.FC = () => {
         />
 
         <FlatList
+          ref={flatListRef}
           data={cachedMessages.length > 0 ? cachedMessages : messages}
           renderItem={({ item }) => (
             <View key={item.id}>
@@ -280,6 +284,7 @@ const ChatScreen: React.FC = () => {
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatArea}
+          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
 
         <ChatInput
