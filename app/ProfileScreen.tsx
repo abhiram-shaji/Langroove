@@ -41,38 +41,32 @@ const ProfileScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <IconButton
-        icon="arrow-left"
-        size={24}
-        onPress={() => navigation.goBack()}
-        style={styles.backButton}
-      />
-
       <ProfileAvatar userId={ownerId} />
       <ProfileInfo userId={ownerId} />
 
-      {/* If the profile belongs to the current user, show Edit Profile button */}
-      {currentUser?.uid === ownerId ? (
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate('EditProfileScreen')}
-          style={styles.button}
-        >
-          Edit Profile
-        </Button>
-      ) : (
-        // If not the owner, show Add Friend and Message buttons
-        <View style={styles.buttonContainer}>
-          {!isFriend && (
-            <Button mode="contained" onPress={handleAddFriend} style={styles.button} loading={loading}>
-              Add Friend
-            </Button>
-          )}
-          <Button mode="contained" onPress={handleSendMessage} style={styles.button}>
-            Message
+      {/* Container for Edit Profile, Add Friend, and Message buttons */}
+      <View style={styles.buttonContainer}>
+        {currentUser?.uid === ownerId ? (
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate('EditProfileScreen')}
+            style={styles.button}
+          >
+            Edit Profile
           </Button>
-        </View>
-      )}
+        ) : (
+          <>
+            {!isFriend && (
+              <Button mode="contained" onPress={handleAddFriend} style={styles.button} loading={loading}>
+                Add Friend
+              </Button>
+            )}
+            <Button mode="contained" onPress={handleSendMessage} style={styles.button}>
+              Message
+            </Button>
+          </>
+        )}
+      </View>
     </View>
   );
 };

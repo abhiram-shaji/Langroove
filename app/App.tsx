@@ -80,8 +80,8 @@ const StackNavigator: React.FC = () => (
 
     {/* Additional Screens */}
     <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }} initialParams={{ chatId: "" }} />
-    <Stack.Screen name="Profile" component={ProfileScreen} />
-    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+    <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true }}/>
+    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ headerShown: true }} />
     <Stack.Screen name="Friends" component={FriendListScreen} options={{ headerShown: true }} />
     <Stack.Screen name="AddTopic" component={AddTopicScreen} options={{ headerShown: true }} />
     <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true }} />
