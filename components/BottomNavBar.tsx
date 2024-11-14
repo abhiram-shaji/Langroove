@@ -17,6 +17,7 @@ type BottomNavBarProps = {
 const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
   const currentScreenIndex = state.index;
   const animatedPosition = useRef(new Animated.Value(0)).current;
+  const animatedLeft = useRef(new Animated.Value((Dimensions.get('window').width - Dimensions.get('window').width * 0.7) / 2)).current;
   const screenWidth = Dimensions.get('window').width;
   const navBarWidth = screenWidth * 0.7;
   const iconWidth = navBarWidth / state.routes.length;
@@ -25,6 +26,16 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
   );
 
   useEffect(() => {
+    const isFeedScreen = state.routes[currentScreenIndex].name === 'Feed';
+
+    // Animate navbar position
+    Animated.timing(animatedLeft, {
+      toValue: isFeedScreen ? 20 : (screenWidth - navBarWidth) / 2,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+
+    // Animate the active indicator position
     Animated.timing(animatedPosition, {
       toValue: iconWidth * currentScreenIndex,
       duration: 300,
@@ -40,16 +51,11 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
   const getLabelColor = (screenName: string) =>
     activeScreen === screenName ? { color: 'white' } : { color: 'black' };
 
-  // Calculate the left position for the active background
-  const activeBackgroundLeft =
-    (navBarWidth / state.routes.length) * currentScreenIndex +
-    (navBarWidth / state.routes.length - 50) / 2;
-
   return (
-    <View
+    <Animated.View
       style={[
         bottomNavBarStyles.container,
-        { width: navBarWidth, left: (screenWidth - navBarWidth) / 2 },
+        { width: navBarWidth, left: animatedLeft },
       ]}
     >
       {/* Animated Background Circle */}
@@ -105,7 +111,7 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
           Settings
         </Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 
