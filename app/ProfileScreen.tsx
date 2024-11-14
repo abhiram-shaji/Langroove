@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
-import { IconButton, Button } from "react-native-paper";
+import { View, ScrollView } from "react-native";
+import { Button } from "react-native-paper";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import ProfileAvatar from "../components/ProfileAvatar";
 import ProfileInfo from "../components/ProfileInfo";
@@ -44,10 +44,9 @@ const ProfileScreen: React.FC = () => {
   }, [currentUser, ownerId]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <ProfileAvatar userId={ownerId} />
 
-      {/* Container for Edit Profile, Add Friend, and Message buttons */}
       <View style={styles.buttonContainer}>
         {currentUser?.uid === ownerId ? (
           <Button
@@ -81,7 +80,7 @@ const ProfileScreen: React.FC = () => {
       </View>
 
       <ProfileInfo userId={ownerId} />
-    </View>
+    </ScrollView>
   );
 };
 

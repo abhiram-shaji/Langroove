@@ -2,8 +2,11 @@ import { StyleSheet } from 'react-native';
 import { colors } from './themes';
 
 export const styles = StyleSheet.create({
+  scrollContainer: {
+    padding: 20,
+    backgroundColor: colors.background,
+  },
   container: {
-    flex: 1,
     padding: 20,
     backgroundColor: colors.background,
   },
@@ -23,7 +26,7 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   changeAvatarText: {
-    color: '#007bff', // Consider adding this as an accent color in your theme
+    color: '#007bff',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
@@ -36,24 +39,22 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
-    color: colors.text, // Ensure the text color follows the theme
+    color: colors.text,
   },
   label: {
     fontSize: 16,
     marginVertical: 5,
-    color: colors.text, // Use theme text color
+    color: colors.text,
   },
-
   buttonContainer: {
-    marginTop: 40, // Space between the info and buttons
+    marginTop: 40,
     flexDirection: 'row',
-    justifyContent: 'space-around', // Distribute buttons evenly
+    justifyContent: 'space-around',
     paddingHorizontal: 20,
   },
   button: {
-    width: '45%', // 45% of width for each button to fit side by side
+    width: '45%',
   },
-
   bio: {
     fontSize: 16,
     fontStyle: 'italic',
@@ -91,7 +92,7 @@ export const styles = StyleSheet.create({
   languageCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between', // Ensures text fills the available space
+    justifyContent: 'space-between',
     padding: 10,
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
@@ -101,5 +102,5 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
     width: '80%',
-  },  
+  },
 });
