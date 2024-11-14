@@ -1,6 +1,6 @@
 // Themes.js
 export const colors = {
-    primary: "#000000", // Pure Black
+    primary: "#181818", // Pure Black
     secondary: "#333333", // Dark Gray
     accent: "#666666", // Medium Gray (for hover/focus states)
     background: "#FFFFFF", // Pure White

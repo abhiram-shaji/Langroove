@@ -59,4 +59,26 @@ export const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: "right",
   },
+  headerRightContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  translatorButton: {
+    backgroundColor: colors.primary,       // Black background for the button
+    paddingHorizontal: 10,           // Horizontal padding for spacing
+    paddingVertical: 6,              // Vertical padding
+    marginRight: 10,                 // Right margin for spacing
+    borderRadius: 10,                // Rounded corners
+    flexDirection: "row",            // Aligns flag and text horizontally
+    alignItems: "center",            // Vertically centers the items
+  },
+  flagImage: {
+    width: 24,
+    height: 24,
+    marginRight: 8,                   // Space between flag and text
+  },
+  translatorText: {
+    color: "white",                   // White text color
+    fontSize: 16,                     // Font size
+  },
 });

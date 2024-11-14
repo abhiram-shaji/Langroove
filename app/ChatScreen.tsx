@@ -137,25 +137,25 @@ const ChatScreen: React.FC = () => {
     </View>
   );
 
-  const renderHeaderRight = () => {
-    const flagUrl = userLanguage ? getFlagUrl(userLanguage) : null;
-    return (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+const renderHeaderRight = () => {
+  const flagUrl = userLanguage ? getFlagUrl(userLanguage) : null;
+  return (
+    <View style={styles.headerRightContainer}>
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)}
+        style={styles.translatorButton}
+      >
         {flagUrl && (
           <Image
             source={{ uri: flagUrl }}
-            style={{ width: 24, height: 24, marginRight: 8 }}
+            style={styles.flagImage}
           />
         )}
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          style={{ padding: 8 }}
-        >
-          <Text style={{ color: "blue", fontSize: 16 }}>Translator</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+        <Text style={styles.translatorText}>Translator</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
   const renderHeaderLeft = () => (
     <TouchableOpacity

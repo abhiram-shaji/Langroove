@@ -25,7 +25,7 @@ export const feedScreenStyles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   addButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: 'black',
     width: 60, // Match the container height
     height: 60, // Match the container height
     borderRadius: 30, // Half of width/height to keep it circular

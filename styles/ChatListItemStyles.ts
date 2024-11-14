@@ -15,7 +15,7 @@ export const ChatListItemStyles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 12,
     marginLeft: 8,
-    backgroundColor: '#0f0e17',
+    backgroundColor: 'purple',
   },
   textContainer: {
     flexDirection: 'column',
