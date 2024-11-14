@@ -56,6 +56,7 @@ export const useEditProfile = () => {
     setter((prev) => prev.filter((lang) => lang !== language));
   };
 
+  // Wrap handleSaveProfile in saveProfile function
   const saveProfile = () => {
     const profileData = {
       name,
@@ -89,7 +90,7 @@ export const useEditProfile = () => {
     getAvailableLanguages,
     handleLanguageSelection,
     handleRemoveLanguage,
-    saveProfile, // Exposing the saveProfile method
+    saveProfile, // Expose the saveProfile method
     languages,
   };
 };

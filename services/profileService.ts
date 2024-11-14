@@ -10,4 +10,3 @@ export const handleSaveProfile = (profileData: {
     console.log("Saving profile data:", profileData);
     // Implement save logic
   };
-  

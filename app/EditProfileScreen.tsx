@@ -13,19 +13,17 @@ import { Button, Menu, Provider as PaperProvider } from "react-native-paper";
 import styles from "../styles/EditProfileScreenStyles";
 import { colors } from "../styles/themes";
 import { useEditProfile } from "../hooks/useEditProfile";
-import { handleSaveProfile } from "../services/profileService";
-
 
 const EditProfileScreen = () => {
   const {
     name,
     setName,
     nativeLanguages,
-    setNativeLanguages, // Ensure this is correctly imported
+    setNativeLanguages,
     fluentLanguages,
-    setFluentLanguages, // Ensure this is correctly imported
+    setFluentLanguages,
     learningLanguages,
-    setLearningLanguages, // Ensure this is correctly imported
+    setLearningLanguages,
     bio,
     setBio,
     bioCharacterLimit,
@@ -39,18 +37,8 @@ const EditProfileScreen = () => {
     getAvailableLanguages,
     handleLanguageSelection,
     handleRemoveLanguage,
+    saveProfile, // Use saveProfile method from the hook
   } = useEditProfile();
-
-  const saveProfileData = () => {
-    handleSaveProfile({
-      name,
-      nativeLanguages,
-      fluentLanguages,
-      learningLanguages,
-      bio,
-    });
-  };
-
 
   const InputField = ({
     label,
@@ -246,7 +234,7 @@ const EditProfileScreen = () => {
 
         <Button
           mode="contained"
-          onPress={saveProfileData}
+          onPress={saveProfile} // Call saveProfile from hook
           style={styles.saveButton}
         >
           Save Profile
