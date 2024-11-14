@@ -66,8 +66,8 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   languagesLabel: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     marginTop: 10,
   },
   languagePlaceholder: {
@@ -78,4 +78,28 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
   },
+  languageItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  flagIcon: {
+    width: 24,
+    height: 16,
+    marginRight: 8,
+  },
+  languageCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', // Ensures text fills the available space
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    marginVertical: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    width: '80%',
+  },  
 });
