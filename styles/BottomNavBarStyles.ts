@@ -1,29 +1,38 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { colors } from './themes';
+
+const screenWidth = Dimensions.get('window').width;
+const navBarWidth = screenWidth * 0.6; // Set the width to 80% of the screen
 
 export const bottomNavBarStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 70,
+    width: navBarWidth,
+    height: 60,
     backgroundColor: colors.background,
-    borderTopWidth: 3,
-    borderTopColor: colors.primary,
-    position: 'relative',
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 20,
+    left: (screenWidth - navBarWidth) / 2, // Center the bar horizontally
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   navItem: {
     alignItems: 'center',
-    flex: 1, // Adjusts width based on the screen width
+    flex: 1,
   },
   activeBackground: {
-    width: 60, // Size of the square
-    height: 55,
+    width: 50,
+    height: 50,
     backgroundColor: 'black',
-    borderRadius: 4,
+    borderRadius: 10,
     position: 'absolute',
-    top: 6, // Center it vertically relative to icons
-    left: '8.5%', // Slightly offset to align with icon centers
+    top: 5,
   },
   label: {
     fontSize: 12,
