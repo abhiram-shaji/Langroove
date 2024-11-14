@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, setDoc, getDocs, query, collection, where } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
@@ -85,10 +85,16 @@ export const useSignUp = () => {
         await updateProfile(userCredential.user, { displayName: name });
         const avatarUrl = `https://robohash.org/${uid}.png`;
 
+        // Save user details in Firestore
         await setDoc(doc(db, 'users', uid), { name, email, avatar: avatarUrl });
 
-        console.log('Sign-up successful for:', email);
-        navigation.replace('Login');
+        // Send verification email
+        await sendEmailVerification(userCredential.user);
+
+        console.log('Verification email sent to:', email);
+
+        // Redirect to WaitingForVerification screen
+        navigation.replace('WaitingForVerification');
       }
     } catch (error: any) {
       const errorMessage = getErrorMessage(error.code);
