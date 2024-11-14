@@ -1,12 +1,16 @@
 // /hooks/useUserInfo.ts
 
 import { useEffect, useState } from 'react';
-import { db } from '../firebase'; // Ensure proper firebase imports
+import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 interface UserInfo {
   name: string;
-  avatar?: string; // You can add more fields as needed
+  avatar?: string;
+  bio?: string;
+  nativeLanguages?: string[];
+  fluentLanguages?: string[];
+  learningLanguages?: string[];
 }
 
 const useUserInfo = (userId: string) => {
@@ -23,6 +27,10 @@ const useUserInfo = (userId: string) => {
             setUserInfo({
               name: userData?.name || '',
               avatar: userData?.avatar || 'https://robohash.org/default-avatar.png',
+              bio: userData?.bio || '',
+              nativeLanguages: userData?.nativeLanguages || [],
+              fluentLanguages: userData?.fluentLanguages || [],
+              learningLanguages: userData?.learningLanguages || [],
             });
           }
         }

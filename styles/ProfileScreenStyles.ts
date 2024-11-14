@@ -28,8 +28,8 @@ export const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   infoContainer: {
-    marginTop: 30,
-    paddingHorizontal: 20,
+    padding: 20,
+    alignItems: 'center',
   },
   name: {
     fontSize: 24,
@@ -43,12 +43,7 @@ export const styles = StyleSheet.create({
     marginVertical: 5,
     color: colors.text, // Use theme text color
   },
-  bio: {
-    marginTop: 20,
-    fontStyle: 'italic',
-    color: colors.accent, // Using accent color from theme for bio
-  },
-  // New styles for buttons
+
   buttonContainer: {
     marginTop: 40, // Space between the info and buttons
     flexDirection: 'row',
@@ -57,5 +52,26 @@ export const styles = StyleSheet.create({
   },
   button: {
     width: '45%', // 45% of width for each button to fit side by side
+  },
+
+  bio: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  languagesContainer: {
+    width: '100%',
+    marginTop: 10,
+  },
+  languagesLabel: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 10,
+  },
+  languagePlaceholder: {
+    fontSize: 16,
+    color: '#999',
   },
 });
