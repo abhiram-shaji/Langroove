@@ -25,16 +25,19 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userId }) => {
 
   const renderLanguagesWithFlags = (languages: string[] | undefined) => {
     return languages?.length ? (
-      languages.map((language) => (
-        <View key={language} style={styles.languageCard}>
-          <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
-          <Text style={[styles.languageText, { flex: 1 }]} >{language}</Text>
-        </View>
-      ))
+      <View style={styles.languagesRow}>
+        {languages.map((language) => (
+          <View key={language} style={styles.languageCard}>
+            <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
+            <Text style={styles.languageText}>{language}</Text>
+          </View>
+        ))}
+      </View>
     ) : (
       <Text style={styles.languagePlaceholder}>Not specified</Text>
     );
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
