@@ -1,30 +1,38 @@
 // app/EditProfileScreen.tsx
 
-import React, { useState } from 'react';
-import { View, Text, TextInput, ScrollView } from 'react-native';
-import { Button } from 'react-native-paper';
-import { colors } from '../styles/themes';
+import React from 'react';
+import { View, Text, TextInput, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Button, Menu, Provider as PaperProvider } from 'react-native-paper';
 import styles from '../styles/EditProfileScreenStyles';
+import { colors } from '../styles/themes';
+import { useEditProfile } from '../hooks/useEditProfile';
 
 const EditProfileScreen = () => {
-  const [name, setName] = useState('');
-  const [nativeLanguage, setNativeLanguage] = useState('');
-  const [fluentLanguages, setFluentLanguages] = useState<string[]>([]);
-  const [learningLanguages, setLearningLanguages] = useState<string[]>([]);
-  const [bio, setBio] = useState('');
-  const bioCharacterLimit = 200;
+  const {
+    name,
+    setName,
+    nativeLanguages,
+    setNativeLanguages,  // Ensure this is correctly imported
+    fluentLanguages,
+    setFluentLanguages,  // Ensure this is correctly imported
+    learningLanguages,
+    setLearningLanguages,  // Ensure this is correctly imported
+    bio,
+    setBio,
+    bioCharacterLimit,
+    getFlagUrl,
+    nativeLangMenuVisible,
+    setNativeLangMenuVisible,
+    fluentLangMenuVisible,
+    setFluentLangMenuVisible,
+    learningLangMenuVisible,
+    setLearningLangMenuVisible,
+    getAvailableLanguages,
+    handleLanguageSelection,
+    handleRemoveLanguage,
+    handleSaveProfile,
+  } = useEditProfile();
 
-  const handleSaveProfile = () => {
-    console.log({
-      name,
-      nativeLanguage,
-      fluentLanguages,
-      learningLanguages,
-      bio,
-    });
-  };
-
-  // Reusable InputField component within the same file
   const InputField = ({
     label,
     value,
@@ -48,56 +56,130 @@ const EditProfileScreen = () => {
     </View>
   );
 
+  const renderSelectedLanguages = (languages: string[], removeHandler: (lang: string) => void) => (
+    <View style={styles.languageSelectionContainer}>
+      {languages.map((lang) => (
+        <View key={lang} style={styles.languageItem}>
+          <Image source={{ uri: getFlagUrl(lang) }} style={styles.flagIcon} />
+          <Text>{lang}</Text>
+          <TouchableOpacity onPress={() => removeHandler(lang)}>
+            <Text style={styles.removeText}>✕</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+    </View>
+  );
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.header}>Edit Profile</Text>
+    <PaperProvider> 
+      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <Text style={styles.header}>Edit Profile</Text>
 
-      <InputField
-        label="User Name"
-        value={name}
-        onChangeText={setName}
-        placeholder="Enter your name"
-      />
-
-      <InputField
-        label="Native Language"
-        value={nativeLanguage}
-        onChangeText={setNativeLanguage}
-        placeholder="e.g., English"
-      />
-
-      <InputField
-        label="Fluent Languages"
-        value={fluentLanguages.join(', ')}
-        onChangeText={(text) => setFluentLanguages(text.split(',').map((l) => l.trim()))}
-        placeholder="Add languages (comma-separated)"
-      />
-
-      <InputField
-        label="Learning Languages"
-        value={learningLanguages.join(', ')}
-        onChangeText={(text) => setLearningLanguages(text.split(',').map((l) => l.trim()))}
-        placeholder="Add learning languages (comma-separated)"
-      />
-
-      <View style={styles.bioSection}>
-        <Text style={styles.label}>Personal Bio</Text>
-        <TextInput
-          style={[styles.input, styles.bioInput]}
-          value={bio}
-          onChangeText={(text) => {
-            if (text.length <= bioCharacterLimit) setBio(text);
-          }}
-          placeholder="Share something about yourself"
-          multiline
+        <InputField
+          label="User Name"
+          value={name}
+          onChangeText={setName}
+          placeholder="Enter your name"
         />
-        <Text style={styles.charCount}>{bio.length}/{bioCharacterLimit}</Text>
-      </View>
 
-      <Button mode="contained" onPress={handleSaveProfile} style={styles.saveButton}>
-        Save Profile
-      </Button>
-    </ScrollView>
+        {/* Native Languages Dropdown */}
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.label}>Native Languages</Text>
+          <Menu
+            visible={nativeLangMenuVisible}
+            onDismiss={() => setNativeLangMenuVisible(false)}
+            anchor={
+              <Button mode="outlined" onPress={() => setNativeLangMenuVisible(true)}>
+                Select Native Languages
+              </Button>
+            }
+          >
+            {getAvailableLanguages(nativeLanguages).map((language) => (
+              <Menu.Item
+                key={language}
+                onPress={() => handleLanguageSelection(language, setNativeLanguages)}
+                title={language}
+                leadingIcon={() => (
+                  <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
+                )}
+              />
+            ))}
+          </Menu>
+          {renderSelectedLanguages(nativeLanguages, (lang) => handleRemoveLanguage(lang, setNativeLanguages))}
+        </View>
+
+        {/* Fluent Languages Dropdown */}
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.label}>Fluent Languages</Text>
+          <Menu
+            visible={fluentLangMenuVisible}
+            onDismiss={() => setFluentLangMenuVisible(false)}
+            anchor={
+              <Button mode="outlined" onPress={() => setFluentLangMenuVisible(true)}>
+                Select Fluent Languages
+              </Button>
+            }
+          >
+            {getAvailableLanguages(fluentLanguages).map((language) => (
+              <Menu.Item
+                key={language}
+                onPress={() => handleLanguageSelection(language, setFluentLanguages)}
+                title={language}
+                leadingIcon={() => (
+                  <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
+                )}
+              />
+            ))}
+          </Menu>
+          {renderSelectedLanguages(fluentLanguages, (lang) => handleRemoveLanguage(lang, setFluentLanguages))}
+        </View>
+
+        {/* Learning Languages Dropdown */}
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.label}>Learning Languages</Text>
+          <Menu
+            visible={learningLangMenuVisible}
+            onDismiss={() => setLearningLangMenuVisible(false)}
+            anchor={
+              <Button mode="outlined" onPress={() => setLearningLangMenuVisible(true)}>
+                Select Learning Languages
+              </Button>
+            }
+          >
+            {getAvailableLanguages(learningLanguages).map((language) => (
+              <Menu.Item
+                key={language}
+                onPress={() => handleLanguageSelection(language, setLearningLanguages)}
+                title={language}
+                leadingIcon={() => (
+                  <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
+                )}
+              />
+            ))}
+          </Menu>
+          {renderSelectedLanguages(learningLanguages, (lang) => handleRemoveLanguage(lang, setLearningLanguages))}
+        </View>
+
+        {/* Personal Bio */}
+        <View style={styles.bioSection}>
+          <Text style={styles.label}>Personal Bio</Text>
+          <TextInput
+            style={[styles.input, styles.bioInput]}
+            value={bio}
+            onChangeText={(text) => {
+              if (text.length <= bioCharacterLimit) setBio(text);
+            }}
+            placeholder="Share something about yourself"
+            multiline
+          />
+          <Text style={styles.charCount}>{bio.length}/{bioCharacterLimit}</Text>
+        </View>
+
+        <Button mode="contained" onPress={handleSaveProfile} style={styles.saveButton}>
+          Save Profile
+        </Button>
+      </ScrollView>
+    </PaperProvider>
   );
 };
 

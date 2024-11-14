@@ -21,6 +21,7 @@ import ProfileScreen from "./ProfileScreen";
 import AddTopicScreen from "./AddTopicScreen";
 import PrivacyScreen from "./PrivacyScreen";
 import AboutScreen from "./AboutScreen";
+import EditProfileScreen from "./EditProfileScreen";
 
 // Components
 import BottomNavBar from "../components/BottomNavBar";
@@ -40,6 +41,7 @@ export type RootStackParamList = {
   Privacy: undefined;
   About: undefined;
   AddTopic: undefined;
+  EditProfileScreen: undefined; 
 };
 
 // Stack and Tab Navigators
@@ -79,6 +81,7 @@ const StackNavigator: React.FC = () => (
     {/* Additional Screens */}
     <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }} initialParams={{ chatId: "" }} />
     <Stack.Screen name="Profile" component={ProfileScreen} />
+    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
     <Stack.Screen name="Friends" component={FriendListScreen} options={{ headerShown: true }} />
     <Stack.Screen name="AddTopic" component={AddTopicScreen} options={{ headerShown: true }} />
     <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true }} />

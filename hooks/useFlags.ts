@@ -1,3 +1,5 @@
+//hooks/useFlags.ts
+
 import { useCallback } from 'react';
 
 // Mapping of language names to country codes

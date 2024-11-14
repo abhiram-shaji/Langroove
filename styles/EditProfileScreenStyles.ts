@@ -20,6 +20,9 @@ export default StyleSheet.create({
   inputContainer: {
     marginBottom: 15,
   },
+  dropdownContainer: {
+    marginBottom: 15,
+  },
   label: {
     fontSize: 16,
     fontWeight: '600',
@@ -34,6 +37,16 @@ export default StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: colors.background,
   },
+  flagIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
+  languageItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
   bioSection: {
     marginBottom: 20,
   },
@@ -45,6 +58,16 @@ export default StyleSheet.create({
     textAlign: 'right',
     color: colors.accent,
     fontSize: 12,
+  },
+  languageSelectionContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  removeText: {
+    color: '#FF0000', // Red color for remove icon
+    marginLeft: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   saveButton: {
     backgroundColor: colors.primary,

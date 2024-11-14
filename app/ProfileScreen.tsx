@@ -51,7 +51,17 @@ const ProfileScreen: React.FC = () => {
       <ProfileAvatar userId={ownerId} />
       <ProfileInfo userId={ownerId} />
 
-      {currentUser?.uid !== ownerId && (
+      {/* If the profile belongs to the current user, show Edit Profile button */}
+      {currentUser?.uid === ownerId ? (
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('EditProfileScreen')}
+          style={styles.button}
+        >
+          Edit Profile
+        </Button>
+      ) : (
+        // If not the owner, show Add Friend and Message buttons
         <View style={styles.buttonContainer}>
           {!isFriend && (
             <Button mode="contained" onPress={handleAddFriend} style={styles.button} loading={loading}>
