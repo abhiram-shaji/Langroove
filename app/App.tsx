@@ -32,7 +32,7 @@ export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
   ForgotPassword: undefined;
-  TabScreens: undefined;
+  TabScreens: { screen: keyof RootStackParamList; params?: undefined }; // Allow nested navigation within TabScreens
   WaitingForVerification: undefined;
   Chat: { chatId: string };
   Profile: { ownerId: string };

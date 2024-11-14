@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../app/App';
@@ -37,13 +37,28 @@ export const useLogin = () => {
 
   const handleLogin = async () => {
     if (!validateFields()) return;
-
+  
     setLoading(true);
-
+  
     try {
-      await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
-      // After successful login, Firebase will automatically manage the user session
-      navigation.navigate('Feed'); // Navigate to the main screen after login
+      const userCredential = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        // If the email is not verified, send a verification email and navigate to WaitingForVerification screen
+        await sendEmailVerification(user);
+        setError('Email not verified. Please check your email and verify your account.');
+        
+        // Using reset instead of replace to clear navigation stack
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'WaitingForVerification' }],
+        });
+        return; // Stop further login process
+      }
+
+      // After successful login and email verification, Firebase will automatically manage the user session
+      navigation.navigate('TabScreens', { screen: 'Feed' }); // Navigate to Feed within TabScreens after login
     } catch (error: any) {
       const errorMessage = getErrorMessage(error.code);
       setError(errorMessage); // Set the general error message

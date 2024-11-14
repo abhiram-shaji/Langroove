@@ -16,13 +16,14 @@ export const useEmailVerification = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser?.emailVerified) {
-        navigation.replace('TabScreens'); // Navigate to TabScreens instead of Feed
+        navigation.replace('TabScreens', { screen: 'Feed' }); // Navigate to Feed within TabScreens
       } else {
         setLoading(false);
       }
     });
     return unsubscribe;
   }, [navigation]);
+  
 
   const checkVerificationStatus = async () => {
     if (user) {
@@ -32,7 +33,7 @@ export const useEmailVerification = () => {
         const updatedUser = auth.currentUser;
         setUser(updatedUser);
         if (updatedUser?.emailVerified) {
-          navigation.replace('TabScreens'); // Navigate to TabScreens instead of Feed
+          navigation.replace('TabScreens', { screen: 'Feed' }); // Navigate to Feed within TabScreens
         }
       } catch (error) {
         console.error('Error reloading user:', error);
@@ -42,6 +43,7 @@ export const useEmailVerification = () => {
       }
     }
   };
+  
 
   const handleResendVerification = () => {
     if (user) {
