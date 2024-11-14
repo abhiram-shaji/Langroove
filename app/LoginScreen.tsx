@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useLogin } from '../hooks/useLogin';
 import { LoginStyles } from '../styles/LoginStyles';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Login() {
   const {
@@ -12,6 +13,8 @@ export default function Login() {
     navigateToForgotPassword,
     error,
   } = useLogin();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <View style={LoginStyles.container}>
@@ -24,15 +27,26 @@ export default function Login() {
         style={LoginStyles.input}
       />
 
-      <TextInput
-        placeholder="Password"
-        value={credentials.password}
-        onChangeText={(text) => handleInputChange('password', text)}
-        secureTextEntry
-        style={LoginStyles.input}
-      />
-      
-      {/* Display the error message below the password field */}
+      <View style={LoginStyles.passwordContainer}>
+        <TextInput
+          placeholder="Password"
+          value={credentials.password}
+          onChangeText={(text) => handleInputChange('password', text)}
+          secureTextEntry={!showPassword}
+          style={LoginStyles.inputPassword}
+        />
+        <TouchableOpacity
+          style={LoginStyles.icon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <MaterialIcons
+            name={showPassword ? 'visibility' : 'visibility-off'}
+            size={24}
+            color="gray"
+          />
+        </TouchableOpacity>
+      </View>
+
       {error ? <Text style={LoginStyles.errorText}>{error}</Text> : null}
 
       <TouchableOpacity style={LoginStyles.button} onPress={handleLogin}>

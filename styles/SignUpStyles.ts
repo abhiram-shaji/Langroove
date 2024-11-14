@@ -48,4 +48,25 @@ export const SignUpStyles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'flex-start',
   },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputPassword: {
+    paddingRight: 40,
+    width: '100%',
+    height: 50,
+    borderColor: colors.border,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    marginBottom: 20,
+    color: colors.text,
+  },
+  icon: {
+    position: 'absolute',
+    right: 10,
+    top: '20%', // Adjust to vertically center the icon as needed
+  },  
 });

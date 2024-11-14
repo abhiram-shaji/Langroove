@@ -1,8 +1,8 @@
 import { signOut } from 'firebase/auth';
-import { auth } from '../firebase'; 
+import { auth } from '../firebase';
 import { Alert } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../app/App'; 
+import { useNavigation, NavigationProp, StackActions } from '@react-navigation/native';
+import { RootStackParamList } from '../app/App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFeed } from './useFeed'; // Import your feed hook
 
@@ -35,8 +35,10 @@ export const useLogout = () => {
       // Sign out the user from Firebase auth
       await signOut(auth);
 
-      // Navigate to the login screen after logout
-      navigation.navigate('Login');
+      // Reset the navigation stack to the login screen after logout
+      navigation.dispatch(
+        StackActions.replace('Login') // Clears navigation history
+      );
     } catch (error) {
       // Handle any errors during logout
       Alert.alert('Error', 'Failed to logout. Please try again.');

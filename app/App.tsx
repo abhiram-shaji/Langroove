@@ -97,17 +97,17 @@ const StackNavigator: React.FC<{ user: User | null }> = ({ user }) => (
 
 // Main App Component
 const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined); // `undefined` indicates loading state
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+      setUser(user ?? null); // Set to null if no user is authenticated
     });
     return unsubscribe;
   }, []);
 
-  if (user === null) {
-    return (
+  if (user === undefined) {
+    return ( // Show loading until authentication status is determined
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
       </View>
