@@ -41,11 +41,13 @@ export const useEditProfile = () => {
 
   const handleLanguageSelection = (
     selectedLanguage: string,
-    setter: React.Dispatch<React.SetStateAction<string[]>>
+    setter: React.Dispatch<React.SetStateAction<string[]>>,
+    setMenuVisible: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
     setter((prev) => [...prev, selectedLanguage]);
+    setMenuVisible(false); // Close the menu after selection
   };
-
+  
   const handleRemoveLanguage = (
     language: string,
     setter: React.Dispatch<React.SetStateAction<string[]>>

@@ -1,22 +1,29 @@
 // app/EditProfileScreen.tsx
 
-import React from 'react';
-import { View, Text, TextInput, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { Button, Menu, Provider as PaperProvider } from 'react-native-paper';
-import styles from '../styles/EditProfileScreenStyles';
-import { colors } from '../styles/themes';
-import { useEditProfile } from '../hooks/useEditProfile';
+import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { Button, Menu, Provider as PaperProvider } from "react-native-paper";
+import styles from "../styles/EditProfileScreenStyles";
+import { colors } from "../styles/themes";
+import { useEditProfile } from "../hooks/useEditProfile";
 
 const EditProfileScreen = () => {
   const {
     name,
     setName,
     nativeLanguages,
-    setNativeLanguages,  // Ensure this is correctly imported
+    setNativeLanguages, // Ensure this is correctly imported
     fluentLanguages,
-    setFluentLanguages,  // Ensure this is correctly imported
+    setFluentLanguages, // Ensure this is correctly imported
     learningLanguages,
-    setLearningLanguages,  // Ensure this is correctly imported
+    setLearningLanguages, // Ensure this is correctly imported
     bio,
     setBio,
     bioCharacterLimit,
@@ -56,7 +63,10 @@ const EditProfileScreen = () => {
     </View>
   );
 
-  const renderSelectedLanguages = (languages: string[], removeHandler: (lang: string) => void) => (
+  const renderSelectedLanguages = (
+    languages: string[],
+    removeHandler: (lang: string) => void
+  ) => (
     <View style={styles.languageSelectionContainer}>
       {languages.map((lang) => (
         <View key={lang} style={styles.languageItem}>
@@ -71,8 +81,11 @@ const EditProfileScreen = () => {
   );
 
   return (
-    <PaperProvider> 
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <PaperProvider>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+      >
         <Text style={styles.header}>Edit Profile</Text>
 
         <InputField
@@ -89,7 +102,10 @@ const EditProfileScreen = () => {
             visible={nativeLangMenuVisible}
             onDismiss={() => setNativeLangMenuVisible(false)}
             anchor={
-              <Button mode="outlined" onPress={() => setNativeLangMenuVisible(true)}>
+              <Button
+                mode="outlined"
+                onPress={() => setNativeLangMenuVisible(true)}
+              >
                 Select Native Languages
               </Button>
             }
@@ -97,15 +113,26 @@ const EditProfileScreen = () => {
             {getAvailableLanguages(nativeLanguages).map((language) => (
               <Menu.Item
                 key={language}
-                onPress={() => handleLanguageSelection(language, setNativeLanguages)}
+                onPress={() =>
+                  handleLanguageSelection(
+                    language,
+                    setNativeLanguages,
+                    setNativeLangMenuVisible
+                  )
+                }
                 title={language}
                 leadingIcon={() => (
-                  <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
+                  <Image
+                    source={{ uri: getFlagUrl(language) }}
+                    style={styles.flagIcon}
+                  />
                 )}
               />
             ))}
           </Menu>
-          {renderSelectedLanguages(nativeLanguages, (lang) => handleRemoveLanguage(lang, setNativeLanguages))}
+          {renderSelectedLanguages(nativeLanguages, (lang) =>
+            handleRemoveLanguage(lang, setNativeLanguages)
+          )}
         </View>
 
         {/* Fluent Languages Dropdown */}
@@ -115,7 +142,10 @@ const EditProfileScreen = () => {
             visible={fluentLangMenuVisible}
             onDismiss={() => setFluentLangMenuVisible(false)}
             anchor={
-              <Button mode="outlined" onPress={() => setFluentLangMenuVisible(true)}>
+              <Button
+                mode="outlined"
+                onPress={() => setFluentLangMenuVisible(true)}
+              >
                 Select Fluent Languages
               </Button>
             }
@@ -123,15 +153,26 @@ const EditProfileScreen = () => {
             {getAvailableLanguages(fluentLanguages).map((language) => (
               <Menu.Item
                 key={language}
-                onPress={() => handleLanguageSelection(language, setFluentLanguages)}
+                onPress={() =>
+                  handleLanguageSelection(
+                    language,
+                    setFluentLanguages,
+                    setFluentLangMenuVisible
+                  )
+                }
                 title={language}
                 leadingIcon={() => (
-                  <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
+                  <Image
+                    source={{ uri: getFlagUrl(language) }}
+                    style={styles.flagIcon}
+                  />
                 )}
               />
             ))}
           </Menu>
-          {renderSelectedLanguages(fluentLanguages, (lang) => handleRemoveLanguage(lang, setFluentLanguages))}
+          {renderSelectedLanguages(fluentLanguages, (lang) =>
+            handleRemoveLanguage(lang, setFluentLanguages)
+          )}
         </View>
 
         {/* Learning Languages Dropdown */}
@@ -141,7 +182,10 @@ const EditProfileScreen = () => {
             visible={learningLangMenuVisible}
             onDismiss={() => setLearningLangMenuVisible(false)}
             anchor={
-              <Button mode="outlined" onPress={() => setLearningLangMenuVisible(true)}>
+              <Button
+                mode="outlined"
+                onPress={() => setLearningLangMenuVisible(true)}
+              >
                 Select Learning Languages
               </Button>
             }
@@ -149,15 +193,26 @@ const EditProfileScreen = () => {
             {getAvailableLanguages(learningLanguages).map((language) => (
               <Menu.Item
                 key={language}
-                onPress={() => handleLanguageSelection(language, setLearningLanguages)}
+                onPress={() =>
+                  handleLanguageSelection(
+                    language,
+                    setLearningLanguages,
+                    setLearningLangMenuVisible
+                  )
+                }
                 title={language}
                 leadingIcon={() => (
-                  <Image source={{ uri: getFlagUrl(language) }} style={styles.flagIcon} />
+                  <Image
+                    source={{ uri: getFlagUrl(language) }}
+                    style={styles.flagIcon}
+                  />
                 )}
               />
             ))}
           </Menu>
-          {renderSelectedLanguages(learningLanguages, (lang) => handleRemoveLanguage(lang, setLearningLanguages))}
+          {renderSelectedLanguages(learningLanguages, (lang) =>
+            handleRemoveLanguage(lang, setLearningLanguages)
+          )}
         </View>
 
         {/* Personal Bio */}
@@ -172,10 +227,16 @@ const EditProfileScreen = () => {
             placeholder="Share something about yourself"
             multiline
           />
-          <Text style={styles.charCount}>{bio.length}/{bioCharacterLimit}</Text>
+          <Text style={styles.charCount}>
+            {bio.length}/{bioCharacterLimit}
+          </Text>
         </View>
 
-        <Button mode="contained" onPress={handleSaveProfile} style={styles.saveButton}>
+        <Button
+          mode="contained"
+          onPress={handleSaveProfile}
+          style={styles.saveButton}
+        >
           Save Profile
         </Button>
       </ScrollView>
