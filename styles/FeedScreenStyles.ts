@@ -8,6 +8,7 @@ export const feedScreenStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     paddingTop: 20,
+    paddingBottom: 80,
   },
   topBar: {
     backgroundColor: colors.background,
@@ -82,5 +83,20 @@ export const topicCardStyles = StyleSheet.create({
     fontSize: 16,
     color: colors.text,
     flexWrap: "wrap",
+  },
+  viewProfileButton: {
+    backgroundColor: colors.primary, // Blue background color
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    marginRight: 16,
+  },
+  viewProfileButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  ownerNameText: {
+    fontSize: 20, // Increase font size for the name
+    fontWeight: '600',
   },
 });

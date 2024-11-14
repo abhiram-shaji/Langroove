@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTransition } from "../styles/transitions";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../firebase";
 
 // Import Screens
@@ -61,46 +61,52 @@ const TabScreens: React.FC = () => (
 );
 
 // Main Stack Navigator
-const StackNavigator: React.FC = () => (
+const StackNavigator: React.FC<{ user: User | null }> = ({ user }) => (
   <Stack.Navigator
-    initialRouteName="Login"
     screenOptions={{
       headerShown: false,
       headerStyle: { backgroundColor: '#f9bc60' },
       ...useTransition,
     }}
   >
-    {/* Auth Screens */}
-    <Stack.Screen name="Login" component={LoginScreen} />
-    <Stack.Screen name="SignUp" component={SignUpScreen} />
-    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-
-    {/* Main Tab Screens */}
-    <Stack.Screen name="Feed" component={TabScreens} />
-
-    {/* Additional Screens */}
-    <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }} initialParams={{ chatId: "" }} />
-    <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true }}/>
-    <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ headerShown: true }} />
-    <Stack.Screen name="Friends" component={FriendListScreen} options={{ headerShown: true }} />
-    <Stack.Screen name="AddTopic" component={AddTopicScreen} options={{ headerShown: true }} />
-    <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true }} />
-    <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: true }} />
+    {/* Conditional rendering based on user authentication status */}
+    {user ? (
+      <>
+        {/* Main Tab Screens */}
+        <Stack.Screen name="TabScreens" component={TabScreens} />
+        
+        {/* Additional Screens */}
+        <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }} initialParams={{ chatId: "" }} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true }}/>
+        <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ headerShown: true }} />
+        <Stack.Screen name="Friends" component={FriendListScreen} options={{ headerShown: true }} />
+        <Stack.Screen name="AddTopic" component={AddTopicScreen} options={{ headerShown: true }} />
+        <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true }} />
+        <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: true }} />
+      </>
+    ) : (
+      <>
+        {/* Auth Screens */}
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      </>
+    )}
   </Stack.Navigator>
 );
 
 // Main App Component
 const App: React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setLoggedIn(!!user);
+      setUser(user);
     });
     return unsubscribe;
   }, []);
 
-  if (loggedIn === null) {
+  if (user === null) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
@@ -110,7 +116,7 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <StackNavigator />
+      <StackNavigator user={user} />
     </NavigationContainer>
   );
 };

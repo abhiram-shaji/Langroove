@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -17,7 +17,6 @@ export const useLogin = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [error, setError] = useState(''); // Single error message
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -43,7 +42,8 @@ export const useLogin = () => {
 
     try {
       await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
-      setLoggedIn(true);
+      // After successful login, Firebase will automatically manage the user session
+      navigation.navigate('Feed'); // Navigate to the main screen after login
     } catch (error: any) {
       const errorMessage = getErrorMessage(error.code);
       setError(errorMessage); // Set the general error message
@@ -51,12 +51,6 @@ export const useLogin = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (loggedIn) {
-      navigation.navigate('Feed');
-    }
-  }, [loggedIn, navigation]);
 
   const navigateToSignUp = () => {
     navigation.navigate('SignUp');
