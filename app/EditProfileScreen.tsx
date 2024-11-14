@@ -13,8 +13,10 @@ import { Button, Menu, Provider as PaperProvider } from "react-native-paper";
 import styles from "../styles/EditProfileScreenStyles";
 import { colors } from "../styles/themes";
 import { useEditProfile } from "../hooks/useEditProfile";
+import { useNavigation } from "@react-navigation/native";
 
 const EditProfileScreen = () => {
+  const navigation = useNavigation();
   const {
     name,
     setName,
@@ -39,6 +41,11 @@ const EditProfileScreen = () => {
     handleRemoveLanguage,
     saveProfile,
   } = useEditProfile();
+
+  const handleSaveAndNavigate = async () => {
+    await saveProfile(); // Wait for save to complete
+    navigation.goBack(); // Navigate back to the Profile page
+  };
 
   const InputField = ({
     label,
@@ -234,8 +241,9 @@ const EditProfileScreen = () => {
 
         <Button
           mode="contained"
-          onPress={saveProfile}
+          onPress={handleSaveAndNavigate}
           style={styles.saveButton}
+          labelStyle={{ color: "white" }}
         >
           Save Profile
         </Button>

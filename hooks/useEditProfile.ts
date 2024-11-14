@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useFlags } from './useFlags';
 import { handleSaveProfile, fetchProfile } from '../services/profileService';
-import { getAuth } from 'firebase/auth'; // Assuming you're using Firebase Auth
+import { getAuth } from 'firebase/auth';
 
 const languages = [
   "English",
@@ -75,7 +75,7 @@ export const useEditProfile = () => {
     setter((prev) => prev.filter((lang) => lang !== language));
   };
 
-  const saveProfile = () => {
+  const saveProfile = async () => {
     if (!userId) return;
     const profileData = {
       name,
@@ -84,7 +84,7 @@ export const useEditProfile = () => {
       learningLanguages,
       bio,
     };
-    handleSaveProfile(userId, profileData);
+    await handleSaveProfile(userId, profileData); // Await completion of save operation
   };
 
   return {

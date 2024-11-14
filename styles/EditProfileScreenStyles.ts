@@ -71,5 +71,6 @@ export default StyleSheet.create({
   },
   saveButton: {
     backgroundColor: colors.primary,
+    color: 'white',
   },
 });
