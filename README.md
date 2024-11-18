@@ -125,30 +125,60 @@ Langroove is built with React Native and Firebase, incorporating custom hooks fo
 
 ### Key Logic and Wiki Links
 
+#### App Logic
 - [App.tsx](https://github.com/abhiram-shaji/Langroove/wiki/App.tsx-(The-entry))
-- [Chat Logic](https://github.com/abhiram-shaji/Langroove/wiki/Chat-Logic)
-- [Feed Logic](https://github.com/abhiram-shaji/Langroove/wiki/Feed-Logic)
-- [User Data Fetching](https://github.com/abhiram-shaji/Langroove/wiki/Fetching-User-Data-from-Firebase-Firestore)
-- [Build an APK from Your Expo App](https://github.com/abhiram-shaji/Langroove/wiki/Build-an-APK-from-Your-Expo-App)
-- [Caching Feature](https://github.com/abhiram-shaji/Langroove/wiki/Caching-Feature)
-- [Database Structure](https://github.com/abhiram-shaji/Langroove/wiki/Databse-Structure)
-- [Deploying Langroove App on Google Play Store](https://github.com/abhiram-shaji/Langroove/wiki/Deploying-Langroove-App-on-Google-Play-Store)
-- [Email Verification Logic](https://github.com/abhiram-shaji/Langroove/wiki/Email-Verification-Logic)
-- [Fetch User Profile](https://github.com/abhiram-shaji/Langroove/wiki/Fetch-user-profile)
-- [Forgot Password Logic](https://github.com/abhiram-shaji/Langroove/wiki/Forgot-Password-Logic)
-- [Further Google Developer Account & Deployment Guideline](https://github.com/abhiram-shaji/Langroove/wiki/Further-Google-Developer-Account-&-Deployment-Guideline)
-- [How to Make a Production Build in Expo for Android App Bundle (AAB)](https://github.com/abhiram-shaji/Langroove/wiki/How-to-Make-a-Production-Build-in-Expo-for-Android-App-Bundle-(AAB))
-- [Libre Translate Logic](https://github.com/abhiram-shaji/Langroove/wiki/Libre-Translate-Logic)
-- [List of Friends Logic](https://github.com/abhiram-shaji/Langroove/wiki/List-of-Friends-Logic)
-- [Login Logic](https://github.com/abhiram-shaji/Langroove/wiki/Login-Logic)
-- [Logout Logic](https://github.com/abhiram-shaji/Langroove/wiki/Logout-Logic)
-- [Navbar Logic](https://github.com/abhiram-shaji/Langroove/wiki/Navbar-Logic)
-- [Practices Adopted](https://github.com/abhiram-shaji/Langroove/wiki/Practices-adopted)
 - [Project Summary](https://github.com/abhiram-shaji/Langroove/wiki/Project-Summary)
-- [Revert to an Old Commit](https://github.com/abhiram-shaji/Langroove/wiki/Revert-to-an-old-commit)
+
+#### Chat Logic
+- [Chat Logic](https://github.com/abhiram-shaji/Langroove/wiki/Chat-Logic)
+- [List of Friends Logic](https://github.com/abhiram-shaji/Langroove/wiki/List-of-Friends-Logic)
+
+#### Feed Logic
+- [Feed Logic](https://github.com/abhiram-shaji/Langroove/wiki/Feed-Logic)
+- [useAddTopic Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useAddTopic-Hook-logic)
+
+#### Authentication
+- [Login Logic](https://github.com/abhiram-shaji/Langroove/wiki/Login-Logic)
 - [Sign-Up Logic](https://github.com/abhiram-shaji/Langroove/wiki/Sign-Up-Logic)
+- [Forgot Password Logic](https://github.com/abhiram-shaji/Langroove/wiki/Forgot-Password-Logic)
+- [Email Verification Logic](https://github.com/abhiram-shaji/Langroove/wiki/Email-Verification-Logic)
+- [useFirebaseAuthErrors Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useFirebaseAuthErrors-Hook-Logic)
+
+#### Profile
+- [Fetch User Profile](https://github.com/abhiram-shaji/Langroove/wiki/Fetch-user-profile)
+- [useEditProfile Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useEditProfile-Hook-Logic)
+- [useProfileActions Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useProfileActions-Hook-Logic)
+
+#### Navigation
+- [Navbar Logic](https://github.com/abhiram-shaji/Langroove/wiki/Navbar-Logic)
+- [useHeader Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useHeader-Hook-Logic)
+
+#### Database and Data Fetching
+- [Database Structure](https://github.com/abhiram-shaji/Langroove/wiki/Databse-Structure)
+- [User Data Fetching](https://github.com/abhiram-shaji/Langroove/wiki/Fetching-User-Data-from-Firebase-Firestore)
+
+#### Caching and Optimization
+- [Caching Feature](https://github.com/abhiram-shaji/Langroove/wiki/Caching-Feature)
+
+#### Translation
+- [Libre Translate Syntax](https://github.com/abhiram-shaji/Langroove/wiki/Libre-Translate-Syntax)
 - [Supported Translation Languages on Langroove](https://github.com/abhiram-shaji/Langroove/wiki/Supported-Translation-Languages-on-Langroove)
+
+#### Development and Deployment
+- [Build an APK from Your Expo App](https://github.com/abhiram-shaji/Langroove/wiki/Build-an-APK-from-Your-Expo-App)
+- [How to Make a Production Build in Expo for Android App Bundle (AAB)](https://github.com/abhiram-shaji/Langroove/wiki/How-to-Make-a-Production-Build-in-Expo-for-Android-App-Bundle-(AAB))
+- [Deploying Langroove App on Google Play Store](https://github.com/abhiram-shaji/Langroove/wiki/Deploying-Langroove-App-on-Google-Play-Store)
+- [Further Google Developer Account & Deployment Guideline](https://github.com/abhiram-shaji/Langroove/wiki/Further-Google-Developer-Account-&-Deployment-Guideline)
+
+#### Hooks
+- [useSearch Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useSearch-Hook-Logic)
+- [useFlags Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useFlags-Hook-Logic)
+
+#### Miscellaneous
+- [Practices Adopted](https://github.com/abhiram-shaji/Langroove/wiki/Practices-adopted)
+- [Revert to an Old Commit](https://github.com/abhiram-shaji/Langroove/wiki/Revert-to-an-old-commit)
 - [Testing and Verification: Internal Testing Guide for Langroove](https://github.com/abhiram-shaji/Langroove/wiki/Testing-and-Verification:-Internal-Testing-Guide-for-Langroove)
+
 ---
 
 ### Future Enhancements
