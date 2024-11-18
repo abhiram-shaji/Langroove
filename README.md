@@ -129,7 +129,26 @@ Langroove is built with React Native and Firebase, incorporating custom hooks fo
 - [Chat Logic](https://github.com/abhiram-shaji/Langroove/wiki/Chat-Logic)
 - [Feed Logic](https://github.com/abhiram-shaji/Langroove/wiki/Feed-Logic)
 - [User Data Fetching](https://github.com/abhiram-shaji/Langroove/wiki/Fetching-User-Data-from-Firebase-Firestore)
-
+- [Build an APK from Your Expo App](https://github.com/abhiram-shaji/Langroove/wiki/Build-an-APK-from-Your-Expo-App)
+- [Caching Feature](https://github.com/abhiram-shaji/Langroove/wiki/Caching-Feature)
+- [Database Structure](https://github.com/abhiram-shaji/Langroove/wiki/Databse-Structure)
+- [Deploying Langroove App on Google Play Store](https://github.com/abhiram-shaji/Langroove/wiki/Deploying-Langroove-App-on-Google-Play-Store)
+- [Email Verification Logic](https://github.com/abhiram-shaji/Langroove/wiki/Email-Verification-Logic)
+- [Fetch User Profile](https://github.com/abhiram-shaji/Langroove/wiki/Fetch-user-profile)
+- [Forgot Password Logic](https://github.com/abhiram-shaji/Langroove/wiki/Forgot-Password-Logic)
+- [Further Google Developer Account & Deployment Guideline](https://github.com/abhiram-shaji/Langroove/wiki/Further-Google-Developer-Account-&-Deployment-Guideline)
+- [How to Make a Production Build in Expo for Android App Bundle (AAB)](https://github.com/abhiram-shaji/Langroove/wiki/How-to-Make-a-Production-Build-in-Expo-for-Android-App-Bundle-(AAB))
+- [Libre Translate Logic](https://github.com/abhiram-shaji/Langroove/wiki/Libre-Translate-Logic)
+- [List of Friends Logic](https://github.com/abhiram-shaji/Langroove/wiki/List-of-Friends-Logic)
+- [Login Logic](https://github.com/abhiram-shaji/Langroove/wiki/Login-Logic)
+- [Logout Logic](https://github.com/abhiram-shaji/Langroove/wiki/Logout-Logic)
+- [Navbar Logic](https://github.com/abhiram-shaji/Langroove/wiki/Navbar-Logic)
+- [Practices Adopted](https://github.com/abhiram-shaji/Langroove/wiki/Practices-adopted)
+- [Project Summary](https://github.com/abhiram-shaji/Langroove/wiki/Project-Summary)
+- [Revert to an Old Commit](https://github.com/abhiram-shaji/Langroove/wiki/Revert-to-an-old-commit)
+- [Sign-Up Logic](https://github.com/abhiram-shaji/Langroove/wiki/Sign-Up-Logic)
+- [Supported Translation Languages on Langroove](https://github.com/abhiram-shaji/Langroove/wiki/Supported-Translation-Languages-on-Langroove)
+- [Testing and Verification: Internal Testing Guide for Langroove](https://github.com/abhiram-shaji/Langroove/wiki/Testing-and-Verification:-Internal-Testing-Guide-for-Langroove)
 ---
 
 ### Future Enhancements
