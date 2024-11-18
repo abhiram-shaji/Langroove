@@ -1,140 +1,156 @@
 # Langroove - Language Learning App
 
-Welcome to the Langroove project! This app is designed to provide an interactive platform for language learners, allowing users to chat, manage friends, and practice real-time communication in different languages. This README will guide you through the current implementation of the project, covering the core features, functions, and how to get started with running the app locally.
+Langroove is a dynamic platform for language learners, offering tools to chat, manage friends, and practice real-time communication in different languages. This document includes **User Documentation** for end users and **Developer Documentation** for contributors.
 
 [Link To Play Store](https://play.google.com/store/apps/details?id=com.langroove.app)
 
-
 ---
 
-## Features Overview
+## User Documentation
 
-### 1. **Authentication Management**
-- **Login and Sign-Up**:
-  - **`useLogin`**: Handles user authentication via Firebase. It manages the login state, and upon successful login, it navigates users to appropriate screens.
-  - **`useSignUp`**: Manages new user registration, including form validation, creating a user account in Firebase Authentication, and storing user details in Firestore.
-  
-- **Logout**:
-  - **`useLogout`**: Signs out the user and redirects them to the login screen.
+### Features
 
-### 2. **User Profile and Friends Management**
-- **Friend List**:
-  - **`useFriendList`**: Fetches the user's friend list from Firestore. It includes search and filtering functionality to easily locate friends by name or other attributes.
+1. **Authentication**
+   - Create an account or log in using your email.
+   - Reset forgotten passwords easily.
 
-### 3. **Chat Functionality**
-- **Individual Chat Management**:
-  - **`useChat`**: Manages one-on-one chat conversations. It supports:
-    - Sending messages and handling real-time updates.
-    - Fetching message history from Firestore.
-    - Updating chat metadata (e.g., last message, participants).
+2. **User Profiles**
+   - Customize your profile with a name and avatar.
+   - Manage your friend list and connect with other users.
 
-### 4. **Data Management with Firestore**
-- **Real-Time Updates**:
-  - **`onSnapshot`**: Listens for real-time changes in Firestore collections, ensuring that chat lists, friends, and messages are always up to date.
+3. **Chat Functionality**
+   - One-on-one real-time messaging.
+   - View chat history and send messages in your preferred language.
 
-- **CRUD Operations**:
-  - **`addDoc`**: Adds new documents to Firestore, primarily used for sending messages.
-  - **`setDoc`**: Creates or updates documents, used for chat metadata (e.g., last message, participants).
-  - **`getDoc`**: Retrieves specific documents, used for fetching user profiles and friend details.
-
-### 5. **State Management**
-- **`useState`**: Manages local component states, such as messages, loading indicators, search terms, errors, etc., ensuring the app is responsive to user inputs and data changes.
-
-### 6. **Effects Management**
-- **`useEffect`**: Used throughout the app to handle side effects like fetching data on component mount, updating lists when data changes, or cleaning up resources when components unmount.
-
----
-
-## Logic
-
-Here is an overview of the core logic components, with detailed explanations available in the wiki:
-
-- [App.tsx (The entry)](https://github.com/abhiram-shaji/Langroove/wiki/App.tsx-(The-entry))
-- [Chat Logic](https://github.com/abhiram-shaji/Langroove/wiki/Chat-Logic)
-- [Feed Logic](https://github.com/abhiram-shaji/Langroove/wiki/Feed-Logic)
-- [Fetching User Data from Firebase Firestore](https://github.com/abhiram-shaji/Langroove/wiki/Fetching-User-Data-from-Firebase-Firestore)
-- [List of Chats Logic](https://github.com/abhiram-shaji/Langroove/wiki/List-of-Friends-Logic)
-- [List of Friends Logic](https://github.com/abhiram-shaji/Langroove/wiki/List-of-Friends-Logic)
-- [Login Logic](https://github.com/abhiram-shaji/Langroove/wiki/Login-Logic)
-- [Logout Logic](https://github.com/abhiram-shaji/Langroove/wiki/Logout-Logic)
-- [Sign-Up Logic](https://github.com/abhiram-shaji/Langroove/wiki/Sign-Up-Logic)
-- [Database Structure](https://github.com/abhiram-shaji/Langroove/wiki/Databse-Structure)
-
----
-
-
-## Prerequisites
-
-Before running the project, ensure you have the following installed on your machine:
-
-1. **Node.js** (v12 or higher)
-2. **Expo CLI** (for managing the React Native project)
-3. **Firebase Project**: Set up Firebase Authentication and Firestore (use Firebase configuration in the app).
+4. **Language Learning Tools**
+   - Translate messages in real-time to practice and understand new languages.
+   - Set individual translation languages for yourself and chat participants.
 
 ---
 
 ### Getting Started
-Follow the steps below to set up and run the project on your local machine:
 
-1. **Fork and Clone the Repository**  
-   - First, fork this repository to your GitHub account.
-   - Then, clone it to your local machine:
-     ```bash
-     git clone https://github.com/yourusername/langroove.git
-     cd langroove
-     ```
+1. **Download the App**
+   - Get Langroove from the [Google Play Store](https://play.google.com/store/apps/details?id=com.langroove.app).
 
-2. **Install Dependencies**  
+2. **Sign Up**
+   - Open the app and create a new account by providing your email and a password.
+
+3. **Start Chatting**
+   - Add friends to your list and start real-time messaging.
+   - Use the translation feature to practice new languages.
+
+4. **Manage Your Profile**
+   - Update your name, avatar, and language preferences anytime.
+
+---
+
+### Support and Feedback
+If you encounter any issues or have feedback, contact support via the app or email me at write4abhiram@gmail.com
+
+---
+
+## Developer Documentation
+
+### Overview
+
+Langroove is built with React Native and Firebase, incorporating custom hooks for functionality and a structured project setup for ease of collaboration. Below are the key components, setup instructions, and implementation details.
+
+---
+
+### Features Overview
+
+1. **Authentication Management**
+   - `useLogin`: Handles user login with Firebase Authentication.
+   - `useSignUp`: Manages new user registration and data storage in Firestore.
+   - `useLogout`: Signs out the user and clears app state.
+
+2. **Data Management**
+   - `useFriendList`: Fetches and manages the friend list from Firestore.
+   - `useChat`: Handles chat messages, real-time updates, and chat metadata.
+
+3. **State Management**
+   - `useState` and `useEffect` are extensively used to manage local states and side effects.
+
+4. **Firestore Integration**
+   - Implements CRUD operations (`addDoc`, `setDoc`, `getDoc`) for chat messages and user data.
+
+---
+
+### Project Structure
+
+- **`src/hooks`**: Custom React hooks for managing app logic.
+- **`src/components`**: Reusable UI components (e.g., chat bubbles, profile cards).
+- **`src/screens`**: Main app screens (e.g., LoginScreen, ChatScreen).
+- **`src/firebaseConfig.js`**: Firebase configuration and initialization.
+- **`App.js`**: The app’s entry point.
+
+---
+
+### Prerequisites
+
+1. **Node.js**: Version 12 or higher.
+2. **Expo**: For React Native project management.
+3. **Firebase**: A Firebase project with Authentication and Firestore set up.
+
+---
+
+### Setup Instructions
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/yourusername/langroove.git
+   cd langroove
+   ```
+
+2. **Install Dependencies**
    ```bash
    npm install
    ```
 
-3. **Install Expo (New Workflow)**  
-   - Install the `expo` package directly without `expo-cli`:
-     ```bash
-     npm install expo
-     ```
-   - If you prefer using the Expo Development server globally, you can run:
-     ```bash
-     npm install -g expo
-     ```
+3. **Set Up Firebase**
+   - Create a Firebase project.
+   - Enable Firebase Authentication and Firestore.
+   - Add your Firebase configuration to `src/firebaseConfig.js`.
 
-4. **Configure Firebase**  
-   - Navigate to the Firebase Console and create a new project.
-   - Set up **Firebase Authentication** and **Firestore**.
-   - Copy the Firebase configuration object (API keys, projectId, etc.) and add it to your app in the appropriate place (e.g., `firebaseConfig.js`).
-
-5. **Start the Development Server**  
+4. **Start Development Server**
    ```bash
    npx expo start
    ```
-   - This command will open the Expo developer tools in your browser.
-   - You can scan the QR code with the Expo Go app on your mobile device or run the app on an emulator.
 
-6. **Running on Android/iOS Emulator**  
-   - To run the app on an Android or iOS emulator:
-     - **Android:** Ensure you have **Android Studio** installed with an emulator configured.
-     - **iOS:** Use **Xcode** to set up an iOS simulator.
-   - Once configured, select the target platform from the Expo developer tools.
+5. **Run on Emulator or Device**
+   - Use the Expo Go app or a configured emulator (Android/iOS).
 
 ---
 
-## Project Structure
+### Key Logic and Wiki Links
 
-- **`src/hooks`**: Contains custom React hooks for managing authentication, chat, friends, and other data operations.
-- **`src/components`**: Contains reusable UI components for the app (e.g., chat bubbles, profile cards).
-- **`src/screens`**: Contains the main screens (e.g., login, signup, chat, profile).
-- **`src/firebaseConfig.js`**: The configuration file for Firebase services (authentication, Firestore, etc.).
-- **`App.js`**: The entry point of the application.
-
----
-
-## Future Features (Post-MVP)
-
-- **Language Games**: Introducing fun learning activities like "2 Truths and 1 Lie" and word matching games.
-- **Voice Messaging**: Allowing users to send voice messages for language practice.
-- **Push Notifications**: Enabling real-time notifications for new messages and friend requests.
+- [App.tsx](https://github.com/abhiram-shaji/Langroove/wiki/App.tsx-(The-entry))
+- [Chat Logic](https://github.com/abhiram-shaji/Langroove/wiki/Chat-Logic)
+- [Feed Logic](https://github.com/abhiram-shaji/Langroove/wiki/Feed-Logic)
+- [User Data Fetching](https://github.com/abhiram-shaji/Langroove/wiki/Fetching-User-Data-from-Firebase-Firestore)
 
 ---
 
-Thank you for being part of Langroove! Happy coding and language learning!
+### Future Enhancements
+
+1. **Post-MVP Features**
+   - Language games for interactive learning.
+   - Voice messaging for better language practice.
+   - Push notifications for user engagement.
+
+2. **Optimizations**
+   - Improve data fetching and caching.
+   - Enhance app responsiveness and UI transitions.
+
+---
+
+### Contributor Guide
+
+- Fork the repository and create a branch for your feature or bug fix.
+- Use clean, modular code and follow the existing code style.
+- Submit a pull request with detailed comments on your changes.
+
+---
+
+Happy coding!
