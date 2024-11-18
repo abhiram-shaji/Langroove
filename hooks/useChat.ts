@@ -36,8 +36,11 @@ export const useChat = (chatId: string) => {
     return { message, setMessage, messages, sendMessage: () => {}, avatars, setChatLanguage: () => {} };
   }
 
-  // Initialize chat languages
+  // Initialize chat languages on mount
   useEffect(() => {
+    // Language caching: Attempts to retrieve user and recipient language settings
+    // from a potentially cached source or database. By calling ensureChatLanguage,
+    // we avoid repeatedly fetching these settings, optimizing resource use.
     const initializeChatLanguages = async () => {
       const { userLanguage, recipientLanguage } = await ensureChatLanguage(chatId, currentUser.uid, recipientId);
       setUserLanguage(userLanguage);
@@ -46,7 +49,7 @@ export const useChat = (chatId: string) => {
     initializeChatLanguages();
   }, [chatId, currentUser, recipientId]);
 
-  // Set chat language
+  // Set chat language (user-selected language saved to database)
   const setChatLanguage = useCallback(async (selectedLanguage: string) => {
     try {
       const updatedLanguage = await updateChatLanguage(chatId, currentUser.uid, selectedLanguage);
@@ -62,6 +65,9 @@ export const useChat = (chatId: string) => {
     const messagesRef = collection(chatDocRef, "messages");
     const messagesQuery = query(messagesRef, orderBy("createdAt", "asc"));
 
+    // Real-time listener with Firestore caching:
+    // Firestore caches messages locally after they're fetched, minimizing server requests.
+    // This listener provides cached data initially, updating with server changes if online.
     const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
       const loadedMessages: Message[] = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -75,6 +81,7 @@ export const useChat = (chatId: string) => {
     return () => unsubscribe(); // Clean up listener on unmount
   }, [chatId, currentUser]);
 
+  // Send message and update last message in chat
   const sendMessage = useCallback(async () => {
     if (!message.trim()) return;
 
