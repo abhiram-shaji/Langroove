@@ -2,7 +2,8 @@
 
 Langroove is a dynamic platform for language learners, offering tools to chat, manage friends, and practice real-time communication in different languages. This document includes **User Documentation** for end users and **Developer Documentation** for contributors.
 
-[Link To Play Store](https://play.google.com/store/apps/details?id=com.langroove.app)
+[Link To Play Store](https://play.google.com/store/apps/details?id=com.langroove.app) (Only allowed testers for now)
+[Download APK](https://drive.google.com/file/d/1DZuIKCl-TvJ0xspKEkwdUm76dI5Vl1XP/view?usp=sharing)
 
 ---
 
@@ -31,7 +32,7 @@ Langroove is a dynamic platform for language learners, offering tools to chat, m
 ### Getting Started
 
 1. **Download the App**
-   - Get Langroove from the [Google Play Store](https://play.google.com/store/apps/details?id=com.langroove.app).
+   - Get Langroove from the [Google Play Store](https://play.google.com/store/apps/details?id=com.langroove.app) or [Download APK](https://drive.google.com/file/d/1DZuIKCl-TvJ0xspKEkwdUm76dI5Vl1XP/view?usp=sharing).
 
 2. **Sign Up**
    - Open the app and create a new account by providing your email and a password.
