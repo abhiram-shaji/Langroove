@@ -176,6 +176,7 @@ Langroove is built with React Native and Firebase, incorporating custom hooks fo
 - [useFlags Hook Logic](https://github.com/abhiram-shaji/Langroove/wiki/useFlags-Hook-Logic)
 
 #### Miscellaneous
+- [TypeScript for a Better Developer Experience]([https://github.com/abhiram-shaji/Langroove/wiki/Practices-adopted](https://github.com/abhiram-shaji/Langroove/wiki/Integrating-TypeScript-for-a-Better-Developer-Experience))
 - [Practices Adopted](https://github.com/abhiram-shaji/Langroove/wiki/Practices-adopted)
 - [Revert to an Old Commit](https://github.com/abhiram-shaji/Langroove/wiki/Revert-to-an-old-commit)
 - [Testing and Verification: Internal Testing Guide for Langroove](https://github.com/abhiram-shaji/Langroove/wiki/Testing-and-Verification:-Internal-Testing-Guide-for-Langroove)
