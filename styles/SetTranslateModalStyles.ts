@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: 'black',
   },
+  languageList: {
+    flex: 1,
+  },
   languageItem: {
     flexDirection: 'row',
     alignItems: 'center',
