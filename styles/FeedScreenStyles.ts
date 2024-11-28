@@ -8,7 +8,6 @@ export const feedScreenStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     paddingTop: 20,
-    paddingBottom: 80,
   },
   topBar: {
     backgroundColor: colors.background,
@@ -23,9 +22,10 @@ export const feedScreenStyles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 10,
+    paddingBottom: 80, // Add padding at the end of scrolling
   },
   addButton: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     width: 60, // Match the container height
     height: 60, // Match the container height
     borderRadius: 30, // Half of width/height to keep it circular
@@ -47,6 +47,7 @@ export const feedScreenStyles = StyleSheet.create({
     elevation: 5,
   },
 });
+
 
 export const headerStyles = StyleSheet.create({
   container: {
