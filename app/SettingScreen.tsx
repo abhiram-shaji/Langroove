@@ -1,15 +1,14 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SettingsButton from "../components/SettingsButton";
 import { styles } from "../styles/SettingsScreenStyles";
 import { useLogout } from "../hooks/useLogout";
-import { StackScreenProps } from "@react-navigation/stack"; // Import StackScreenProps
+import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../app/App";
 import { auth } from "../firebase";
 
-// Define SettingsScreen's props using StackScreenProps
-type SettingsScreenProps = StackScreenProps<RootStackParamList, 'Settings'>;
+type SettingsScreenProps = StackScreenProps<RootStackParamList, "Settings">;
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { handleLogout } = useLogout();
@@ -24,11 +23,19 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <SettingsButton title="Profile" onPress={handleProfilePress} />
-        <SettingsButton title="Friends" onPress={() => navigation.navigate("Friends")} />
-        <SettingsButton title="Privacy" onPress={() => navigation.navigate("Privacy")} />
-        <SettingsButton title="About" onPress={() => navigation.navigate("About")} />
-        <SettingsButton title="Logout" onPress={handleLogout} />
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Settings</Text>
+        </View>
+
+        {/* Settings Buttons */}
+        <View style={styles.settingsContainer}>
+          <SettingsButton title="Profile" iconName="person-outline" onPress={handleProfilePress} />
+          <SettingsButton title="Friends" iconName="group" onPress={() => navigation.navigate("Friends")} />
+          <SettingsButton title="Privacy" iconName="lock-outline" onPress={() => navigation.navigate("Privacy")} />
+          <SettingsButton title="About" iconName="info-outline" onPress={() => navigation.navigate("About")} />
+          <SettingsButton title="Logout" iconName="logout" onPress={handleLogout} />
+        </View>
       </View>
     </SafeAreaProvider>
   );
