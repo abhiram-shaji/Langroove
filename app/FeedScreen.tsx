@@ -6,7 +6,7 @@ import { feedScreenStyles } from '../styles/FeedScreenStyles';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../app/App';
 import { StackScreenProps } from '@react-navigation/stack'; // Import StackScreenProps
-import { Ionicons } from '@expo/vector-icons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import useHeader from '../hooks/useHeader';
 
 // Define FeedScreen's props using StackScreenProps
@@ -51,7 +51,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
         )}
       </ScrollView>
       <TouchableOpacity style={feedScreenStyles.addButton} onPress={handleAddTopicPress}>
-        <Ionicons name="add-circle" size={60} color="white" />
+      <MaterialIcons name="post-add" size={24} color="black" />
       </TouchableOpacity>
     </View>
   );

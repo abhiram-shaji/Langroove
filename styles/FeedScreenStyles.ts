@@ -25,27 +25,29 @@ export const feedScreenStyles = StyleSheet.create({
     paddingBottom: 80, // Add padding at the end of scrolling
   },
   addButton: {
-    backgroundColor: "black",
+    backgroundColor: "white",
     width: 60, // Match the container height
     height: 60, // Match the container height
     borderRadius: 30, // Half of width/height to keep it circular
     alignItems: "center",
     justifyContent: "center",
-
+  
+    // Border properties
+    borderWidth: 1, // Adjust the thickness of the border
+    borderColor: "black", // Light gray color for the border
+  
     // Positioning to the bottom-right corner
     position: "absolute",
     right: 20, // Distance from the right edge of the screen
     bottom: 19, // Distance from the bottom edge of the screen
-
-    // iOS shadow
-    shadowColor: "#000",
+  
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 4,
-
-    // Android shadow
-    elevation: 5,
+    shadowRadius: 8,
+    elevation: 8,
   },
+  
 });
 
 
