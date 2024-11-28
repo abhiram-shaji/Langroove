@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { collection, query, where, onSnapshot, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase'; // Firestore and auth instance
 
@@ -13,6 +13,9 @@ type Chat = {
 export const useChatList = () => {
   const [chats, setChats] = useState<Chat[]>([]);
   
+  // In-memory cache for user data
+  const userCache = useRef<{ [userId: string]: { name: string; avatar: string } }>({});
+
   useEffect(() => {
     const currentUser = auth.currentUser;
     
@@ -20,61 +23,50 @@ export const useChatList = () => {
       return;
     }
 
-    // Fetch user name from Firestore
-    const fetchNameForUser = async (userId: string): Promise<string> => {
-      try {
-        if (!userId) {
-          return "Unknown User"; // Placeholder name
-        }
-
-        const userDoc = await getDoc(doc(db, "users", userId));
-        const userData = userDoc.exists() ? userDoc.data() : null;
-
-        return userData?.name || "Unknown User"; // Fallback to "Unknown User"
-      } catch (error) {
-        console.error("Error fetching user name:", error);
-        return "Unknown User"; // Fallback name
+    // Fetch user data (name and avatar) with caching
+    const fetchUserData = async (userId: string): Promise<{ name: string; avatar: string }> => {
+      // Check if the user data is already in the cache
+      if (userCache.current[userId]) {
+        return userCache.current[userId];
       }
-    };
 
-    // Fetch avatar for a user (same as before)
-    const fetchAvatarForUser = async (userId: string): Promise<string> => {
       try {
         if (!userId) {
-          return "https://via.placeholder.com/50"; // Return placeholder if no user ID
+          return { name: "Unknown User", avatar: "https://via.placeholder.com/50" };
         }
 
         const userDoc = await getDoc(doc(db, "users", userId));
         const userData = userDoc.exists() ? userDoc.data() : null;
 
-        return userData?.avatar || "https://via.placeholder.com/50"; // Fallback to placeholder
+        const name = userData?.name || "Unknown User";
+        const avatar = userData?.avatar || "https://via.placeholder.com/50";
+
+        // Store fetched data in the cache
+        userCache.current[userId] = { name, avatar };
+
+        return { name, avatar };
       } catch (error) {
-        console.error("Error fetching user avatar:", error);
-        return "https://via.placeholder.com/50"; // Fallback to placeholder
+        console.error("Error fetching user data:", error);
+        return { name: "Unknown User", avatar: "https://via.placeholder.com/50" };
       }
     };
 
     const fetchChatAvatarsAndNames = async (participants: string[], isGroupChat: boolean): Promise<{ name: string, avatar: string }> => {
       if (!currentUser?.uid) {
-        return { name: "Unknown", avatar: "https://via.placeholder.com/50" }; // Placeholder if no authenticated user
+        return { name: "Unknown", avatar: "https://via.placeholder.com/50" };
       }
 
       if (isGroupChat) {
-        return { name: "Unnamed Group", avatar: "https://via.placeholder.com/50" }; // Placeholder for group chats
+        return { name: "Unnamed Group", avatar: "https://via.placeholder.com/50" };
       }
 
       const otherParticipantId = participants.find(id => id !== currentUser.uid);
       if (!otherParticipantId) {
-        return { name: "Unknown", avatar: "https://via.placeholder.com/50" }; // Fallback if no other participant
+        return { name: "Unknown", avatar: "https://via.placeholder.com/50" };
       }
 
-      // Fetch name and avatar for the other participant
-      const [name, avatar] = await Promise.all([
-        fetchNameForUser(otherParticipantId),
-        fetchAvatarForUser(otherParticipantId)
-      ]);
-
-      return { name, avatar };
+      // Fetch user data for the other participant with caching
+      return await fetchUserData(otherParticipantId);
     };
 
     try {
@@ -91,8 +83,8 @@ export const useChatList = () => {
           const { name, avatar } = await fetchChatAvatarsAndNames(data.participants, isGroupChat);
 
           return {
-            id: doc.id, // Chat ID from Firestore
-            name: isGroupChat ? (data.groupName || name) : name, // Use groupName if it's a group, else use fetched name
+            id: doc.id,
+            name: isGroupChat ? (data.groupName || name) : name,
             avatar: avatar,
             lastMessage: lastMessage,
             isGroupChat: isGroupChat,
@@ -103,7 +95,7 @@ export const useChatList = () => {
       });
 
       return () => {
-        unsubscribe(); // Cleanup listener on unmount
+        unsubscribe();
       };
     } catch (error) {
       console.error("Error fetching chats:", error);
