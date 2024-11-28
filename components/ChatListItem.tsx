@@ -35,7 +35,13 @@ const ChatListItem: React.FC<ChatListItemProps> = ({ id, name, avatar, lastMessa
         />
         <View style={styles.textContainer}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.lastMessage}>{lastMessage}</Text>
+          <Text
+            style={styles.lastMessage}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {lastMessage}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
