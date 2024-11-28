@@ -15,6 +15,13 @@ const styles = StyleSheet.create({
     right: 20,
     padding: 10,
     backgroundColor: 'black',
+    borderRadius: 25,
+  },
+  modalHint: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: 'red',
   },
   modalTitle: {
     paddingTop: 50,

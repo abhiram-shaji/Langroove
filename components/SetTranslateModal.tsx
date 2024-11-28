@@ -57,6 +57,7 @@ const SetTranslateModal: React.FC<SetTranslateModalProps> = ({ visible, onClose,
           <Ionicons name="close" size={24} color="white" />
         </TouchableOpacity>
         <Text style={styles.modalTitle}>Select Language</Text>
+        <Text style={styles.modalHint}>Double tap incoming message to translate</Text>
         <FlatList
           data={languages}
           keyExtractor={(item) => item}
