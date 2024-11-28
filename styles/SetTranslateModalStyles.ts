@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   modalTitle: {
+    paddingTop: 50,
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
