@@ -33,7 +33,7 @@ export const feedScreenStyles = StyleSheet.create({
     justifyContent: "center",
   
     // Border properties
-    borderWidth: 1, // Adjust the thickness of the border
+    borderWidth: 2, // Adjust the thickness of the border
     borderColor: "black", // Light gray color for the border
   
     // Positioning to the bottom-right corner
