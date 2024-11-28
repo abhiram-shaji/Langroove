@@ -37,6 +37,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  charCount: {
+    alignSelf: 'flex-end',    // Aligns the text to the right
+    marginRight: 10,          // Adds some right margin for spacing
+    marginTop: 5,             // Adds top margin to separate from the TextInput
+    color: 'gray',            // Sets the text color to gray for subtlety
+    fontSize: 12,             // Sets a smaller font size
+  },
 });
 
 export default styles;
