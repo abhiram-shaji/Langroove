@@ -7,7 +7,7 @@ export const ChatListItemStyles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: colors.border, // Using border color from theme
     paddingEnd: 100,
   },
   avatar: {
@@ -16,7 +16,7 @@ export const ChatListItemStyles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 12,
     marginLeft: 8,
-    backgroundColor: 'purple',
+    backgroundColor: colors.accent, // Use accent color for placeholder avatar background
   },
   textContainer: {
     flexDirection: 'column',
@@ -24,11 +24,11 @@ export const ChatListItemStyles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: colors.headline, // Headline color for names
   },
   lastMessage: {
     fontSize: 14,
-    color: colors.secondary,
+    color: colors.paragraph, // Paragraph color for the last message text
     marginTop: 4,
     overflow: 'hidden',
   },

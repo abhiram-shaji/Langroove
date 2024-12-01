@@ -1,23 +1,21 @@
-// /styles/FeedScreenStyles.ts
-
 import { StyleSheet } from "react-native";
 import { colors } from "./themes";
 
 export const feedScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.background, // Consistent background color
     paddingTop: 20,
   },
   topBar: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.background, // Consistent background color
     paddingTop: 10,
     alignItems: "center",
     justifyContent: "center",
   },
   welcomeText: {
     fontSize: 20,
-    color: colors.text,
+    color: colors.headline, // Headline color for visibility
     fontWeight: "bold",
   },
   scrollContainer: {
@@ -25,7 +23,7 @@ export const feedScreenStyles = StyleSheet.create({
     paddingBottom: 80, // Add padding at the end of scrolling
   },
   addButton: {
-    backgroundColor: "white",
+    backgroundColor: colors.accent, // Accent color for the button
     width: 60, // Match the container height
     height: 60, // Match the container height
     borderRadius: 30, // Half of width/height to keep it circular
@@ -34,22 +32,20 @@ export const feedScreenStyles = StyleSheet.create({
   
     // Border properties
     borderWidth: 2, // Adjust the thickness of the border
-    borderColor: "black", // Light gray color for the border
+    borderColor: colors.border, // Border color from theme
   
     // Positioning to the bottom-right corner
     position: "absolute",
     right: 20, // Distance from the right edge of the screen
     bottom: 19, // Distance from the bottom edge of the screen
   
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 8, // Shadow for Android
   },
-  
 });
-
 
 export const headerStyles = StyleSheet.create({
   container: {
@@ -57,18 +53,18 @@ export const headerStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 15,
-    backgroundColor: colors.background,
+    backgroundColor: colors.background, // Consistent background color
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: colors.border, // Border color from theme
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: colors.text,
+    color: colors.headline, // Headline color for title
   },
   subtitle: {
     fontSize: 10,
-    color: colors.text,
+    color: colors.paragraph, // Paragraph color for subtitle
   },
   iconButton: {
     padding: 5,
@@ -78,28 +74,31 @@ export const headerStyles = StyleSheet.create({
 export const topicCardStyles = StyleSheet.create({
   card: {
     marginVertical: 8,
-    backgroundColor: colors.background,
-    borderColor: colors.border,
+    backgroundColor: colors.background, // Consistent background color
+    borderColor: colors.border, // Border color from theme
     borderWidth: 2,
+    borderRadius: 8, // Add some rounding to the card
+    padding: 12, // Add padding inside the card
   },
   description: {
     fontSize: 16,
-    color: colors.text,
+    color: colors.paragraph, // Paragraph color for the description
     flexWrap: "wrap",
   },
   viewProfileButton: {
-    backgroundColor: colors.primary, // Blue background color
+    backgroundColor: colors.accent, // Accent color for the button
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 6,
     marginRight: 16,
   },
   viewProfileButtonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
+    color: colors.headline, // Headline color for button text
+    fontWeight: "bold",
   },
   ownerNameText: {
     fontSize: 20, // Increase font size for the name
-    fontWeight: '600',
+    fontWeight: "600",
+    color: colors.headline, // Headline color for the owner's name
   },
 });

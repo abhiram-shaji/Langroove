@@ -4,7 +4,7 @@ import { colors } from './themes';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.background, // Dark background color from theme
     paddingTop: 16,
   },
   noChatsContainer: {
@@ -15,15 +15,15 @@ const styles = StyleSheet.create({
   },
   noChatsText: {
     fontSize: 16,
-    color: '#888', 
+    color: colors.paragraph, // Use paragraph color for subtle text
   },
   searchInput: {
-    backgroundColor: '#F0F0F0', // This color can be added to the theme if it's used widely, or a similar color from the theme can be used
+    backgroundColor: colors.accent, // Use the accent color for input background
     padding: 10,
     margin: 10,
     borderRadius: 8,
     fontSize: 16,
-    color: colors.text, 
+    color: colors.headline, // Text color matches headline for visibility
   },
 });
 

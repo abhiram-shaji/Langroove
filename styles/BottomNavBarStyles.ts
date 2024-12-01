@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { colors } from './themes';
 
 const screenWidth = Dimensions.get('window').width;
-const navBarWidth = screenWidth * 0.6; // Set the width to 80% of the screen
+const navBarWidth = screenWidth * 0.6; // Set the width to 60% of the screen
 
 export const bottomNavBarStyles = StyleSheet.create({
   container: {
@@ -11,7 +11,7 @@ export const bottomNavBarStyles = StyleSheet.create({
     alignItems: 'center',
     width: navBarWidth,
     height: 60,
-    backgroundColor: colors.background,
+    backgroundColor: colors.background, // Dark background
     borderRadius: 30,
     position: 'absolute',
     bottom: 20,
@@ -20,7 +20,7 @@ export const bottomNavBarStyles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 8, // Elevation for Android shadow
   },
   navItem: {
     alignItems: 'center',
@@ -29,14 +29,14 @@ export const bottomNavBarStyles = StyleSheet.create({
   activeBackground: {
     width: 50,
     height: 50,
-    backgroundColor: 'black',
+    backgroundColor: colors.accent, // Green accent for the active state
     borderRadius: 10,
     position: 'absolute',
     top: 5,
   },
   label: {
     fontSize: 12,
-    color: colors.text,
+    color: colors.paragraph, // Use paragraph color for labels
     fontWeight: '600',
     marginTop: 4,
   },

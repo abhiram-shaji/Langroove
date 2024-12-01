@@ -1,5 +1,3 @@
-// /styles/LoginStyles.ts
-
 import { StyleSheet } from 'react-native';
 import { colors } from './themes';
 
@@ -9,48 +7,49 @@ export const LoginStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: colors.background,
+    backgroundColor: colors.background, // Use theme's background color
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: colors.primary,
+    color: colors.headline, // Headline color for the title
   },
   input: {
     width: '100%',
     height: 50,
-    borderColor: colors.border,
+    borderColor: colors.border, // Border color from theme
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 16,
     marginBottom: 20,
-    color: colors.text,
+    backgroundColor: colors.background, // Consistent background color for inputs
+    color: colors.headline, // Input text color for visibility
   },
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent, // Accent color for the button
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
     marginTop: 10,
   },
   buttonText: {
-    color: colors.background,
+    color: colors.headline, // Headline color for button text
     fontSize: 16,
     fontWeight: 'bold',
   },
   forgotPasswordText: {
-    color: colors.accent,
+    color: colors.accent, // Accent color for the "Forgot Password" text
     fontSize: 16,
   },
   forgotPassword: {
     marginTop: 20,
   },
   errorText: {
-    color: 'red',
+    color: '#FF0000', // Retain red for error messages
     marginBottom: 10,
     fontSize: 12,
   },
@@ -62,17 +61,18 @@ export const LoginStyles = StyleSheet.create({
     paddingRight: 40,
     width: '100%',
     height: 50,
-    borderColor: colors.border,
+    borderColor: colors.border, // Border color for password input
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 16,
     marginBottom: 20,
-    color: colors.text,
+    backgroundColor: colors.background, // Consistent background color for password input
+    color: colors.headline, // Text color for password input
   },
   icon: {
     position: 'absolute',
     right: 10,
-    top: '20%', // Adjust as needed to align with the TextInput
+    top: '25%', // Align icon vertically with input text
   },
 });

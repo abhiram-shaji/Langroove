@@ -1,11 +1,15 @@
 // Themes.js
+
 export const colors = {
-    primary: "#181818", // Pure Black
-    secondary: "#333333", // Dark Gray
-    accent: "#666666", // Medium Gray (for hover/focus states)
-    background: "#FFFFFF", // Pure White
-    text: "#000000", // Pure Black for text
-    border: "#CCCCCC", // Light Gray for borders/dividers
-    disabled: "#AAAAAA", // Light Gray for disabled elements
-  };
-  
+  background: "#16161a",
+  headline: "#fffffe",
+  paragraph: "#94a1b2",
+
+  buttonBackground: "#7f5af0",
+  buttonDisabled: "#7f5af0",
+  buttonText: "#fffffe",
+
+  border: "#010101",
+  accent: "#2cb67d",
+
+};

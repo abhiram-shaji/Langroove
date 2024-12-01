@@ -1,5 +1,3 @@
-// SignUpStyles.ts
-
 import { StyleSheet } from 'react-native';
 import { colors } from './themes';
 
@@ -9,44 +7,46 @@ export const SignUpStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: colors.background,
+    backgroundColor: colors.background, // Consistent background color
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: colors.primary,
+    color: colors.headline, // Headline color for prominent title
   },
   input: {
     width: '100%',
     height: 50,
-    borderColor: colors.border,
+    borderColor: colors.border, // Border color from theme
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 16,
     marginBottom: 20,
-    color: colors.text,
+    color: colors.headline, // Text color for input fields
+    backgroundColor: colors.background, // Consistent input background
   },
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent, // Accent color for button
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
     marginTop: 10,
   },
   buttonDisabled: {
-    backgroundColor: '#d3d3d3', 
+    backgroundColor: colors.border, // Subtle color for disabled button
+    opacity: 0.5, // Visual feedback for disabled state
   },
   buttonText: {
-    color: colors.background,
+    color: colors.headline, // Headline color for button text
     fontSize: 16,
     fontWeight: 'bold',
   },
   errorText: {
-    color: 'red',
+    color: '#FF0000', // Retain red for error messages
     fontSize: 12,
     marginBottom: 10,
     alignSelf: 'flex-start',
@@ -59,17 +59,18 @@ export const SignUpStyles = StyleSheet.create({
     paddingRight: 40,
     width: '100%',
     height: 50,
-    borderColor: colors.border,
+    borderColor: colors.border, // Border color from theme
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 16,
     marginBottom: 20,
-    color: colors.text,
+    color: colors.headline, // Consistent input text color
+    backgroundColor: colors.background, // Consistent input background
   },
   icon: {
     position: 'absolute',
     right: 10,
     top: '20%', // Adjust to vertically center the icon as needed
-  },  
+  },
 });

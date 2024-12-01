@@ -1,5 +1,3 @@
-// /styles/ChatMessageStyles.ts
-
 import { StyleSheet } from 'react-native';
 import { colors } from './themes';
 
@@ -33,15 +31,18 @@ export const styles = StyleSheet.create({
     maxWidth: '100%',
   },
   sentMessage: {
-    backgroundColor: '#E1FFC7', // You can decide to add this to the theme if reused often
+    backgroundColor: colors.accent, // Use accent color for sent message bubbles
+    color: colors.headline, // Text inside sent messages uses headline color
   },
   receivedMessage: {
-    backgroundColor: '#fef6e4', // Use theme background color for received messages
+    backgroundColor: colors.background, // Use the background color for received messages
+    color: colors.paragraph, // Subtle text for received message content
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+    backgroundColor: colors.accent, // Placeholder avatar background
   },
 });

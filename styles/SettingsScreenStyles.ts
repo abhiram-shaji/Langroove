@@ -1,23 +1,24 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./themes";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff", // White background like Instagram
+    backgroundColor: colors.background, // Use theme's background color
     padding: 16,
     paddingTop: 30,
   },
   header: {
     paddingTop: 50, // Add padding for safe area
-    paddingBottom: 20,// Light gray background for the header
+    paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#e6e6e6", // Subtle border at the bottom
+    borderBottomColor: colors.border, // Use border color from theme
     alignItems: "center", // Center align header content
   },
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#000", // Black text
+    color: colors.headline, // Use headline color for header text
   },
   settingsContainer: {
     flex: 1,
@@ -31,16 +32,16 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#e6e6e6", // Light gray divider
+    borderBottomColor: colors.border, // Use border color from theme
   },
   buttonText: {
     fontSize: 20,
-    color: "#000", // Black text
+    color: colors.headline, // Use headline color for button text
     fontWeight: "500",
   },
   icon: {
     fontSize: 20,
-    color: "#888", // Gray for subtle icons
+    color: colors.paragraph, // Use paragraph color for subtle icons
     marginRight: 12,
   },
 });

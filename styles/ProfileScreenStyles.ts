@@ -3,13 +3,13 @@ import { colors } from './themes';
 
 export const styles = StyleSheet.create({
   scrollContainer: {
-    backgroundColor: colors.background,
-    alignItems: 'center', 
+    backgroundColor: colors.background, // Consistent background
+    alignItems: 'center',
   },
   container: {
     padding: 20,
-    backgroundColor: colors.background,
-    alignItems: 'center', 
+    backgroundColor: colors.background, // Consistent background
+    alignItems: 'center',
   },
   backButton: {
     position: 'absolute',
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   changeAvatarText: {
-    color: '#007bff',
+    color: colors.accent, // Use accent color for change avatar text
     fontWeight: 'bold',
     textDecorationLine: 'underline',
     textAlign: 'center',
@@ -36,19 +36,19 @@ export const styles = StyleSheet.create({
   infoContainer: {
     padding: 20,
     alignItems: 'center',
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
-    color: colors.text,
+    color: colors.headline, // Use headline color for name
   },
   label: {
     fontSize: 16,
     marginVertical: 5,
-    color: colors.text,
+    color: colors.paragraph, // Use paragraph color for labels
     textAlign: 'center',
   },
   buttonContainer: {
@@ -56,17 +56,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   button: {
     width: '45%',
     marginHorizontal: 10,
   },
-  
   bio: {
     fontSize: 16,
     fontStyle: 'italic',
-    color: '#666',
+    color: colors.paragraph, // Use paragraph color for bio text
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -81,6 +80,7 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 10,
     textAlign: 'left',
+    color: colors.headline, // Use headline color for labels
   },
   languagesRow: {
     flexDirection: 'row',
@@ -92,7 +92,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.background, // Use background color for language card
+    borderColor: colors.border, // Use border color from theme
+    borderWidth: 1,
     borderRadius: 8,
     marginRight: 10,
     marginBottom: 10,
@@ -103,7 +105,7 @@ export const styles = StyleSheet.create({
   },
   languageText: {
     fontSize: 16,
-    color: colors.text,
+    color: colors.headline, // Use headline color for language text
     marginLeft: 5,
   },
   flagIcon: {
@@ -112,7 +114,7 @@ export const styles = StyleSheet.create({
   },
   languagePlaceholder: {
     fontSize: 16,
-    color: '#999',
+    color: colors.paragraph, // Use paragraph color for placeholder text
     textAlign: 'center',
     marginVertical: 10, // Adjusts spacing for consistency
   },

@@ -1,10 +1,10 @@
-// SetTranslateModalStyles.ts
 import { StyleSheet } from 'react-native';
+import { colors } from './themes';
 
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: colors.background, // Use theme's background color
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -14,21 +14,21 @@ const styles = StyleSheet.create({
     top: 40,
     right: 20,
     padding: 10,
-    backgroundColor: 'black',
+    backgroundColor: colors.accent, // Use accent color for the close button
     borderRadius: 25,
   },
   modalHint: {
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'red',
+    color: colors.accent, // Use accent color for hints or warnings
   },
   modalTitle: {
     paddingTop: 50,
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'black',
+    color: colors.headline, // Use headline color for modal title
   },
   languageList: {
     flex: 1,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     marginVertical: 5,
-    backgroundColor: 'black',
+    backgroundColor: colors.accent, // Use accent color for language items
     borderRadius: 5,
     width: 200,
   },
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   languageText: {
     fontSize: 16,
-    color: 'white',
+    color: colors.headline, // Use headline color for text inside language items
   },
 });
 
