@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTransition } from "../styles/transitions";
 import { onAuthStateChanged, User, reload } from "firebase/auth";
 import { auth } from "../firebase";
+import { colors } from '../styles/themes';
 
 // Import Screens
 import LoginScreen from "./LoginScreen";
@@ -76,7 +77,7 @@ const StackNavigator: React.FC<{ user: User | null; isEmailVerified: boolean }> 
       initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false,
-        headerStyle: { backgroundColor: '#f9bc60' },
+        headerStyle: { backgroundColor: colors.accent },
         ...useTransition,
       }}
     >

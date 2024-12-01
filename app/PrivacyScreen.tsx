@@ -31,7 +31,7 @@ const Privacy = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.secondary,
     padding: 20,
     justifyContent: 'center',
   },
@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: colors.primary,
+    color: colors.headline,
   },
   paragraph: {
     fontSize: 16,
     lineHeight: 22,
-    color: colors.text,
+    color: colors.paragraph,
     marginBottom: 10,
   },
 });
