@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { bottomNavBarStyles } from '../styles/BottomNavBarStyles';
+import { colors } from '../styles/themes';
+
 import {
   NavigationHelpers,
   TabNavigationState,
@@ -46,10 +48,12 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
   }, [currentScreenIndex]);
 
   const getIconColor = (screenName: string) =>
-    activeScreen === screenName ? 'white' : 'black';
+    activeScreen === screenName ? colors.headline : colors.headline;
 
   const getLabelColor = (screenName: string) =>
-    activeScreen === screenName ? { color: 'white' } : { color: 'black' };
+    activeScreen === screenName
+      ? { color: colors.headline }
+      : { color: colors.headline };
 
   return (
     <Animated.View
