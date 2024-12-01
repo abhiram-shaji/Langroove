@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, Avatar, Text } from 'react-native-paper';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { topicCardStyles } from '../styles/FeedScreenStyles';
 import useUserInfo from '../hooks/useUserInfo';
 
@@ -17,7 +17,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ description, ownerName, ownerId, 
   const { userInfo, loading } = useUserInfo(ownerId);
 
   return (
-    <Card style={topicCardStyles.card}>
+    <Card style={topicCardStyles.card} onPress={onPress}>
       <Card.Title
         title={<Text style={topicCardStyles.ownerNameText}>{ownerName}</Text>}
         left={() => (
@@ -25,11 +25,6 @@ const TopicCard: React.FC<TopicCardProps> = ({ description, ownerName, ownerId, 
             size={40}
             source={{ uri: loading ? 'https://robohash.org/default-avatar.png' : userInfo.avatar }}
           />
-        )}
-        right={() => (
-          <TouchableOpacity onPress={onPress} style={topicCardStyles.viewProfileButton}>
-            <Text style={topicCardStyles.viewProfileButtonText}>View Profile</Text>
-          </TouchableOpacity>
         )}
       />
       <Card.Content>

@@ -76,7 +76,7 @@ export const topicCardStyles = StyleSheet.create({
     backgroundColor: colors.background, // Consistent background color
 
     borderRadius: 8, // Add some rounding to the card
-    padding: 12, // Add padding inside the card
+    padding: 5, // Add padding inside the card
   },
   description: {
     fontSize: 16,
