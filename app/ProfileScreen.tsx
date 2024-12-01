@@ -26,6 +26,7 @@ const ProfileScreen: React.FC = () => {
   const currentUser = auth.currentUser;
 
   const [isFriend, setIsFriend] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0); // State to trigger reload
 
   useEffect(() => {
     const checkFriendStatus = async () => {
@@ -41,7 +42,12 @@ const ProfileScreen: React.FC = () => {
     };
 
     checkFriendStatus();
-  }, [currentUser, ownerId]);
+  }, [currentUser, ownerId, reloadKey]); // Add reloadKey to dependencies
+
+  const handleAddFriendAndReload = async () => {
+    await handleAddFriend(); // Call the add friend function
+    setReloadKey((prevKey) => prevKey + 1); // Trigger reload by updating reloadKey
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -61,7 +67,7 @@ const ProfileScreen: React.FC = () => {
             {!isFriend && (
               <Button
                 mode="contained"
-                onPress={handleAddFriend}
+                onPress={handleAddFriendAndReload}
                 style={styles.button}
                 loading={loading}
               >
