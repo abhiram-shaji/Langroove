@@ -8,6 +8,7 @@ import FriendItem from '../components/FriendItem';
 import { styles } from '../styles/FriendListStyles';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../app/App';
+import { colors } from '../styles/themes';
 
 // Define props for FriendListScreen
 type FriendListScreenProps = StackScreenProps<RootStackParamList, 'Friends'>;
@@ -21,6 +22,7 @@ const FriendListScreen: React.FC<FriendListScreenProps> = ({ navigation }) => {
         <TextInput
           style={styles.searchInput}
           placeholder="Search friends..."
+          placeholderTextColor={colors.paragraph}
           value={search}
           onChangeText={setSearch}
         />

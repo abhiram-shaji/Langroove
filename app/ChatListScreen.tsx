@@ -6,6 +6,7 @@ import { useChatList } from "../hooks/useChatList";
 import useSearch from "../hooks/useSearch";
 import { StackScreenProps } from "@react-navigation/stack"; // Import StackScreenProps
 import { RootStackParamList } from "../app/App";
+import { colors } from '../styles/themes';
 
 // Define ChatListScreen's props using StackScreenProps
 type ChatListScreenProps = StackScreenProps<RootStackParamList, 'ChatListScreen'>;
@@ -19,7 +20,8 @@ const ChatListScreen: React.FC<ChatListScreenProps> = () => {
       <TextInput
         style={styles.searchInput}
         placeholder="Search friends..."
-        value={search}
+          placeholderTextColor={colors.paragraph}
+          value={search}
         onChangeText={setSearch}
       />
       <ScrollView>

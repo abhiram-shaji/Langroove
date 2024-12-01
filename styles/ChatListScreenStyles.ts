@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     color: colors.paragraph, // Use paragraph color for subtle text
   },
   searchInput: {
-    backgroundColor: colors.accent, // Use the accent color for input background
+    backgroundColor: colors.form, // Use the accent color for input background
     padding: 10,
     margin: 10,
     borderRadius: 8,
