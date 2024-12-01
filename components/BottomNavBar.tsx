@@ -48,11 +48,11 @@ const BottomNavBar: React.FC<BottomNavBarProps> = ({ navigation, state }) => {
   }, [currentScreenIndex]);
 
   const getIconColor = (screenName: string) =>
-    activeScreen === screenName ? colors.headline : colors.headline;
+    activeScreen === screenName ? colors.paragraph : colors.headline;
 
   const getLabelColor = (screenName: string) =>
     activeScreen === screenName
-      ? { color: colors.headline }
+      ? { color: colors.paragraph }
       : { color: colors.headline };
 
   return (

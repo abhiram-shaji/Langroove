@@ -11,7 +11,7 @@ export const bottomNavBarStyles = StyleSheet.create({
     alignItems: 'center',
     width: navBarWidth,
     height: 60,
-    backgroundColor: colors.background, // Dark background
+    backgroundColor: colors.accent, // Dark background
     borderRadius: 30,
     position: 'absolute',
     bottom: 20,
@@ -29,7 +29,7 @@ export const bottomNavBarStyles = StyleSheet.create({
   activeBackground: {
     width: 50,
     height: 50,
-    backgroundColor: colors.accent, // Green accent for the active state
+    backgroundColor: colors.background, // Green accent for the active state
     borderRadius: 10,
     position: 'absolute',
     top: 5,
