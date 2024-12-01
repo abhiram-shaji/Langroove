@@ -75,11 +75,13 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   saveButton: {
-    backgroundColor: colors.accent, // Accent color for save button
-    color: colors.headline, // White text on button
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    width: '100%',
+    height: 50,
+    backgroundColor: colors.accent, // Accent color for the button
+    justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 8,
+    marginTop: 10,
   },
+
 });

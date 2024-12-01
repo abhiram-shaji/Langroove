@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView } from "react-native";
-import { Button } from "react-native-paper";
+import { View, ScrollView, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import ProfileAvatar from "../components/ProfileAvatar";
 import ProfileInfo from "../components/ProfileInfo";
@@ -55,32 +54,29 @@ const ProfileScreen: React.FC = () => {
 
       <View style={styles.buttonContainer}>
         {currentUser?.uid === ownerId ? (
-          <Button
-            mode="contained"
+          <TouchableOpacity
             onPress={() => navigation.navigate("EditProfileScreen")}
             style={styles.button}
           >
-            Edit Profile
-          </Button>
+            <Text style={styles.buttonText}>Edit Profile</Text>
+          </TouchableOpacity>
         ) : (
           <>
             {!isFriend && (
-              <Button
-                mode="contained"
+              <TouchableOpacity
                 onPress={handleAddFriendAndReload}
                 style={styles.button}
-                loading={loading}
               >
-                Add Friend
-              </Button>
+                {loading ? (
+                  <ActivityIndicator color="white" /> // Show a loader
+                ) : (
+                  <Text style={styles.buttonText}>Add Friend</Text>
+                )}
+              </TouchableOpacity>
             )}
-            <Button
-              mode="contained"
-              onPress={handleSendMessage}
-              style={styles.button}
-            >
-              Message
-            </Button>
+            <TouchableOpacity onPress={handleSendMessage} style={styles.button}>
+              <Text style={styles.buttonText}>Message</Text>
+            </TouchableOpacity>
           </>
         )}
       </View>
