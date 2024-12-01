@@ -1,7 +1,7 @@
 const useFirebaseAuthErrors = () => {
-  const getErrorMessage = (errorCode: string): string => {
+    const getErrorMessage = (errorCode: string): string => {
       switch (errorCode) {
-          case 'auth/claims-too-large':
+        case 'auth/claims-too-large':
               return 'Something went wrong with your request. Please try again later.';
           case 'auth/email-already-exists':
               return 'This email is already registered. Try signing in instead.';
@@ -64,7 +64,10 @@ const useFirebaseAuthErrors = () => {
           default:
               return 'Something went wrong. Please try again later.';
       }
+    };
+  
+    return { getErrorMessage };
   };
-
-  return { getErrorMessage };
-};
+  
+  export default useFirebaseAuthErrors;
+  
