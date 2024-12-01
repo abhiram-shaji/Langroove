@@ -12,4 +12,5 @@ export const colors = {
   border: "#010101",
   accent: "#2cb67d",
 
+  form: "#2f2f2f",
 };

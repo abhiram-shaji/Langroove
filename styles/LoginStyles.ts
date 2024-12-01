@@ -24,7 +24,7 @@ export const LoginStyles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
     marginBottom: 20,
-    backgroundColor: colors.background, // Consistent background color for inputs
+    backgroundColor: colors.form, // Consistent background color for inputs
     color: colors.headline, // Input text color for visibility
   },
   button: {
@@ -56,19 +56,6 @@ export const LoginStyles = StyleSheet.create({
   passwordContainer: {
     position: 'relative',
     width: '100%',
-  },
-  inputPassword: {
-    paddingRight: 40,
-    width: '100%',
-    height: 50,
-    borderColor: colors.border, // Border color for password input
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    marginBottom: 20,
-    backgroundColor: colors.background, // Consistent background color for password input
-    color: colors.headline, // Text color for password input
   },
   icon: {
     position: 'absolute',

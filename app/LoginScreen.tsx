@@ -3,6 +3,7 @@ import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useLogin } from '../hooks/useLogin';
 import { LoginStyles } from '../styles/LoginStyles';
 import { MaterialIcons } from '@expo/vector-icons';
+import { colors } from '../styles/themes';
 
 export default function Login() {
   const {
@@ -22,7 +23,8 @@ export default function Login() {
 
       <TextInput
         placeholder="Email"
-        value={credentials.email}
+          placeholderTextColor={colors.paragraph}
+          value={credentials.email}
         onChangeText={(text) => handleInputChange('email', text)}
         style={LoginStyles.input}
       />
@@ -30,10 +32,11 @@ export default function Login() {
       <View style={LoginStyles.passwordContainer}>
         <TextInput
           placeholder="Password"
+          placeholderTextColor={colors.paragraph}
           value={credentials.password}
           onChangeText={(text) => handleInputChange('password', text)}
           secureTextEntry={!showPassword}
-          style={LoginStyles.inputPassword}
+          style={LoginStyles.input}
         />
         <TouchableOpacity
           style={LoginStyles.icon}

@@ -3,6 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'reac
 import { useSignUp } from '../hooks/useSignUp';
 import { SignUpStyles } from '../styles/SignUpStyles';
 import { MaterialIcons } from '@expo/vector-icons';
+import { colors } from '../styles/themes';
 
 const SignUpScreen: React.FC = () => {
   const { credentials, errors, loading, handleInputChange, handleSignUp } = useSignUp();
@@ -24,7 +25,8 @@ const SignUpScreen: React.FC = () => {
 
       <TextInput
         placeholder="Name"
-        value={credentials.name}
+          placeholderTextColor={colors.paragraph}
+          value={credentials.name}
         onChangeText={(text) => handleInputChange('name', text)}
         style={SignUpStyles.input}
       />
@@ -32,7 +34,8 @@ const SignUpScreen: React.FC = () => {
 
       <TextInput
         placeholder="Email"
-        value={credentials.email}
+          placeholderTextColor={colors.paragraph}
+          value={credentials.email}
         onChangeText={(text) => handleInputChange('email', text)}
         keyboardType="email-address"
         style={SignUpStyles.input}
@@ -42,10 +45,11 @@ const SignUpScreen: React.FC = () => {
       <View style={SignUpStyles.passwordContainer}>
         <TextInput
           placeholder="Password"
+          placeholderTextColor={colors.paragraph}
           value={credentials.password}
           onChangeText={(text) => handleInputChange('password', text)}
           secureTextEntry={!showPassword}
-          style={SignUpStyles.inputPassword}
+          style={SignUpStyles.input}
         />
         <TouchableOpacity
           style={SignUpStyles.icon}
@@ -63,10 +67,11 @@ const SignUpScreen: React.FC = () => {
       <View style={SignUpStyles.passwordContainer}>
         <TextInput
           placeholder="Confirm Password"
+          placeholderTextColor={colors.paragraph}
           value={credentials.confirmPassword}
           onChangeText={(text) => handleInputChange('confirmPassword', text)}
           secureTextEntry={!showPassword}
-          style={SignUpStyles.inputPassword}
+          style={SignUpStyles.input}
         />
         <TouchableOpacity
           style={SignUpStyles.icon}

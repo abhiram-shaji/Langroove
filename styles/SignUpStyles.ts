@@ -25,7 +25,7 @@ export const SignUpStyles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
     color: colors.headline, // Text color for input fields
-    backgroundColor: colors.background, // Consistent input background
+    backgroundColor: colors.form,
   },
   button: {
     width: '100%',
@@ -54,19 +54,6 @@ export const SignUpStyles = StyleSheet.create({
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  inputPassword: {
-    paddingRight: 40,
-    width: '100%',
-    height: 50,
-    borderColor: colors.border, // Border color from theme
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    marginBottom: 20,
-    color: colors.headline, // Consistent input text color
-    backgroundColor: colors.background, // Consistent input background
   },
   icon: {
     position: 'absolute',
