@@ -43,8 +43,29 @@ export const useSignUp = () => {
     // Clear specific field error when user starts typing
     setErrors((prevErrors) => ({ ...prevErrors, [field]: undefined }));
 
+    // Real-time validation
     if (field === 'email') {
-      checkEmailExists(value);
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: 'Invalid email format.',
+        }));
+      } else {
+        setErrors((prevErrors) => ({ ...prevErrors, email: undefined }));
+        checkEmailExists(value);
+      }
+    }
+
+    if (field === 'password') {
+      if (value.length < 6) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          password: 'Password must be at least 6 characters long.',
+        }));
+      } else {
+        setErrors((prevErrors) => ({ ...prevErrors, password: undefined }));
+      }
     }
   };
 

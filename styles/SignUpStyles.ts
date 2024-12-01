@@ -37,6 +37,9 @@ export const SignUpStyles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 10,
   },
+  buttonDisabled: {
+    backgroundColor: '#d3d3d3', 
+  },
   buttonText: {
     color: colors.background,
     fontSize: 16,
