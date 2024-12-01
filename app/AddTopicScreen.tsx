@@ -3,6 +3,7 @@ import { View, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import { useAddTopic } from '../hooks/useAddTopic';
 import styles from '../styles/AddTopicScreenStyles';
+import { colors } from '../styles/themes';
 
 const MAX_DESCRIPTION_LENGTH = 200; // Define your maximum length here
 
@@ -25,7 +26,8 @@ const AddTopicScreen: React.FC = () => {
     <View style={styles.container}>
       <TextInput
         placeholder="Description"
-        value={description}
+          placeholderTextColor={colors.paragraph}
+          value={description}
         onChangeText={handleChangeText}
         style={[styles.input, styles.textArea]}
         multiline

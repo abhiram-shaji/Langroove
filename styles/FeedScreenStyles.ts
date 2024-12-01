@@ -4,14 +4,15 @@ import { colors } from "./themes";
 export const feedScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background, // Consistent background color
+    backgroundColor: colors.secondary, // Consistent background color
     paddingTop: 20,
   },
   topBar: {
     backgroundColor: colors.background, // Consistent background color
-    paddingTop: 10,
+    padding: 10,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 8, // Add some rounding to the card
   },
   welcomeText: {
     fontSize: 20,
@@ -53,7 +54,7 @@ export const headerStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 15,
-    backgroundColor: colors.background, // Consistent background color
+    backgroundColor: colors.secondary, // Consistent background color
     borderBottomWidth: 1,
     borderBottomColor: colors.border, // Border color from theme
   },

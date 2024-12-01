@@ -34,7 +34,13 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
 
   return (
     <View style={feedScreenStyles.container}>
-      <View style={feedScreenStyles.topBar}>
+      
+      <ScrollView
+        contentContainerStyle={feedScreenStyles.scrollContainer}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        <View style={feedScreenStyles.topBar}>
         {isUserLoading || userInfoLoading ? (
           <ActivityIndicator size="small" color="#ffffff" />
         ) : (
@@ -43,11 +49,6 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
           </Text>
         )}
       </View>
-      <ScrollView
-        contentContainerStyle={feedScreenStyles.scrollContainer}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
         {topics.length > 0 ? (
           topics.map((topic) => (
             <TopicCard

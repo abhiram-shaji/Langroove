@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     marginBottom: 16,
-    backgroundColor: colors.background, // Matches the overall dark theme
+    backgroundColor: colors.form, // Matches the overall dark theme
     color: colors.headline, // Ensures text inside the input is visible
   },
   textArea: {
