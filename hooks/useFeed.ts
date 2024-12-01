@@ -1,10 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db, auth } from '../firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore'; // Import Firestore Timestamp
+
+// Define the Topic type
+interface Topic {
+  id: string;
+  createdAt: Timestamp | null; // Allow null for pending server timestamps
+  description: string;
+  ownerId: string;
+  ownerName: string;
+}
 
 export const useFeed = () => {
-  const [topics, setTopics] = useState<any[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]); // Use the Topic type
   const [loading, setLoading] = useState(true);
   const unsubscribeRef = useRef<(() => void) | null>(null); // Store the unsubscribe function
 
@@ -37,10 +47,24 @@ export const useFeed = () => {
       const unsubscribe = onSnapshot(
         topicsCollection,
         (snapshot) => {
-          const topicsData = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const topicsData: Topic[] = snapshot.docs
+            .map((doc: QueryDocumentSnapshot<DocumentData>) => {
+              const data = doc.data();
+              return {
+                id: doc.id,
+                createdAt: data.createdAt || null, // Handle null values for pending server timestamps
+                description: data.description,
+                ownerId: data.ownerId,
+                ownerName: data.ownerName,
+              } as Topic;
+            })
+            .sort((a, b) => {
+              // Handle sorting with potential null values
+              const timeA = a.createdAt ? a.createdAt.toMillis() : 0; // Treat null as the oldest
+              const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+              return timeB - timeA; // Sort by descending time
+            });
+
           setTopics(topicsData);
 
           // Cache the topics data
