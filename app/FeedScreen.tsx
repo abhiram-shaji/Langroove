@@ -7,6 +7,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import useHeader from '../hooks/useHeader';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../app/App';
+import { colors } from '../styles/themes';
 
 type FeedScreenProps = StackScreenProps<RootStackParamList, 'Feed'>;
 
@@ -64,8 +65,8 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
         )}
         {loading && <ActivityIndicator size="large" color="#004643" />}
       </ScrollView>
-      <TouchableOpacity style={feedScreenStyles.addButton} onPress={handleAddTopicPress}>
-        <MaterialIcons name="post-add" size={24} color="black" />
+      <TouchableOpacity style={feedScreenStyles.addButton} onPress={handleAddTopicPress}>        
+      <MaterialIcons name="post-add" size={24} color={colors.headline} />
       </TouchableOpacity>
     </View>
   );

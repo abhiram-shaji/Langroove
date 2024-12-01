@@ -30,10 +30,8 @@ export const feedScreenStyles = StyleSheet.create({
     borderRadius: 30, // Half of width/height to keep it circular
     alignItems: "center",
     justifyContent: "center",
+    color: colors.headline,
   
-    // Border properties
-    borderWidth: 2, // Adjust the thickness of the border
-    borderColor: colors.border, // Border color from theme
   
     // Positioning to the bottom-right corner
     position: "absolute",
@@ -76,8 +74,7 @@ export const topicCardStyles = StyleSheet.create({
   card: {
     marginVertical: 8,
     backgroundColor: colors.background, // Consistent background color
-    borderColor: colors.border, // Border color from theme
-    borderWidth: 2,
+
     borderRadius: 8, // Add some rounding to the card
     padding: 12, // Add padding inside the card
   },
