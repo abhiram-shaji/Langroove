@@ -1,19 +1,17 @@
-import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useCallback } from 'react';
+import { ScrollView, View, Text, TouchableOpacity, ActivityIndicator, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { useFeed } from '../hooks/useFeed';
 import TopicCard from '../components/TopicCard';
 import { feedScreenStyles } from '../styles/FeedScreenStyles';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../app/App';
-import { StackScreenProps } from '@react-navigation/stack'; // Import StackScreenProps
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import useHeader from '../hooks/useHeader';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../app/App';
 
-// Define FeedScreen's props using StackScreenProps
 type FeedScreenProps = StackScreenProps<RootStackParamList, 'Feed'>;
 
 const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
-  const { topics } = useFeed();
+  const { topics, loading, fetchMore, hasMore } = useFeed();
   const { userInfo, isUserLoading, userInfoLoading } = useHeader();
 
   const handleAddTopicPress = () => {
@@ -23,6 +21,16 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
   const handleTopicPress = (ownerId: string) => {
     navigation.navigate('Profile', { ownerId });
   };
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+      if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 20 && hasMore && !loading) {
+        fetchMore();
+      }
+    },
+    [fetchMore, hasMore, loading]
+  );
 
   return (
     <View style={feedScreenStyles.container}>
@@ -35,7 +43,11 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
           </Text>
         )}
       </View>
-      <ScrollView contentContainerStyle={feedScreenStyles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={feedScreenStyles.scrollContainer}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         {topics.length > 0 ? (
           topics.map((topic) => (
             <TopicCard
@@ -49,9 +61,10 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ navigation }) => {
         ) : (
           <Text>No topics available.</Text>
         )}
+        {loading && <ActivityIndicator size="large" color="#004643" />}
       </ScrollView>
       <TouchableOpacity style={feedScreenStyles.addButton} onPress={handleAddTopicPress}>
-      <MaterialIcons name="post-add" size={24} color="black" />
+        <MaterialIcons name="post-add" size={24} color="black" />
       </TouchableOpacity>
     </View>
   );

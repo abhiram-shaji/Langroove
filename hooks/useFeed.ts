@@ -1,97 +1,75 @@
 import { useState, useEffect, useRef } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { db, auth } from '../firebase';
-import { collection, onSnapshot, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { Timestamp } from 'firebase/firestore'; // Import Firestore Timestamp
+import { db } from '../firebase';
+import { collection, query, orderBy, limit, startAfter, getDocs, onSnapshot, DocumentSnapshot } from 'firebase/firestore';
 
-// Define the Topic type
-interface Topic {
-  id: string;
-  createdAt: Timestamp | null; // Allow null for pending server timestamps
-  description: string;
-  ownerId: string;
-  ownerName: string;
-}
+const PAGE_SIZE = 10; // Number of topics to fetch per page
 
 export const useFeed = () => {
-  const [topics, setTopics] = useState<Topic[]>([]); // Use the Topic type
+  const [topics, setTopics] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const unsubscribeRef = useRef<(() => void) | null>(null); // Store the unsubscribe function
+  const [lastVisible, setLastVisible] = useState<DocumentSnapshot | null>(null);
+  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    const currentUser = auth.currentUser;
+  const unsubscribeRef = useRef<(() => void) | null>(null); // Properly typed useRef
 
-    if (!currentUser) {
-      setLoading(false);
-      return;
-    }
-
-    // Load topics from cache first
-    const loadCachedTopics = async () => {
-      try {
-        const cachedTopics = await AsyncStorage.getItem('cachedTopics');
-        if (cachedTopics) {
-          setTopics(JSON.parse(cachedTopics));
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Error loading cached topics:', error);
-      }
-    };
-
-    // Function to fetch topics from Firestore and update cache
-    const fetchTopicsFromFirestore = () => {
+  const fetchTopics = async (loadMore = false) => {
+    setLoading(true);
+    try {
       const topicsCollection = collection(db, 'topics');
-
-      // Set up the snapshot listener and store the unsubscribe function
-      const unsubscribe = onSnapshot(
+      const topicsQuery = query(
         topicsCollection,
-        (snapshot) => {
-          const topicsData: Topic[] = snapshot.docs
-            .map((doc: QueryDocumentSnapshot<DocumentData>) => {
-              const data = doc.data();
-              return {
-                id: doc.id,
-                createdAt: data.createdAt || null, // Handle null values for pending server timestamps
-                description: data.description,
-                ownerId: data.ownerId,
-                ownerName: data.ownerName,
-              } as Topic;
-            })
-            .sort((a, b) => {
-              // Handle sorting with potential null values
-              const timeA = a.createdAt ? a.createdAt.toMillis() : 0; // Treat null as the oldest
-              const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
-              return timeB - timeA; // Sort by descending time
-            });
-
-          setTopics(topicsData);
-
-          // Cache the topics data
-          AsyncStorage.setItem('cachedTopics', JSON.stringify(topicsData)).catch((error) =>
-            console.error('Error caching topics:', error)
-          );
-
-          setLoading(false);
-        },
-        (error) => {
-          console.error('Error fetching real-time topics:', error);
-          setLoading(false);
-        }
+        orderBy('createdAt', 'desc'),
+        ...(loadMore && lastVisible ? [startAfter(lastVisible)] : []),
+        limit(PAGE_SIZE)
       );
 
-      unsubscribeRef.current = unsubscribe; // Store unsubscribe function
-    };
+      const snapshot = await getDocs(topicsQuery);
 
-    loadCachedTopics(); // Load from cache on mount
-    fetchTopicsFromFirestore(); // Then fetch and update in real-time from Firestore
+      const newTopics = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setTopics((prev) => (loadMore ? [...prev, ...newTopics] : newTopics));
+      setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+      setHasMore(snapshot.docs.length === PAGE_SIZE);
+    } catch (error) {
+      console.error('Error fetching topics:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setupRealTimeUpdates = () => {
+    const topicsCollection = collection(db, 'topics');
+    const realTimeQuery = query(topicsCollection, orderBy('createdAt', 'desc'), limit(PAGE_SIZE));
+
+    const unsubscribe = onSnapshot(realTimeQuery, (snapshot) => {
+      const realTimeTopics = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setTopics((prev) => {
+        const existingIds = new Set(prev.map((topic) => topic.id));
+        const newTopics = realTimeTopics.filter((topic) => !existingIds.has(topic.id));
+        return [...newTopics, ...prev];
+      });
+    });
+
+    unsubscribeRef.current = unsubscribe; // Assign unsubscribe function
+  };
+
+  useEffect(() => {
+    fetchTopics();
+    setupRealTimeUpdates();
 
     return () => {
       if (unsubscribeRef.current) {
-        unsubscribeRef.current(); // Clean up the listener on unmount
+        unsubscribeRef.current(); // Cleanup listener
       }
     };
   }, []);
 
-  return { topics, loading, unsubscribeRef }; // Return the unsubscribeRef
+  return { topics, loading, fetchMore: () => fetchTopics(true), hasMore };
 };
