@@ -33,7 +33,7 @@ export default StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    backgroundColor: colors.background, // Matches overall dark background
+    backgroundColor: colors.form, // Matches overall dark background
     color: colors.headline, // Input text color for visibility
   },
   flagIcon: {
@@ -56,7 +56,7 @@ export default StyleSheet.create({
     borderColor: colors.border, // Border color for bio input
     borderRadius: 8,
     padding: 10,
-    backgroundColor: colors.background, // Matches screen background
+    backgroundColor: colors.form, // Matches screen background
     color: colors.headline, // Text color for bio input
   },
   charCount: {
@@ -77,7 +77,7 @@ export default StyleSheet.create({
   saveButton: {
     width: '100%',
     height: 50,
-    backgroundColor: colors.accent, // Accent color for the button
+    backgroundColor: colors.buttonBackground, // Accent color for the button
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

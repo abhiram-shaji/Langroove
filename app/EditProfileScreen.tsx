@@ -57,6 +57,7 @@ const EditProfileScreen = () => {
     value: string;
     onChangeText: (text: string) => void;
     placeholder?: string;
+    placeholderTextColor?: string; // Add this line
   }) => (
     <View style={styles.inputContainer}>
       <Text style={styles.label}>{label}</Text>
@@ -100,6 +101,7 @@ const EditProfileScreen = () => {
           value={name}
           onChangeText={setName}
           placeholder="Enter your name"
+          placeholderTextColor={colors.paragraph}
         />
 
         {/* Native Languages Dropdown */}
@@ -231,6 +233,7 @@ const EditProfileScreen = () => {
             onChangeText={(text) => {
               if (text.length <= bioCharacterLimit) setBio(text);
             }}
+          placeholderTextColor={colors.paragraph}
             placeholder="Share something about yourself"
             multiline
           />
