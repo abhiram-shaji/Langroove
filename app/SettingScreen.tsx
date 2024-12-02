@@ -7,6 +7,7 @@ import { useLogout } from "../hooks/useLogout";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../app/App";
 import { auth } from "../firebase";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 type SettingsScreenProps = StackScreenProps<RootStackParamList, "Settings">;
 
@@ -32,6 +33,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
         <View style={styles.settingsContainer}>
           <SettingsButton title="Profile" iconName="person-outline" onPress={handleProfilePress} />
           <SettingsButton title="Friends" iconName="group" onPress={() => navigation.navigate("Friends")} />
+          <SettingsButton title="Themes" iconName="color-lens" onPress={() => navigation.navigate("Themes")} />
           <SettingsButton title="Privacy" iconName="lock-outline" onPress={() => navigation.navigate("Privacy")} />
           <SettingsButton title="About" iconName="info-outline" onPress={() => navigation.navigate("About")} />
           <SettingsButton title="Logout" iconName="logout" onPress={handleLogout} />

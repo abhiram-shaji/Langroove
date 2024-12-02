@@ -23,8 +23,8 @@ import AddTopicScreen from "./AddTopicScreen";
 import PrivacyScreen from "./PrivacyScreen";
 import AboutScreen from "./AboutScreen";
 import EditProfileScreen from "./EditProfileScreen";
-import WaitingForVerificationScreen from "./WaitingForVerificationScreen"; // New screen
-
+import WaitingForVerificationScreen from "./WaitingForVerificationScreen";
+import ThemeScreen from "./ThemeScreen";
 // Components
 import BottomNavBar from "../components/BottomNavBar";
 
@@ -45,6 +45,7 @@ export type RootStackParamList = {
   EditProfileScreen: undefined;
   Feed: undefined;
   Settings: undefined;
+  Themes: undefined;
 };
 
 // Stack and Tab Navigators
@@ -94,6 +95,7 @@ const StackNavigator: React.FC<{ user: User | null; isEmailVerified: boolean }> 
       <Stack.Screen name="AddTopic" component={AddTopicScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true }} />
       <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="Themes" component={ThemeScreen} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
 };
