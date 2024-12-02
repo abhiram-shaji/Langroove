@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
   chatArea: {
     padding: 10,
     flexGrow: 1,
-    backgroundColor: colors.secondary, // Consistent background
+    backgroundColor: colors.background, // Consistent background
   },
   inputContainer: {
     flexDirection: 'row',

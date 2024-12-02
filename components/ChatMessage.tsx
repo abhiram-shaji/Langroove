@@ -25,23 +25,20 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 }) => {
   const isOther = senderType === "other";
   const [lastTap, setLastTap] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // Added isLoading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePress = async () => {
-    // Made the function asynchronous
     const now = Date.now();
     if (lastTap && now - lastTap < DOUBLE_TAP_DELAY) {
-      if (isOther) {
-        if (onDoubleTapTranslate) {
-          setIsLoading(true); // Set loading state to true
-          try {
-            await onDoubleTapTranslate(text); // Await the translation function
-          } finally {
-            setIsLoading(false); // Reset loading state after translation
-          }
+      if (isOther && onDoubleTapTranslate) {
+        setIsLoading(true);
+        try {
+          await onDoubleTapTranslate(text);
+        } finally {
+          setIsLoading(false);
         }
       }
-      setLastTap(null); // reset after a double tap is detected
+      setLastTap(null);
     } else {
       setLastTap(now);
     }
@@ -82,7 +79,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 flexWrap: "wrap",
               }}
             >
-              <Text style={{ flexShrink: 1 }}>{text}</Text>
+              <Text
+                style={[
+                  { flexShrink: 1 },
+                  isOther ? styles.receivedMessageText : styles.sentMessageText,
+                ]}
+              >
+                {text}
+              </Text>
               {isLoading && (
                 <ActivityIndicator
                   size="small"
