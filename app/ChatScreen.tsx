@@ -26,7 +26,7 @@ import ChatInput from "../components/ChatInput";
 import SetTranslateModal from "../components/SetTranslateModal";
 import { styles } from "../styles/ChatScreenStyles";
 import { RootStackParamList } from "../app/App";
-import { colors } from '../styles/themes';
+import { colors } from "../styles/themes";
 
 type Message = {
   id: string;
@@ -41,19 +41,27 @@ const ChatScreen: React.FC = () => {
   const route = useRoute<ChatScreenRouteProp>();
   const navigation = useNavigation();
   const { chatId } = route.params;
-  const { message, setMessage, messages, sendMessage, avatars } = useChat(chatId);
+  const { message, setMessage, messages, sendMessage, avatars } =
+    useChat(chatId);
   const { getFlagUrl } = useFlags();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLanguageLoaded, setIsLanguageLoaded] = useState(false);
   const [userLanguage, setUserLanguage] = useState<string | null>(null);
-  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(null);
-  const [translatedMessages, setTranslatedMessages] = useState<{ [id: string]: string }>({});
+  const [recipientLanguage, setRecipientLanguage] = useState<string | null>(
+    null
+  );
+  const [translatedMessages, setTranslatedMessages] = useState<{
+    [id: string]: string;
+  }>({});
   const [lastTap, setLastTap] = useState<number | null>(null);
-  const [translationsCache, setTranslationsCache] = useState<{ [key: string]: string }>({});
+  const [translationsCache, setTranslationsCache] = useState<{
+    [key: string]: string;
+  }>({});
   const [cachedMessages, setCachedMessages] = useState<Message[]>([]);
 
   const currentUser = auth.currentUser;
-  const recipientId = chatId.split("_").find((id) => id !== currentUser?.uid) || "";
+  const recipientId =
+    chatId.split("_").find((id) => id !== currentUser?.uid) || "";
   const { userInfo, loading } = useUserInfo(recipientId);
 
   const flatListRef = useRef<FlatList>(null);
@@ -62,13 +70,16 @@ const ChatScreen: React.FC = () => {
     const loadCache = async () => {
       try {
         const storedMessages = await AsyncStorage.getItem(`messages_${chatId}`);
-        const storedTranslations = await AsyncStorage.getItem(`translations_${chatId}`);
+        const storedTranslations = await AsyncStorage.getItem(
+          `translations_${chatId}`
+        );
         if (storedMessages) {
           const parsedMessages: Message[] = JSON.parse(storedMessages);
           setCachedMessages(parsedMessages);
         }
         if (storedTranslations) {
-          const parsedTranslations: { [key: string]: string } = JSON.parse(storedTranslations);
+          const parsedTranslations: { [key: string]: string } =
+            JSON.parse(storedTranslations);
           setTranslationsCache(parsedTranslations);
         }
       } catch (error) {
@@ -104,7 +115,10 @@ const ChatScreen: React.FC = () => {
     const cacheMessages = async () => {
       try {
         if (messages.length > 0) {
-          await AsyncStorage.setItem(`messages_${chatId}`, JSON.stringify(messages));
+          await AsyncStorage.setItem(
+            `messages_${chatId}`,
+            JSON.stringify(messages)
+          );
           setCachedMessages(messages);
         }
       } catch (error) {
@@ -138,25 +152,22 @@ const ChatScreen: React.FC = () => {
     </View>
   );
 
-const renderHeaderRight = () => {
-  const flagUrl = userLanguage ? getFlagUrl(userLanguage) : null;
-  return (
-    <View style={styles.headerRightContainer}>
-      <TouchableOpacity
-        onPress={() => setModalVisible(true)}
-        style={styles.translatorButton}
-      >
-        {flagUrl && (
-          <Image
-            source={{ uri: flagUrl }}
-            style={styles.flagImage}
-          />
-        )}
-        <Text style={styles.translatorText}>Translator</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+  const renderHeaderRight = () => {
+    const flagUrl = userLanguage ? getFlagUrl(userLanguage) : null;
+    return (
+      <View style={styles.headerRightContainer}>
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          style={styles.translatorButton}
+        >
+          {flagUrl && (
+            <Image source={{ uri: flagUrl }} style={styles.flagImage} />
+          )}
+          <Text style={styles.translatorText}>Translator</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const renderHeaderLeft = () => (
     <TouchableOpacity
@@ -180,22 +191,37 @@ const renderHeaderRight = () => {
     }
   };
 
-  const handleDoubleClickMessage = async (messageId: string, messageText: string) => {
+  const handleDoubleClickMessage = async (
+    messageId: string,
+    messageText: string
+  ) => {
     if (!userLanguage) {
       console.warn("User language not set.");
       return;
     }
 
     if (translationsCache[messageId]) {
-      setTranslatedMessages((prev) => ({ ...prev, [messageId]: translationsCache[messageId] }));
+      setTranslatedMessages((prev) => ({
+        ...prev,
+        [messageId]: translationsCache[messageId],
+      }));
     } else {
       try {
         const translatedText = await translateText(messageText, userLanguage);
-        setTranslatedMessages((prev) => ({ ...prev, [messageId]: translatedText }));
-        
-        const updatedTranslationsCache = { ...translationsCache, [messageId]: translatedText };
+        setTranslatedMessages((prev) => ({
+          ...prev,
+          [messageId]: translatedText,
+        }));
+
+        const updatedTranslationsCache = {
+          ...translationsCache,
+          [messageId]: translatedText,
+        };
         setTranslationsCache(updatedTranslationsCache);
-        await AsyncStorage.setItem(`translations_${chatId}`, JSON.stringify(updatedTranslationsCache));
+        await AsyncStorage.setItem(
+          `translations_${chatId}`,
+          JSON.stringify(updatedTranslationsCache)
+        );
       } catch (error) {
         console.error("Error translating message:", error);
       }
@@ -216,7 +242,10 @@ const renderHeaderRight = () => {
     setTranslationsCache(updatedTranslationsCache);
 
     try {
-      await AsyncStorage.setItem(`translations_${chatId}`, JSON.stringify(updatedTranslationsCache));
+      await AsyncStorage.setItem(
+        `translations_${chatId}`,
+        JSON.stringify(updatedTranslationsCache)
+      );
     } catch (error) {
       console.error("Error updating cache in AsyncStorage:", error);
     }
@@ -231,12 +260,11 @@ const renderHeaderRight = () => {
     }
   };
 
-
   if (!isLanguageLoaded) {
     return (
       <SafeAreaProvider>
         <View style={styles.container}>
-        <ActivityIndicator size="large" color={colors.headline} />
+          <ActivityIndicator size="large" color={colors.headline} />
           <Text>Loading translation settings...</Text>
         </View>
       </SafeAreaProvider>
@@ -262,7 +290,9 @@ const renderHeaderRight = () => {
                   <Text style={styles.translationText}>
                     {translatedMessages[item.id]}
                   </Text>
-                  <TouchableOpacity onPress={() => handleClearTranslation(item.id)}>
+                  <TouchableOpacity
+                    onPress={() => handleClearTranslation(item.id)}
+                  >
                     <Text style={styles.clearTranslationButton}>Clear</Text>
                   </TouchableOpacity>
                 </View>
@@ -285,7 +315,9 @@ const renderHeaderRight = () => {
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatArea}
-          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          onContentSizeChange={() =>
+            flatListRef.current?.scrollToEnd({ animated: true })
+          }
         />
 
         <ChatInput
