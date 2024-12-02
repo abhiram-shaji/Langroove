@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
   avatar: {
     marginBottom: 10,
-    backgroundColor: colors.accent, // Use accent color for placeholder avatar background
+    backgroundColor: colors.buttonBackground, // Use accent color for placeholder avatar background
   },
   changeAvatarButton: {
     marginTop: 10,
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create({
   button: {
     padding: 15,
     height: 50,
-    backgroundColor: colors.accent, // Accent color for the button
+    backgroundColor: colors.buttonBackground, // Accent color for the button
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,

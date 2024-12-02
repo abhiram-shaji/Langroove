@@ -16,7 +16,7 @@ export const ChatListItemStyles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 12,
     marginLeft: 8,
-    backgroundColor: colors.accent, // Use accent color for placeholder avatar background
+    backgroundColor: colors.buttonBackground, // Use accent color for placeholder avatar background
   },
   textContainer: {
     flexDirection: 'column',

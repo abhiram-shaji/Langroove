@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
   chatArea: {
     padding: 10,
     flexGrow: 1,
-    backgroundColor: colors.background, // Consistent background
+    backgroundColor: colors.secondary, // Consistent background
   },
   inputContainer: {
     flexDirection: 'row',
@@ -20,12 +20,13 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     marginRight: 10,
-    backgroundColor: colors.background, // Consistent input background
+    backgroundColor: colors.form, // Consistent input background
     color: colors.headline, // Use theme's headline color for input text
   },
   sendButton: {
     alignSelf: 'center',
-    color: colors.accent, // Accent color for the send button
+    color: colors.accent,
+    backgroundColor: colors.buttonBackground, // Accent color for the send button
   },
   sentMessage: {
     alignSelf: 'flex-end',
@@ -39,7 +40,7 @@ export const styles = StyleSheet.create({
   receivedMessage: {
     alignSelf: 'flex-start',
     marginVertical: 5,
-    backgroundColor: colors.background, // Consistent background for received message
+    backgroundColor: colors.secondary, // Consistent background for received message
     color: colors.paragraph, // Use paragraph color for text
     padding: 10,
     borderRadius: 10,
@@ -70,7 +71,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   translatorButton: {
-    backgroundColor: colors.accent, // Accent color for the button
+    backgroundColor: colors.background, // Accent color for the button
     paddingHorizontal: 10, // Horizontal padding for spacing
     paddingVertical: 6, // Vertical padding
     marginRight: 10, // Right margin for spacing

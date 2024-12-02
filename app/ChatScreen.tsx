@@ -26,6 +26,7 @@ import ChatInput from "../components/ChatInput";
 import SetTranslateModal from "../components/SetTranslateModal";
 import { styles } from "../styles/ChatScreenStyles";
 import { RootStackParamList } from "../app/App";
+import { colors } from '../styles/themes';
 
 type Message = {
   id: string;
@@ -162,7 +163,7 @@ const renderHeaderRight = () => {
       onPress={() => navigation.goBack()}
       style={{ padding: 8 }}
     >
-      <Ionicons name="arrow-back" size={24} color="black" />
+      <Ionicons name="arrow-back" size={24} color={colors.background} />
     </TouchableOpacity>
   );
 
@@ -235,7 +236,7 @@ const renderHeaderRight = () => {
     return (
       <SafeAreaProvider>
         <View style={styles.container}>
-          <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={colors.headline} />
           <Text>Loading translation settings...</Text>
         </View>
       </SafeAreaProvider>
