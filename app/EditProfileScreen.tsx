@@ -79,7 +79,7 @@ const EditProfileScreen = () => {
       {languages.map((lang) => (
         <View key={lang} style={styles.languageItem}>
           <Image source={{ uri: getFlagUrl(lang) }} style={styles.flagIcon} />
-          <Text>{lang}</Text>
+          <Text style={{ color: colors.headline }}>{lang}</Text>
           <TouchableOpacity onPress={() => removeHandler(lang)}>
             <Text style={styles.removeText}>✕</Text>
           </TouchableOpacity>
