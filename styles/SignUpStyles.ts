@@ -46,7 +46,7 @@ export const SignUpStyles = StyleSheet.create({
     fontWeight: 'bold',
   },
   errorText: {
-    color: '#FF0000', // Retain red for error messages
+    color: colors.accent, // Retain red for error messages
     fontSize: 12,
     marginBottom: 10,
     alignSelf: 'flex-start',

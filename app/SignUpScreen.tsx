@@ -92,7 +92,7 @@ const SignUpScreen: React.FC = () => {
         disabled={isButtonDisabled || loading}
       >
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color={colors.headline} />
         ) : (
           <Text style={SignUpStyles.buttonText}>Sign Up</Text>
         )}

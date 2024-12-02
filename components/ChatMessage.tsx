@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Image, Pressable, ActivityIndicator } from "react-native";
 import { styles } from "../styles/ChatMessageStyles";
+import { colors } from "@/styles/themes";
 
 type ChatMessageProps = {
   text: string;
@@ -90,7 +91,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               {isLoading && (
                 <ActivityIndicator
                   size="small"
-                  color="#0000ff"
+                  color={colors.headline}
                   style={{ marginLeft: 5 }}
                 />
               )}

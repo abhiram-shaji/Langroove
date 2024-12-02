@@ -49,7 +49,7 @@ export const LoginStyles = StyleSheet.create({
     marginTop: 20,
   },
   errorText: {
-    color: '#FF0000', // Retain red for error messages
+    color: colors.accent, // Retain red for error messages
     marginBottom: 10,
     fontSize: 12,
   },
