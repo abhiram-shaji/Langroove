@@ -28,27 +28,12 @@ export const styles = StyleSheet.create({
     color: colors.accent,
     backgroundColor: colors.buttonBackground, // Accent color for the send button
   },
-  sentMessage: {
-    alignSelf: 'flex-end',
-    marginVertical: 5,
-    backgroundColor: colors.accent, // Accent color for sent message bubble
-    color: colors.headline, // Ensure text in sent messages is readable
-    padding: 10,
-    borderRadius: 10,
-    maxWidth: '80%',
-  },
-  receivedMessage: {
-    alignSelf: 'flex-start',
-    marginVertical: 5,
-    backgroundColor: colors.secondary, // Consistent background for received message
-    color: colors.paragraph, // Use paragraph color for text
-    padding: 10,
-    borderRadius: 10,
-    maxWidth: '80%',
-  },
+
   translationContainer: {
-    backgroundColor: colors.accent, // Accent color for translation bubble
+    backgroundColor: colors.secondary, // Accent color for translation bubble
     padding: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
     borderRadius: 8,
     marginVertical: 4,
     marginHorizontal: 16,
@@ -61,8 +46,9 @@ export const styles = StyleSheet.create({
     fontStyle: 'italic', // Italicized to differentiate from regular messages
   },
   clearTranslationButton: {
-    fontSize: 14,
-    color: colors.accent, // Accent color for the button text
+    fontSize: 15,
+    fontWeight: "bold",
+    color: colors.buttonBackground, // Accent color for the button text
     marginTop: 4,
     textAlign: 'right',
   },
