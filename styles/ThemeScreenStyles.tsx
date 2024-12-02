@@ -1,6 +1,5 @@
-// ThemeScreenStyles.tsx
 import { StyleSheet } from "react-native";
-import { colors } from "../styles/themes";
+import { colors } from "./themes";
 
 export const styles = StyleSheet.create({
   container: {
@@ -11,7 +10,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: colors.background,
+    color: colors.headline,
     marginBottom: 20,
   },
   radioGroup: {
@@ -31,15 +30,6 @@ export const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.background,
-  },
-  radioOuterSelected: {
-    backgroundColor: colors.accent,
-  },
-  radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
     backgroundColor: colors.background,
   },
   label: {

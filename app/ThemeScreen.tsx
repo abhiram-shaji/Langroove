@@ -1,35 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { styles } from "../styles/ThemeScreenStyles"; // Import styles
-
-const themes = Array.from({ length: 10 }, (_, i) => `Theme ${i + 1}`);
+import { styles } from "../styles/ThemeScreenStyles";
+import { useTheme } from "../hooks/useTheme";
 
 const ThemeScreen = () => {
-  const [selectedTheme, setSelectedTheme] = useState<number | null>(null);
-
-  const handleThemeSelect = (index: number) => {
-    setSelectedTheme(index);
-  };
+  const { currentThemeIndex, changeTheme, colors } = useTheme();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Select a Theme</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.headline }]}>
+        Select a Theme
+      </Text>
       <View style={styles.radioGroup}>
-        {themes.map((theme, index) => (
+        {Array.from({ length: 10 }).map((_, index) => (
           <TouchableOpacity
             key={index}
             style={styles.radioButton}
-            onPress={() => handleThemeSelect(index)}
+            onPress={() => changeTheme(index)}
           >
             <View
               style={[
                 styles.radioOuter,
-                selectedTheme === index && styles.radioOuterSelected,
+                currentThemeIndex === index && { backgroundColor: colors.accent },
               ]}
-            >
-              {selectedTheme === index && <View style={styles.radioInner} />}
-            </View>
-            <Text style={styles.label}>{theme}</Text>
+            />
+            <Text style={[styles.label, { color: colors.paragraph }]}>
+              Theme {index + 1}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
