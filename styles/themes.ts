@@ -9,7 +9,7 @@ export const colors = {
   buttonDisabled: "#7f5af0",
   buttonText: "#fffffe",
 
-  border: "#00000",
+  border: "#7f5af0",
   accent: "#2cb67d",
 
   form: "#2f2f2f",
