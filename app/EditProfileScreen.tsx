@@ -233,7 +233,7 @@ const EditProfileScreen = () => {
             onChangeText={(text) => {
               if (text.length <= bioCharacterLimit) setBio(text);
             }}
-          placeholderTextColor={colors.paragraph}
+            placeholderTextColor={colors.paragraph}
             placeholder="Share something about yourself"
             multiline
           />
@@ -242,14 +242,12 @@ const EditProfileScreen = () => {
           </Text>
         </View>
 
-        <Button
-          mode="contained"
+        <TouchableOpacity
           onPress={handleSaveAndNavigate}
           style={styles.saveButton}
-          labelStyle={{ color: colors.headline }}
         >
-          Save Profile
-        </Button>
+          <Text style={{ color: colors.headline }}>Save Profile</Text>
+        </TouchableOpacity>
       </ScrollView>
     </PaperProvider>
   );

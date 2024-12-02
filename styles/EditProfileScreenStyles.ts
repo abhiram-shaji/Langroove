@@ -45,6 +45,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
+    paddingRight: 10,
   },
   bioSection: {
     marginBottom: 20,
