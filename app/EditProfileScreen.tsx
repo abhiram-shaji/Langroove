@@ -246,7 +246,7 @@ const EditProfileScreen = () => {
           mode="contained"
           onPress={handleSaveAndNavigate}
           style={styles.saveButton}
-          labelStyle={{ color: "white" }}
+          labelStyle={{ color: colors.headline }}
         >
           Save Profile
         </Button>
