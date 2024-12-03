@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: colors.accent, // Accent color for the button background
+    backgroundColor: colors.buttonBackground, // Accent color for the button background
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

@@ -30,14 +30,14 @@ export const SignUpStyles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: colors.accent, // Accent color for button
+    backgroundColor: colors.buttonBackground, // Accent color for button
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
     marginTop: 10,
   },
   buttonDisabled: {
-    backgroundColor: colors.border, // Subtle color for disabled button
+    backgroundColor: colors.buttonBackground, // Subtle color for disabled button
     opacity: 0.5, // Visual feedback for disabled state
   },
   buttonText: {
