@@ -1,65 +1,62 @@
 import axios from "axios";
+import Constants from "expo-constants";
 
-/**
- * Interface for the expected response structure from LibreTranslate.
- */
-interface TranslationResponse {
-  translatedText: string;
+interface OpenAIResponse {
+  choices: { message: { content: string } }[];
 }
 
-/**
- * Language codes mapping
- */
-const languageCodes: { [key: string]: string } = {
-  English: "en",
-  Spanish: "es",
-  French: "fr",
-  "Mandarin Chinese": "zh",
-  German: "de",
-  Italian: "it",
-  Japanese: "ja",
-  Korean: "ko",
-  Portuguese: "pt",
-  Russian: "ru",
-};
+const apiKey = Constants.expoConfig?.extra?.openaiApiKey;
 
-/**
- * Translates a given text to the specified target language using LibreTranslate API.
- * @param text - The text to translate.
- * @param targetLanguage - The language name or code for the target language (e.g., 'es' for Spanish).
- * @param sourceLanguage - The language code for the source language (default is 'auto').
- * @returns The translated text.
- */
+if (!apiKey) {
+  throw new Error("OpenAI API key is missing in app.json.");
+}
+
 export const translateText = async (
   text: string,
   targetLanguage: string,
   sourceLanguage: string = "auto"
 ): Promise<string> => {
-  const targetLangCode = languageCodes[targetLanguage] || targetLanguage;
-  const requestData = {
-    q: text,
-    source: sourceLanguage,
-    target: targetLangCode,
-    api_key: "6b35d883-0347-4e33-8e04-a7097c5f0e6a",
-    format: "text",
-  };
-
   try {
-    console.log("Sending request to LibreTranslate:", requestData);
+    const requestData = {
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `Translate to ${targetLanguage} while keeping the original words in parentheses for hints.`,
+        },
+        {
+          role: "user",
+          content: text,
+        },
+      ],
+      temperature: 0.3,
+    };
 
-    const response = await axios.post<TranslationResponse>(
-      "https://libretranslate.com/translate",
+    console.log("🔵 API Request Data:", JSON.stringify(requestData, null, 2));
+
+    const response = await axios.post<OpenAIResponse>(
+      "https://api.openai.com/v1/chat/completions",
       requestData,
       {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
       }
     );
 
-    console.log("Received response from LibreTranslate:", response.data);
+    console.log("✅ OpenAI Response:", response.data);
 
-    return response.data.translatedText;
-  } catch (error) {
-    console.error("Error translating text:", error);
+    // 🔥 Extract the translated text correctly
+    const translatedText = response.data?.choices?.[0]?.message?.content?.trim();
+
+    if (!translatedText) {
+      throw new Error("Translation response is empty.");
+    }
+
+    return translatedText;
+  } catch (error: any) {
+    console.error("❌ Error translating text:", error.response?.status, error.response?.data);
     throw new Error("Translation failed");
   }
 };
