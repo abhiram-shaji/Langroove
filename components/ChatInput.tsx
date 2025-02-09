@@ -10,7 +10,7 @@ type ChatInputProps = {
   onSendMessage: () => void;
 };
 
-const MAX_MESSAGE_LENGTH = 200; // Maximum allowed message length
+const MAX_MESSAGE_LENGTH = 150; // Maximum allowed message length
 const MAX_LINES = 5; // Maximum number of lines before scrolling
 
 const ChatInput: React.FC<ChatInputProps> = ({
