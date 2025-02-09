@@ -21,3 +21,5 @@ expo-env.d.ts
 
 # Ignore Windows-specific files (optional, based on your needs)
 Thumbs.db
+app.json
+app.json
