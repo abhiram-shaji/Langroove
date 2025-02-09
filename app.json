@@ -33,6 +33,7 @@
       "typedRoutes": true
     },
     "extra": {
+      "openaiApiKey": "",
       "eas": {
         "projectId": "198af924-fcbb-4c82-81c5-0e50b4c9d43f"
       }
